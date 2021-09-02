@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "0.2.0-alpha.0",
+  "private": true,
+  "description": "The Backend of OnePixelAttack",
+  "keywords": [
+    "machine learning",
+    "adversarial attack",
+    "differential evolution"
+  ],
+  "homepage": "https://github.com/peidongxie/one-pixel-attack/packages/backend#readme",
+  "bugs": {
+    "url": "https://github.com/peidongxie/one-pixel-attack/issues",
+    "email": "peidongxie@outlook.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peidongxie/one-pixel-attack.git",
+    "directory": "packages/backend"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "谢沛东",
+    "email": "peidongxie@outlook.com",
+    "url": "https://github.com/peidongxie"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "fix": "eslint src --ext .ts --fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.3.2",
+    "sort-package-json": "^1.50.0",
+    "typescript": "^4.4.2"
+  }
+}
