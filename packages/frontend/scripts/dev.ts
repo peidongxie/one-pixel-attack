@@ -1,7 +1,8 @@
 import { ip } from 'address';
 import { serve } from 'esbuild';
-import type { ServeOptions, BuildOptions } from 'esbuild';
+import type { BuildOptions, ServeOptions } from 'esbuild';
 import { readJson } from 'fs-extra';
+import { format } from 'url';
 
 const serveOptions: ServeOptions = {
   port: 3000,
@@ -32,32 +33,42 @@ const buildOptions: BuildOptions = {
   watch: false,
   write: false,
   color: true,
+  metafile: false,
   publicPath: '/static',
   sourceRoot: '/static',
 };
 
 (async () => {
   const { name } = await readJson('package.json');
-  const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
   const { host, port } = await serve(serveOptions, buildOptions);
-  const local = `  ${protocol}://${host}:\x1b[1m${port}\x1b[0m`;
-  const lan = await new Promise<string>((resolve, reject) => {
-    const host = ip();
-    if (/^10[.]|^172[.](1[6-9]|2[0-9]|3[0-1])[.]|^192[.]168[.]/.test(host)) {
-      resolve(`  ${protocol}://${host}:\x1b[1m${port}\x1b[0m`);
-    } else {
-      reject();
-    }
-  }).catch(() => '');
-  console.log('\x1b[32mCompiled successfully!\x1b[0m');
+  const appName = `\x1b[1m${name}\x1b[22m`;
+  const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+  const outputs = [
+    { protocol, hostname: host, port },
+    { protocol, hostname: ip() || '', port },
+  ]
+    .filter((value, index) => {
+      if (index === 0) return true;
+      const lan = value.hostname;
+      return /^10[.]|^172[.](1[6-9]|2[0-9]|3[0-1])[.]|^192[.]168[.]/.test(lan);
+    })
+    .map((output, index) => ({
+      label:
+        index === 0
+          ? '\x1b[1mLocal:            \x1b[22m'
+          : '\x1b[1mOn Your Network:  \x1b[22m',
+      protocol: output.protocol,
+      hostname: output.hostname,
+      port: `\x1b[1m${output.port}\x1b[22m`,
+    }));
+  const only = outputs.length === 1;
+  console.log('\x1b[32mCompiled successfully!\x1b[39m');
   console.log();
-  console.log(`You can now view \x1b[1m${name}\x1b[0m in the browser.`);
+  console.log(`You can now view ${appName} in the browser.`);
   console.log();
-  if (lan) {
-    console.log(`  \x1b[1mLocal:\x1b[0m          ` + local);
-    console.log(`  \x1b[1mOn Your Network:\x1b[0m` + lan);
-  } else {
-    console.log(local);
+  for (const { label, ...url } of outputs) {
+    console.log(`  ${only ? '' : label}${format(url)}`);
   }
   console.log();
+  console.log('Note that the development build is not optimized.');
 })();
