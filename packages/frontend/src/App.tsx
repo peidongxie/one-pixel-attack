@@ -1,16 +1,18 @@
-import type { FC } from 'react';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './theme';
+import type { FC } from 'react';
+import TopBar from './components/top-bar';
+import theme from './utils/theme';
 
-const App: FC = () => {
+interface AppProps {
+  [key: string]: never;
+}
+
+const App: FC<AppProps> = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Button color='primary' variant='contained'>
-        {'Hello World'}
-      </Button>
+      <TopBar />
     </ThemeProvider>
   );
 };

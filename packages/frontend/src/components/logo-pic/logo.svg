@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" color="#ffffff">
+  <g fill="none" fill-rule="evenodd">
+    <g>
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 66 1.5 l 28 16 l 0 32" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 66 1.5 l -5 3 M 94 17.5 l -5 3 M 94 49.5 l -5 3" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 61 24.5 l 0 -20 l 28 16 l 0 32 l -17.5 -10" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 71.5, 22.5)" cx="71.5" cy="22.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 78.5, 26.5)" cx="78.5" cy="26.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 78.5, 34.5)" cx="78.5" cy="34.5" rx="2.4" ry="1.4" />
+      <path stroke="#3f51b5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 71.5 22.5 l -5 3 M 78.5 34.5 l -5 3" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 36.5 10.5 l 35 20 l 0 40" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 36.5 10.5 l -5 3 M 71.5 30.5 l -5 3 M 71.5 70.5 l -5 3" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 31.5 33.5 l 0 -20 l 35 20 l 0 40 l -17.5 -10" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 41.5, 31.5)" cx="41.5" cy="31.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 48.5, 35.5)" cx="48.5" cy="35.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 55.5, 39.5)" cx="55.5" cy="39.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 55.5, 47.5)" cx="55.5" cy="47.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 55.5, 55.5)" cx="55.5" cy="55.5" rx="2.4" ry="1.4" />
+      <path stroke="#3f51b5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 41.5 31.5 l -5 3 M 48.5 35.5 l -5 3 M 55.5 47.5 l -5 3" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 7 19.5 l 42 24 l 0 48" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 7 19.5 l -5 3 M 49 43.5 l -5 3 M 49 91.5 l -5 3" />
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M 2 70.5 l 0 -48 l 42 24 l 0 48 l -42 -24" />
+      <ellipse fill="currentColor" transform="rotate(60, 12, 40.5)" cx="12" cy="40.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 19, 44.5)" cx="19" cy="44.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 26, 48.5)" cx="26" cy="48.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 33, 52.5)" cx="33" cy="52.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 12, 48.5)" cx="12" cy="48.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 19, 52.5)" cx="19" cy="52.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 26, 56.5)" cx="26" cy="56.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 33, 60.5)" cx="33" cy="60.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 12, 56.5)" cx="12" cy="56.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 19, 60.5)"  cx="19" cy="60.5" rx="2.4" ry="1.4"/>
+      <ellipse fill="currentColor" transform="rotate(60, 26, 64.5)" cx="26" cy="64.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 33, 68.5)" cx="33" cy="68.5" rx="2.4" ry="1.4" />
+      <ellipse fill="#3f51b5" transform="rotate(60, 12, 64.5)" cx="12" cy="64.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 19, 68.5)" cx="19" cy="68.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 26, 72.5)" cx="26" cy="72.5" rx="2.4" ry="1.4" />
+      <ellipse fill="currentColor" transform="rotate(60, 33, 76.5)" cx="33" cy="76.5" rx="2.4" ry="1.4" />
+    </g>
+  </g>
+</svg>
