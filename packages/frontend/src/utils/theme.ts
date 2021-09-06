@@ -36,11 +36,6 @@ const themeOptions: ThemeOptions = {
       },
     },
   },
-  typography: {
-    button: {
-      textTransform: 'none',
-    },
-  },
 };
 
 const theme = responsiveFontSizes(createTheme(themeOptions));
