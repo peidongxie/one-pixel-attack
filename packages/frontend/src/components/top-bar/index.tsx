@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   logo: {
-    height: 56,
     padding: 12,
+    height: 56,
   },
   title: {
     height: 34.5,
