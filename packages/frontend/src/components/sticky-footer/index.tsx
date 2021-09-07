@@ -12,7 +12,6 @@ interface StickyFooterProps {
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3, 2),
-    marginTop: 'auto',
     textAlign: 'center',
   },
 }));

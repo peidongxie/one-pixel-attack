@@ -1,6 +1,7 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import type { FC } from 'react';
+import MainBody from './components/main-body';
 import StickyFooter from './components/sticky-footer';
 import TopBar from './components/top-bar';
 import theme from './utils/theme';
@@ -14,6 +15,7 @@ const App: FC<AppProps> = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <TopBar />
+      <MainBody />
       <StickyFooter />
     </ThemeProvider>
   );
