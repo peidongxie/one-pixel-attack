@@ -29,9 +29,10 @@ const themeOptions: ThemeOptions = {
           height: '100%',
           fontFamily: fonts.join(', '),
         },
-        a: {
-          color: 'inherit',
-          textDecoration: 'none',
+        '#root': {
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
         },
       },
     },
