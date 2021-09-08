@@ -1,6 +1,7 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import type { FC } from 'react';
+import ImageControl from '../image-control';
 
 interface InputPaperProps {
   className?: string;
@@ -21,7 +22,11 @@ const useStyles = makeStyles((theme) => ({
 
 const InputPaper: FC<InputPaperProps> = () => {
   const classes = useStyles();
-  return <Paper className={classes.root}></Paper>;
+  return (
+    <Paper className={classes.root}>
+      <ImageControl />
+    </Paper>
+  );
 };
 
 export default InputPaper;
