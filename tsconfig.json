@@ -15,10 +15,8 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "rootDir": "src",
     // Emit
     "noEmit": true,
-    "outDir": "dist",
     // JavaScript Support
     "allowJs": true,
     // Interop Constraints
@@ -33,5 +31,8 @@
     // Completeness
     "skipLibCheck": true
   },
-  "include": ["packages/**/*"]
+  "references": [
+    { "path": "packages/backend" },
+    { "path": "packages/frontend" }
+  ]
 }
