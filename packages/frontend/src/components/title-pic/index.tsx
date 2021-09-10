@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import type { FC } from 'react';
 import title from './title.svg';
 
@@ -7,7 +8,7 @@ interface TitlePicProps {
 
 const TitlePic: FC<TitlePicProps> = (props) => {
   const { className } = props;
-  return <img alt={'title'} className={className ?? ''} src={title} />;
+  return <img alt={'title'} className={clsx(className)} src={title} />;
 };
 
 export default TitlePic;

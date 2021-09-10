@@ -1,5 +1,6 @@
 import Typography from '@material-ui/core/Typography';
 import type { TypographyProps } from '@material-ui/core/Typography';
+import clsx from 'clsx';
 import type { FC } from 'react';
 
 interface ControlLabelProps {
@@ -11,7 +12,7 @@ interface ControlLabelProps {
 const ControlLabel: FC<ControlLabelProps> = (props) => {
   const { className, value, variant } = props;
   return (
-    <Typography className={className ?? ''} variant={variant ?? 'inherit'}>
+    <Typography className={clsx(className)} variant={variant ?? 'inherit'}>
       {value}
     </Typography>
   );

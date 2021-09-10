@@ -1,4 +1,5 @@
 import Link from '@material-ui/core/Link';
+import clsx from 'clsx';
 import type { FC } from 'react';
 
 interface AuthorLinkProps {
@@ -9,7 +10,7 @@ const AuthorLink: FC<AuthorLinkProps> = (props) => {
   const { className } = props;
   return (
     <Link
-      className={className ?? ''}
+      className={clsx(className)}
       color={'inherit'}
       href={'https://github.com/peidongxie'}
     >

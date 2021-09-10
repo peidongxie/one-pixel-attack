@@ -3,11 +3,13 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { useCallback, useState } from 'react';
+import clsx from 'clsx';
+import { useCallback, useMemo, useState } from 'react';
 import type { ChangeEventHandler, FC } from 'react';
 
 interface FileUploaderProps {
-  hidden?: boolean;
+  className?: string;
+  extensions: string[];
   onChange: (file: File | null) => void;
 }
 
@@ -15,31 +17,39 @@ const useStyles = makeStyles(() => ({
   file: {
     display: 'none',
   },
-  visible: {
-    visibility: 'visible',
-  },
-  hidden: {
-    visibility: 'hidden',
+  text: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 }));
 
 const FileUploader: FC<FileUploaderProps> = (props) => {
-  const { hidden, onChange } = props;
+  const { className, extensions, onChange } = props;
   const classes = useStyles();
-  const [text, setText] = useState('allow a NPY or PNG file');
+  const accept = useMemo(() => {
+    const text = extensions
+      .map((extension) => '.' + extension.toLowerCase())
+      .join(',');
+    return text;
+  }, [extensions]);
+  const initHelperText = useMemo(() => {
+    const text = extensions
+      .map((extension) => extension.toUpperCase())
+      .join('/');
+    return `allow a ${text} file`;
+  }, [extensions]);
+  const [helperText, setHelperText] = useState(initHelperText);
   const handleSelectFile = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       const file = e.target.files?.item(0);
-      setText(file ? 'file: ' + file.name : 'allow a NPY or PNG file');
+      setHelperText(file ? 'file: ' + file.name : initHelperText);
       onChange(file ?? null);
     },
-    [onChange],
+    [initHelperText, onChange],
   );
   return (
-    <FormControl
-      className={hidden ? classes.hidden : classes.visible}
-      component={'label'}
-    >
+    <FormControl className={clsx(className)} component={'label'}>
       <Button
         color={'primary'}
         component={'span'}
@@ -49,12 +59,12 @@ const FileUploader: FC<FileUploaderProps> = (props) => {
         {'Upload'}
       </Button>
       <input
-        accept={'.npy,.png'}
+        accept={accept}
         className={classes.file}
         onChange={handleSelectFile}
         type={'file'}
       />
-      <FormHelperText>{text}</FormHelperText>
+      <FormHelperText className={classes.text}>{helperText}</FormHelperText>
     </FormControl>
   );
 };
