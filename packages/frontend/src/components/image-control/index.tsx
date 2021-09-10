@@ -1,10 +1,18 @@
 import FormGroup from '@material-ui/core/FormGroup';
 import { makeStyles } from '@material-ui/core/styles';
-import { useCallback, useState } from 'react';
+import clsx from 'clsx';
 import type { FC } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
 import CustomDefaultSwitch from '../custom-default-switch';
 import FileUploader from '../file-uploader';
+import RawNormalizedSwitch from '../raw-normalized-switch';
+import {
+  imageFileState,
+  imageIsDefaultState,
+  imageIsNormalizedState,
+  imageIsNumpyState,
+} from '../../utils/form';
 
 interface ImageControlProps {
   [key: string]: never;
@@ -18,18 +26,24 @@ const useStyles = makeStyles((theme) => ({
     width: 100,
     textAlign: 'end',
   },
+  file: {
+    width: 128,
+  },
+  hidden: {
+    visibility: 'hidden',
+  },
 }));
+
+const extensions = ['npy', 'png'];
 
 const ImageControl: FC<ImageControlProps> = () => {
   const classes = useStyles();
-  const [isDefault, setIsDefault] = useState(true);
-  const [file, setFile] = useState<File | null>(null);
-  const handleChangeIsDefault = useCallback((value: boolean) => {
-    setIsDefault(value);
-  }, []);
-  const handleChangeFile = useCallback((value: File | null) => {
-    setFile(value);
-  }, []);
+  const [isDefault, setIsDefault] = useRecoilState(imageIsDefaultState);
+  const setImageFile = useSetRecoilState(imageFileState);
+  const [isNormalized, setIsNormalized] = useRecoilState(
+    imageIsNormalizedState,
+  );
+  const isNumpy = useRecoilValue(imageIsNumpyState);
   return (
     <FormGroup row={true}>
       <ControlLabel
@@ -37,8 +51,17 @@ const ImageControl: FC<ImageControlProps> = () => {
         value={'Image'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch initValue={true} onChange={handleChangeIsDefault} />
-      <FileUploader hidden={isDefault} onChange={handleChangeFile} />
+      <CustomDefaultSwitch initValue={isDefault} onChange={setIsDefault} />
+      <FileUploader
+        className={clsx(classes.file, isDefault && classes.hidden)}
+        extensions={extensions}
+        onChange={setImageFile}
+      />
+      <RawNormalizedSwitch
+        className={clsx((isDefault || !isNumpy) && classes.hidden)}
+        initValue={isNormalized}
+        onChange={setIsNormalized}
+      />
     </FormGroup>
   );
 };

@@ -1,5 +1,6 @@
 import IconButton from '@material-ui/core/IconButton';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import clsx from 'clsx';
 import type { FC } from 'react';
 
 interface RepoIconProps {
@@ -11,7 +12,7 @@ const RepoIcon: FC<RepoIconProps> = (props) => {
   return (
     <IconButton
       aria-label={'GitHub'}
-      className={className ?? ''}
+      className={clsx(className)}
       color={'inherit'}
       href={'https://github.com/peidongxie/one-pixel-attack'}
     >

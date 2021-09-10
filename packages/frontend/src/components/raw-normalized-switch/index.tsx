@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react';
 import type { FC } from 'react';
 import ControlLabel from '../control-label';
 
-interface CustomDefaultSwitchProps {
+interface RawNormalizedSwitchProps {
   className?: string;
   initValue: boolean;
   onChange: (value: boolean) => void;
@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(0.5),
   },
   label: {
-    width: 60,
+    width: 116,
   },
 }));
 
-const CustomDefaultSwitch: FC<CustomDefaultSwitchProps> = (props) => {
+const RawNormalizedSwitch: FC<RawNormalizedSwitchProps> = (props) => {
   const { className, initValue, onChange } = props;
   const classes = useStyles();
   const [value, setValue] = useState(initValue);
@@ -48,7 +48,7 @@ const CustomDefaultSwitch: FC<CustomDefaultSwitchProps> = (props) => {
   const label = (
     <ControlLabel
       className={classes.label}
-      value={value ? 'Default' : 'Custom'}
+      value={value ? 'Normalized(0-1)' : 'Raw(0-255)'}
       variant={'body2'}
     />
   );
@@ -61,4 +61,4 @@ const CustomDefaultSwitch: FC<CustomDefaultSwitchProps> = (props) => {
   );
 };
 
-export default CustomDefaultSwitch;
+export default RawNormalizedSwitch;
