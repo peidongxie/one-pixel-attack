@@ -15,6 +15,21 @@ const imageIsNormalizedState = atom({
   default: true,
 });
 
+const modelIsDefaultState = atom({
+  key: 'modelIsDefaultState',
+  default: true,
+});
+
+const modelFileState = atom<File | null>({
+  key: 'modelFileState',
+  default: null,
+});
+
+const modelIsNormalizedState = atom({
+  key: 'modelIsNormalizedState',
+  default: true,
+});
+
 const imageIsNumpyState = selector({
   key: 'imageIsNumpyState',
   get: ({ get }) => {
@@ -39,10 +54,28 @@ const imageState = selector({
   },
 });
 
+const modelState = selector({
+  key: 'modelState',
+  get: ({ get }) => {
+    const isDefault = get(modelIsDefaultState);
+    const file = get(modelFileState);
+    const isNormalized = get(modelIsNormalizedState);
+    return {
+      isDefault,
+      file: isDefault ? null : file,
+      isNormalized: isDefault ? true : isNormalized,
+    };
+  },
+});
+
 export {
   imageFileState,
   imageIsDefaultState,
   imageIsNormalizedState,
   imageIsNumpyState,
   imageState,
+  modelFileState,
+  modelIsDefaultState,
+  modelIsNormalizedState,
+  modelState,
 };

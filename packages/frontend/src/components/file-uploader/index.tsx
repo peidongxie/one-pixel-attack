@@ -4,13 +4,14 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { ChangeEventHandler, FC } from 'react';
 
 interface FileUploaderProps {
   className?: string;
   extensions: string[];
   onChange: (file: File | null) => void;
+  value: File | null;
 }
 
 const useStyles = makeStyles(() => ({
@@ -25,7 +26,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const FileUploader: FC<FileUploaderProps> = (props) => {
-  const { className, extensions, onChange } = props;
+  const { className, extensions, onChange, value } = props;
   const classes = useStyles();
   const accept = useMemo(() => {
     const text = extensions
@@ -33,20 +34,18 @@ const FileUploader: FC<FileUploaderProps> = (props) => {
       .join(',');
     return text;
   }, [extensions]);
-  const initHelperText = useMemo(() => {
+  const helperText = useMemo(() => {
+    if (value) return 'file: ' + value.name;
     const text = extensions
       .map((extension) => extension.toUpperCase())
       .join('/');
     return `allow a ${text} file`;
-  }, [extensions]);
-  const [helperText, setHelperText] = useState(initHelperText);
-  const handleSelectFile = useCallback<ChangeEventHandler<HTMLInputElement>>(
+  }, [extensions, value]);
+  const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
-      const file = e.target.files?.item(0);
-      setHelperText(file ? 'file: ' + file.name : initHelperText);
-      onChange(file ?? null);
+      onChange(e.target.files?.item(0) ?? null);
     },
-    [initHelperText, onChange],
+    [onChange],
   );
   return (
     <FormControl className={clsx(className)} component={'label'}>
@@ -61,7 +60,7 @@ const FileUploader: FC<FileUploaderProps> = (props) => {
       <input
         accept={accept}
         className={classes.file}
-        onChange={handleSelectFile}
+        onChange={handleChange}
         type={'file'}
       />
       <FormHelperText className={classes.text}>{helperText}</FormHelperText>

@@ -2,6 +2,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import type { FC } from 'react';
 import ImageControl from '../image-control';
+import ModelControl from '../model-control';
 
 interface InputPaperProps {
   className?: string;
@@ -25,6 +26,7 @@ const InputPaper: FC<InputPaperProps> = () => {
   return (
     <Paper className={classes.root}>
       <ImageControl />
+      <ModelControl />
     </Paper>
   );
 };

@@ -2,19 +2,18 @@ import FormGroup from '@material-ui/core/FormGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import type { FC } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
 import CustomDefaultSwitch from '../custom-default-switch';
 import FileUploader from '../file-uploader';
 import RawNormalizedSwitch from '../raw-normalized-switch';
 import {
-  imageFileState,
-  imageIsDefaultState,
-  imageIsNormalizedState,
-  imageIsNumpyState,
+  modelFileState,
+  modelIsDefaultState,
+  modelIsNormalizedState,
 } from '../../utils/form';
 
-interface ImageControlProps {
+interface ModelControlProps {
   [key: string]: never;
 }
 
@@ -34,21 +33,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const extensions = ['npy', 'png'];
+const extensions = ['h5'];
 
-const ImageControl: FC<ImageControlProps> = () => {
+const ModelControl: FC<ModelControlProps> = () => {
   const classes = useStyles();
-  const [isDefault, setIsDefault] = useRecoilState(imageIsDefaultState);
-  const [file, setFile] = useRecoilState(imageFileState);
+  const [isDefault, setIsDefault] = useRecoilState(modelIsDefaultState);
+  const [file, setFile] = useRecoilState(modelFileState);
   const [isNormalized, setIsNormalized] = useRecoilState(
-    imageIsNormalizedState,
+    modelIsNormalizedState,
   );
-  const isNumpy = useRecoilValue(imageIsNumpyState);
   return (
     <FormGroup row={true}>
       <ControlLabel
         className={classes.label}
-        value={'Image'}
+        value={'Model'}
         variant={'subtitle1'}
       />
       <CustomDefaultSwitch
@@ -63,7 +61,7 @@ const ImageControl: FC<ImageControlProps> = () => {
         value={file}
       />
       <RawNormalizedSwitch
-        className={clsx((isDefault || !isNumpy) && classes.hidden)}
+        className={clsx(isDefault && classes.hidden)}
         onChange={setIsNormalized}
         value={isNormalized}
       />
@@ -71,4 +69,4 @@ const ImageControl: FC<ImageControlProps> = () => {
   );
 };
 
-export default ImageControl;
+export default ModelControl;
