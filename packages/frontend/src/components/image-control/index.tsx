@@ -2,7 +2,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import type { FC } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import ControlLabel from '../control-label';
 import CustomDefaultSwitch from '../custom-default-switch';
 import FileUploader from '../file-uploader';
@@ -39,7 +39,7 @@ const extensions = ['npy', 'png'];
 const ImageControl: FC<ImageControlProps> = () => {
   const classes = useStyles();
   const [isDefault, setIsDefault] = useRecoilState(imageIsDefaultState);
-  const setImageFile = useSetRecoilState(imageFileState);
+  const [file, setFile] = useRecoilState(imageFileState);
   const [isNormalized, setIsNormalized] = useRecoilState(
     imageIsNormalizedState,
   );
@@ -51,16 +51,21 @@ const ImageControl: FC<ImageControlProps> = () => {
         value={'Image'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch initValue={isDefault} onChange={setIsDefault} />
+      <CustomDefaultSwitch
+        className={clsx()}
+        onChange={setIsDefault}
+        value={isDefault}
+      />
       <FileUploader
         className={clsx(classes.file, isDefault && classes.hidden)}
         extensions={extensions}
-        onChange={setImageFile}
+        onChange={setFile}
+        value={file}
       />
       <RawNormalizedSwitch
         className={clsx((isDefault || !isNumpy) && classes.hidden)}
-        initValue={isNormalized}
         onChange={setIsNormalized}
+        value={isNormalized}
       />
     </FormGroup>
   );

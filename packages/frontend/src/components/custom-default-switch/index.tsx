@@ -3,14 +3,14 @@ import Switch from '@material-ui/core/Switch';
 import type { SwitchProps } from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { FC } from 'react';
 import ControlLabel from '../control-label';
 
 interface CustomDefaultSwitchProps {
   className?: string;
-  initValue: boolean;
   onChange: (value: boolean) => void;
+  value: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -27,12 +27,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomDefaultSwitch: FC<CustomDefaultSwitchProps> = (props) => {
-  const { className, initValue, onChange } = props;
+  const { className, onChange, value } = props;
   const classes = useStyles();
-  const [value, setValue] = useState(initValue);
   const handleChange = useCallback<NonNullable<SwitchProps['onChange']>>(
     (event, checked) => {
-      setValue(checked);
       onChange(checked);
     },
     [onChange],
