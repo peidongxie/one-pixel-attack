@@ -15,7 +15,7 @@ interface FileUploaderProps {
 }
 
 const useStyles = makeStyles(() => ({
-  file: {
+  input: {
     display: 'none',
   },
   text: {
@@ -59,7 +59,7 @@ const FileUploader: FC<FileUploaderProps> = (props) => {
       </Button>
       <input
         accept={accept}
-        className={classes.file}
+        className={classes.input}
         onChange={handleChange}
         type={'file'}
       />

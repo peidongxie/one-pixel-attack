@@ -19,10 +19,12 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0),
   },
   control: {
-    marginLeft: theme.spacing(0.5),
+    marginTop: -1,
+    marginBottom: -1,
   },
   label: {
-    width: 60,
+    width: 50,
+    marginRight: theme.spacing(1.5),
   },
 }));
 
