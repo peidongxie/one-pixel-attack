@@ -19,10 +19,12 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0),
   },
   control: {
-    marginLeft: theme.spacing(0.5),
+    marginTop: -1,
+    marginBottom: -1,
   },
   label: {
-    width: 116,
+    width: 108,
+    marginRight: theme.spacing(1.5),
   },
 }));
 
@@ -46,7 +48,7 @@ const RawNormalizedSwitch: FC<RawNormalizedSwitchProps> = (props) => {
   const label = (
     <ControlLabel
       className={classes.label}
-      value={value ? 'Normalized(0-1)' : 'Raw(0-255)'}
+      value={value ? 'Normalized (0-1)' : 'Raw (0-255)'}
       variant={'body2'}
     />
   );

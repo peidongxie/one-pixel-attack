@@ -30,6 +30,16 @@ const modelIsNormalizedState = atom({
   default: true,
 });
 
+const labelIsDefaultState = atom({
+  key: 'labelIsDefaultState',
+  default: true,
+});
+
+const labelIndexState = atom<number>({
+  key: 'labelIndexState',
+  default: 0,
+});
+
 const imageIsNumpyState = selector({
   key: 'imageIsNumpyState',
   get: ({ get }) => {
@@ -68,12 +78,27 @@ const modelState = selector({
   },
 });
 
+const labelState = selector({
+  key: 'labelState',
+  get: ({ get }) => {
+    const isDefault = get(labelIsDefaultState);
+    const index = get(labelIndexState);
+    return {
+      isDefault,
+      index: isDefault ? -1 : index,
+    };
+  },
+});
+
 export {
   imageFileState,
   imageIsDefaultState,
   imageIsNormalizedState,
   imageIsNumpyState,
   imageState,
+  labelIndexState,
+  labelIsDefaultState,
+  labelState,
   modelFileState,
   modelIsDefaultState,
   modelIsNormalizedState,
