@@ -4,6 +4,7 @@ import type { FC } from 'react';
 import ImageControl from '../image-control';
 import LabelControl from '../label-control';
 import ModelControl from '../model-control';
+import PerturbationControl from '../perturbation-control';
 
 interface InputPaperProps {
   className?: string;
@@ -29,6 +30,7 @@ const InputPaper: FC<InputPaperProps> = () => {
       <ImageControl />
       <ModelControl />
       <LabelControl />
+      <PerturbationControl />
     </Paper>
   );
 };

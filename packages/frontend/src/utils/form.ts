@@ -1,8 +1,14 @@
 import { atom, selector } from 'recoil';
 
+interface FormItem {
+  name: string;
+  value: string | Blob;
+  fileName?: string;
+}
+
 const imageIsDefaultState = atom({
   key: 'imageIsDefaultState',
-  default: true,
+  default: false,
 });
 
 const imageFileState = atom<File | null>({
@@ -17,7 +23,7 @@ const imageIsNormalizedState = atom({
 
 const modelIsDefaultState = atom({
   key: 'modelIsDefaultState',
-  default: true,
+  default: false,
 });
 
 const modelFileState = atom<File | null>({
@@ -32,12 +38,22 @@ const modelIsNormalizedState = atom({
 
 const labelIsDefaultState = atom({
   key: 'labelIsDefaultState',
-  default: true,
+  default: false,
 });
 
-const labelIndexState = atom<number>({
+const labelIndexState = atom({
   key: 'labelIndexState',
   default: 0,
+});
+
+const perturbationIsDefaultState = atom({
+  key: 'perturbationIsDefaultState',
+  default: false,
+});
+
+const perturbationPixelState = atom({
+  key: 'perturbationPixelState',
+  default: 7,
 });
 
 const imageIsNumpyState = selector({
@@ -49,48 +65,124 @@ const imageIsNumpyState = selector({
   },
 });
 
-const imageState = selector({
+const imageState = selector<FormItem | null>({
   key: 'imageState',
   get: ({ get }) => {
-    const isDefault = get(imageIsDefaultState);
-    const file = get(imageFileState);
-    const isNormalized = get(imageIsNormalizedState);
-    const isNumpy = get(imageIsNumpyState);
+    const imageIsDefault = get(imageIsDefaultState);
+    if (imageIsDefault) {
+      return {
+        name: 'image',
+        value: 'default',
+      };
+    }
+    const imageFile = get(imageFileState);
+    if (!imageFile) return null;
+    const imageIsNumpy = get(imageIsNumpyState);
+    if (!imageIsNumpy) {
+      return {
+        name: 'image',
+        value: imageFile,
+      };
+    }
+    const imageIsNormalized = get(imageIsNormalizedState);
     return {
-      isDefault,
-      file: isDefault ? null : file,
-      isNormalized: isDefault || !isNumpy ? true : isNormalized,
+      name: 'image',
+      value: imageFile,
+      filename: imageIsNormalized ? 'normalized' : 'raw',
     };
   },
 });
 
-const modelState = selector({
+const modelState = selector<FormItem | null>({
   key: 'modelState',
   get: ({ get }) => {
-    const isDefault = get(modelIsDefaultState);
-    const file = get(modelFileState);
-    const isNormalized = get(modelIsNormalizedState);
+    const imageIsDefault = get(imageIsDefaultState);
+    if (imageIsDefault) {
+      return {
+        name: 'model',
+        value: 'default',
+      };
+    }
+    const modelIsDefault = get(modelIsDefaultState);
+    if (modelIsDefault) {
+      return {
+        name: 'model',
+        value: 'default',
+      };
+    }
+    const modelFile = get(modelFileState);
+    if (!modelFile) return null;
+    const modelIsNormalized = get(modelIsNormalizedState);
     return {
-      isDefault,
-      file: isDefault ? null : file,
-      isNormalized: isDefault ? true : isNormalized,
+      name: 'model',
+      value: modelFile,
+      filename: modelIsNormalized ? 'normalized' : 'raw',
     };
   },
 });
 
-const labelState = selector({
+const labelState = selector<FormItem | null>({
   key: 'labelState',
   get: ({ get }) => {
-    const isDefault = get(labelIsDefaultState);
-    const index = get(labelIndexState);
+    const imageIsDefault = get(imageIsDefaultState);
+    if (imageIsDefault) {
+      return {
+        name: 'label',
+        value: 'default',
+      };
+    }
+    const labelIsDefault = get(labelIsDefaultState);
+    if (labelIsDefault) {
+      return {
+        name: 'label',
+        value: 'default',
+      };
+    }
+    const labelIndex = get(labelIndexState);
+    if (isNaN(labelIndex)) return null;
     return {
-      isDefault,
-      index: isDefault ? -1 : index,
+      name: 'label',
+      value: String(labelIndex),
     };
+  },
+});
+
+const perturbationState = selector<FormItem | null>({
+  key: 'perturbationState',
+  get: ({ get }) => {
+    const perturbationIsDefault = get(perturbationIsDefaultState);
+    if (perturbationIsDefault) {
+      return {
+        name: 'perturbation',
+        value: 'default',
+      };
+    }
+    const perturbationPixel = get(perturbationPixelState);
+    if (isNaN(perturbationPixel)) return null;
+    return {
+      name: 'perturbation',
+      value: String(perturbationPixel),
+    };
+  },
+});
+
+const formState = selector({
+  key: 'formState',
+  get: ({ get }) => {
+    const image = get(imageState);
+    if (image === null) return null;
+    const model = get(modelState);
+    if (model === null) return null;
+    const label = get(labelState);
+    if (label === null) return null;
+    const perturbation = get(perturbationState);
+    if (perturbation === null) return null;
+    return [image, model, label, perturbation];
   },
 });
 
 export {
+  formState,
   imageFileState,
   imageIsDefaultState,
   imageIsNormalizedState,
@@ -103,4 +195,7 @@ export {
   modelIsDefaultState,
   modelIsNormalizedState,
   modelState,
+  perturbationIsDefaultState,
+  perturbationPixelState,
+  perturbationState,
 };

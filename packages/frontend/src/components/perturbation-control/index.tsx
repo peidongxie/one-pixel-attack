@@ -6,9 +6,12 @@ import { useRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
 import CustomDefaultSwitch from '../custom-default-switch';
 import IntegerInput from '../integer-input';
-import { labelIndexState, labelIsDefaultState } from '../../utils/form';
+import {
+  perturbationIsDefaultState,
+  perturbationPixelState,
+} from '../../utils/form';
 
-interface LabelControlProps {
+interface PerturbationControlProps {
   [key: string]: never;
 }
 
@@ -25,15 +28,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LabelControl: FC<LabelControlProps> = () => {
+const PerturbationControl: FC<PerturbationControlProps> = () => {
   const classes = useStyles();
-  const [isDefault, setIsDefault] = useRecoilState(labelIsDefaultState);
-  const [index, setIndex] = useRecoilState(labelIndexState);
+  const [isDefault, setIsDefault] = useRecoilState(perturbationIsDefaultState);
+  const [pixel, setPixel] = useRecoilState(perturbationPixelState);
   return (
     <FormGroup row={true}>
       <ControlLabel
         className={classes.label}
-        value={'Label'}
+        value={'Perturbation'}
         variant={'subtitle1'}
       />
       <CustomDefaultSwitch
@@ -43,13 +46,13 @@ const LabelControl: FC<LabelControlProps> = () => {
       />
       <IntegerInput
         className={clsx(isDefault && classes.hidden)}
-        description={'correspond to the classification'}
-        min={0}
-        onChange={setIndex}
-        value={index}
+        description={'number of affected pixels'}
+        min={1}
+        onChange={setPixel}
+        value={pixel}
       />
     </FormGroup>
   );
 };
 
-export default LabelControl;
+export default PerturbationControl;
