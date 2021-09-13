@@ -8,7 +8,7 @@ import CustomDefaultSwitch from '../custom-default-switch';
 import IntegerInput from '../integer-input';
 import { labelIndexState, labelIsDefaultState } from '../../utils/form';
 
-interface ModelControlProps {
+interface LabelControlProps {
   [key: string]: never;
 }
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModelControl: FC<ModelControlProps> = () => {
+const LabelControl: FC<LabelControlProps> = () => {
   const classes = useStyles();
   const [isDefault, setIsDefault] = useRecoilState(labelIsDefaultState);
   const [index, setIndex] = useRecoilState(labelIndexState);
@@ -52,4 +52,4 @@ const ModelControl: FC<ModelControlProps> = () => {
   );
 };
 
-export default ModelControl;
+export default LabelControl;
