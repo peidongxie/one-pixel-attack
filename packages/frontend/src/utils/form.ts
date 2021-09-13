@@ -40,6 +40,16 @@ const labelIndexState = atom<number>({
   default: 0,
 });
 
+const perturbationIsDefaultState = atom({
+  key: 'perturbationIsDefaultState',
+  default: true,
+});
+
+const perturbationPixelState = atom<number>({
+  key: 'perturbationPixelState',
+  default: 1,
+});
+
 const imageIsNumpyState = selector({
   key: 'imageIsNumpyState',
   get: ({ get }) => {
@@ -90,6 +100,18 @@ const labelState = selector({
   },
 });
 
+const perturbationState = selector({
+  key: 'pixelState',
+  get: ({ get }) => {
+    const isDefault = get(perturbationIsDefaultState);
+    const pixel = get(perturbationPixelState);
+    return {
+      isDefault,
+      pixel: isDefault ? -1 : pixel,
+    };
+  },
+});
+
 export {
   imageFileState,
   imageIsDefaultState,
@@ -103,4 +125,7 @@ export {
   modelIsDefaultState,
   modelIsNormalizedState,
   modelState,
+  perturbationIsDefaultState,
+  perturbationPixelState,
+  perturbationState,
 };
