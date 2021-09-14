@@ -18,7 +18,10 @@ interface ModelControlProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing(0.5, 0),
+    flexWrap: 'nowrap',
+  },
   label: {
     padding: theme.spacing(0.75, 2),
     height: 36,
@@ -27,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   file: {
     width: 128,
+    margin: theme.spacing(0, 1),
   },
   hidden: {
     visibility: 'hidden',
@@ -43,17 +47,13 @@ const ModelControl: FC<ModelControlProps> = () => {
     modelIsNormalizedState,
   );
   return (
-    <FormGroup row={true}>
+    <FormGroup className={classes.root} row={true}>
       <ControlLabel
         className={classes.label}
         value={'Model'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch
-        className={clsx()}
-        onChange={setIsDefault}
-        value={isDefault}
-      />
+      <CustomDefaultSwitch onChange={setIsDefault} value={isDefault} />
       <FileUploader
         className={clsx(classes.file, isDefault && classes.hidden)}
         extensions={extensions}

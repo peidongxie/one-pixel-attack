@@ -13,12 +13,18 @@ interface LabelControlProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing(0.5, 0),
+    flexWrap: 'nowrap',
+  },
   label: {
     padding: theme.spacing(0.75, 2),
     height: 36,
     width: 120,
     textAlign: 'end',
+  },
+  index: {
+    margin: theme.spacing(0, 1),
   },
   hidden: {
     visibility: 'hidden',
@@ -30,19 +36,15 @@ const LabelControl: FC<LabelControlProps> = () => {
   const [isDefault, setIsDefault] = useRecoilState(labelIsDefaultState);
   const [index, setIndex] = useRecoilState(labelIndexState);
   return (
-    <FormGroup row={true}>
+    <FormGroup className={classes.root} row={true}>
       <ControlLabel
         className={classes.label}
         value={'Label'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch
-        className={clsx()}
-        onChange={setIsDefault}
-        value={isDefault}
-      />
+      <CustomDefaultSwitch onChange={setIsDefault} value={isDefault} />
       <IntegerInput
-        className={clsx(isDefault && classes.hidden)}
+        className={clsx(classes.index, isDefault && classes.hidden)}
         description={'correspond to the classification'}
         min={0}
         onChange={setIndex}

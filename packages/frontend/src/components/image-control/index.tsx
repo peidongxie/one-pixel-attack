@@ -22,15 +22,22 @@ interface ImageControlProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing(0.5, 0),
+    flexWrap: 'nowrap',
+  },
   label: {
     padding: theme.spacing(0.75, 2),
     height: 36,
     width: 120,
     textAlign: 'end',
   },
+  default: {
+    margin: theme.spacing(0, 1),
+  },
   file: {
     width: 128,
+    margin: theme.spacing(0, 1),
   },
   hidden: {
     visibility: 'hidden',
@@ -60,17 +67,13 @@ const ImageControl: FC<ImageControlProps> = () => {
     [setIsDefault, setLabelIsDefault, setModelIsDefault],
   );
   return (
-    <FormGroup row={true}>
+    <FormGroup className={classes.root} row={true}>
       <ControlLabel
         className={classes.label}
         value={'Image'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch
-        className={clsx()}
-        onChange={handleChange}
-        value={isDefault}
-      />
+      <CustomDefaultSwitch onChange={handleChange} value={isDefault} />
       <FileUploader
         className={clsx(classes.file, isDefault && classes.hidden)}
         extensions={extensions}
