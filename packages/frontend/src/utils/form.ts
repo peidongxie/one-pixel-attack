@@ -10,6 +10,8 @@ interface Result {
   [key: string]: unknown;
 }
 
+// image control
+
 const imageIsDefaultState = atom({
   key: 'imageIsDefaultState',
   default: false,
@@ -24,6 +26,8 @@ const imageIsNormalizedState = atom({
   key: 'imageIsNormalizedState',
   default: true,
 });
+
+// model control
 
 const modelIsDefaultState = atom({
   key: 'modelIsDefaultState',
@@ -40,6 +44,8 @@ const modelIsNormalizedState = atom({
   default: true,
 });
 
+// label control
+
 const labelIsDefaultState = atom({
   key: 'labelIsDefaultState',
   default: false,
@@ -49,6 +55,8 @@ const labelIndexState = atom({
   key: 'labelIndexState',
   default: 0,
 });
+
+// perturbation control
 
 const perturbationIsDefaultState = atom({
   key: 'perturbationIsDefaultState',
@@ -60,10 +68,7 @@ const perturbationPixelState = atom({
   default: 7,
 });
 
-const resultState = atom<Result | null>({
-  key: 'resultState',
-  default: null,
-});
+// form field
 
 const imageIsNumpyState = selector({
   key: 'imageIsNumpyState',
@@ -106,13 +111,6 @@ const imageState = selector<FormItem | null>({
 const modelState = selector<FormItem | null>({
   key: 'modelState',
   get: ({ get }) => {
-    const imageIsDefault = get(imageIsDefaultState);
-    if (imageIsDefault) {
-      return {
-        name: 'model',
-        value: 'default',
-      };
-    }
     const modelIsDefault = get(modelIsDefaultState);
     if (modelIsDefault) {
       return {
@@ -134,13 +132,6 @@ const modelState = selector<FormItem | null>({
 const labelState = selector<FormItem | null>({
   key: 'labelState',
   get: ({ get }) => {
-    const imageIsDefault = get(imageIsDefaultState);
-    if (imageIsDefault) {
-      return {
-        name: 'label',
-        value: 'default',
-      };
-    }
     const labelIsDefault = get(labelIsDefaultState);
     if (labelIsDefault) {
       return {
@@ -176,6 +167,8 @@ const perturbationState = selector<FormItem | null>({
   },
 });
 
+// form state
+
 const formState = selector({
   key: 'formState',
   get: ({ get }) => {
@@ -197,6 +190,11 @@ const isValidState = selector({
     const form = get(formState);
     return form !== null;
   },
+});
+
+const resultState = atom<Result | null>({
+  key: 'resultState',
+  default: null,
 });
 
 export {

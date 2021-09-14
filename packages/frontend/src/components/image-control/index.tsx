@@ -59,10 +59,8 @@ const ImageControl: FC<ImageControlProps> = () => {
   const handleChange = useCallback(
     (value: boolean) => {
       setIsDefault(value);
-      if (value) {
-        setModelIsDefault(true);
-        setLabelIsDefault(true);
-      }
+      setModelIsDefault(value);
+      if (value) setLabelIsDefault(true);
     },
     [setIsDefault, setLabelIsDefault, setModelIsDefault],
   );
