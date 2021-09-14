@@ -6,6 +6,10 @@ interface FormItem {
   fileName?: string;
 }
 
+interface Result {
+  [key: string]: unknown;
+}
+
 const imageIsDefaultState = atom({
   key: 'imageIsDefaultState',
   default: false,
@@ -56,6 +60,11 @@ const perturbationPixelState = atom({
   default: 7,
 });
 
+const resultState = atom<Result | null>({
+  key: 'resultState',
+  default: null,
+});
+
 const imageIsNumpyState = selector({
   key: 'imageIsNumpyState',
   get: ({ get }) => {
@@ -82,6 +91,7 @@ const imageState = selector<FormItem | null>({
       return {
         name: 'image',
         value: imageFile,
+        filename: 'raw',
       };
     }
     const imageIsNormalized = get(imageIsNormalizedState);
@@ -181,6 +191,14 @@ const formState = selector({
   },
 });
 
+const isValidState = selector({
+  key: 'isValidState',
+  get: ({ get }) => {
+    const form = get(formState);
+    return form !== null;
+  },
+});
+
 export {
   formState,
   imageFileState,
@@ -188,6 +206,7 @@ export {
   imageIsNormalizedState,
   imageIsNumpyState,
   imageState,
+  isValidState,
   labelIndexState,
   labelIsDefaultState,
   labelState,
@@ -198,4 +217,5 @@ export {
   perturbationIsDefaultState,
   perturbationPixelState,
   perturbationState,
+  resultState,
 };
