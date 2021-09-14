@@ -1,13 +1,16 @@
 import FormGroup from '@material-ui/core/FormGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import type { FC } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
 import CustomDefaultSwitch from '../custom-default-switch';
 import FileUploader from '../file-uploader';
 import RawNormalizedSwitch from '../raw-normalized-switch';
 import {
+  imageIsDefaultState,
+  labelIsDefaultState,
   modelFileState,
   modelIsDefaultState,
   modelIsNormalizedState,
@@ -18,7 +21,10 @@ interface ModelControlProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing(0.5, 0),
+    flexWrap: 'nowrap',
+  },
   label: {
     padding: theme.spacing(0.75, 2),
     height: 36,
@@ -27,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   file: {
     width: 128,
+    margin: theme.spacing(0, 1),
   },
   hidden: {
     visibility: 'hidden',
@@ -37,23 +44,29 @@ const extensions = ['h5'];
 
 const ModelControl: FC<ModelControlProps> = () => {
   const classes = useStyles();
+  const setImageIsDefault = useSetRecoilState(imageIsDefaultState);
   const [isDefault, setIsDefault] = useRecoilState(modelIsDefaultState);
+  const setLabelIsDefault = useSetRecoilState(labelIsDefaultState);
   const [file, setFile] = useRecoilState(modelFileState);
   const [isNormalized, setIsNormalized] = useRecoilState(
     modelIsNormalizedState,
   );
+  const handleChange = useCallback(
+    (value: boolean) => {
+      setImageIsDefault(value);
+      setIsDefault(value);
+      if (value) setLabelIsDefault(true);
+    },
+    [setImageIsDefault, setLabelIsDefault, setIsDefault],
+  );
   return (
-    <FormGroup row={true}>
+    <FormGroup className={classes.root} row={true}>
       <ControlLabel
         className={classes.label}
         value={'Model'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch
-        className={clsx()}
-        onChange={setIsDefault}
-        value={isDefault}
-      />
+      <CustomDefaultSwitch onChange={handleChange} value={isDefault} />
       <FileUploader
         className={clsx(classes.file, isDefault && classes.hidden)}
         extensions={extensions}

@@ -1,4 +1,4 @@
-import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import type { FC } from 'react';
 import InputPaper from '../input-paper';
@@ -8,22 +8,25 @@ interface MainBodyProps {
   [key: string]: never;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexGrow: 1,
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'flex-start',
+    },
   },
 }));
 
 const MainBody: FC<MainBodyProps> = () => {
   const classes = useStyles();
   return (
-    <Container className={classes.root} component={'main'} maxWidth={false}>
+    <Box className={classes.root} component={'main'}>
       <InputPaper />
       <OutputPaper />
-    </Container>
+    </Box>
   );
 };
 

@@ -16,12 +16,18 @@ interface PerturbationControlProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    margin: theme.spacing(0.5, 0),
+    flexWrap: 'nowrap',
+  },
   label: {
     padding: theme.spacing(0.75, 2),
     height: 36,
     width: 120,
     textAlign: 'end',
+  },
+  pixel: {
+    margin: theme.spacing(0, 1),
   },
   hidden: {
     visibility: 'hidden',
@@ -33,19 +39,15 @@ const PerturbationControl: FC<PerturbationControlProps> = () => {
   const [isDefault, setIsDefault] = useRecoilState(perturbationIsDefaultState);
   const [pixel, setPixel] = useRecoilState(perturbationPixelState);
   return (
-    <FormGroup row={true}>
+    <FormGroup className={classes.root} row={true}>
       <ControlLabel
         className={classes.label}
         value={'Perturbation'}
         variant={'subtitle1'}
       />
-      <CustomDefaultSwitch
-        className={clsx()}
-        onChange={setIsDefault}
-        value={isDefault}
-      />
+      <CustomDefaultSwitch onChange={setIsDefault} value={isDefault} />
       <IntegerInput
-        className={clsx(isDefault && classes.hidden)}
+        className={clsx(classes.pixel, isDefault && classes.hidden)}
         description={'number of affected pixels'}
         min={1}
         onChange={setPixel}

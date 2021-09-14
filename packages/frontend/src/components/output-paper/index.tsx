@@ -11,9 +11,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     height: 'fit-content',
     width: 'fit-content',
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
     [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing(2),
+      padding: theme.spacing(1, 0),
+      marginTop: theme.spacing(0),
       flexGrow: 1,
     },
   },
