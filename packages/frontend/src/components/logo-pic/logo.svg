@@ -40,7 +40,7 @@
       <ellipse fill="currentColor" transform="rotate(60, 26, 56.5)" cx="26" cy="56.5" rx="2.4" ry="1.4" />
       <ellipse fill="#3f51b5" transform="rotate(60, 33, 60.5)" cx="33" cy="60.5" rx="2.4" ry="1.4" />
       <ellipse fill="currentColor" transform="rotate(60, 12, 56.5)" cx="12" cy="56.5" rx="2.4" ry="1.4" />
-      <ellipse fill="#3f51b5" transform="rotate(60, 19, 60.5)"  cx="19" cy="60.5" rx="2.4" ry="1.4"/>
+      <ellipse fill="#3f51b5" transform="rotate(60, 19, 60.5)" cx="19" cy="60.5" rx="2.4" ry="1.4" />
       <ellipse fill="currentColor" transform="rotate(60, 26, 64.5)" cx="26" cy="64.5" rx="2.4" ry="1.4" />
       <ellipse fill="currentColor" transform="rotate(60, 33, 68.5)" cx="33" cy="68.5" rx="2.4" ry="1.4" />
       <ellipse fill="#3f51b5" transform="rotate(60, 12, 64.5)" cx="12" cy="64.5" rx="2.4" ry="1.4" />
