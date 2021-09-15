@@ -2,13 +2,13 @@
   "name": "frontend",
   "version": "0.2.0-alpha.0",
   "private": true,
-  "description": "The Frontend of OnePixelAttack",
+  "description": "The frontend of OnePixelAttack",
   "keywords": [
     "machine learning",
     "adversarial attack",
     "differential evolution"
   ],
-  "homepage": "https://github.com/peidongxie/one-pixel-attack/packages/frontend#readme",
+  "homepage": "https://github.com/peidongxie/one-pixel-attack/tree/main/packages/frontend#readme",
   "bugs": {
     "url": "https://github.com/peidongxie/one-pixel-attack/issues",
     "email": "peidongxie@outlook.com"
