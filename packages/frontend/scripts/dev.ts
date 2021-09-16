@@ -16,7 +16,7 @@ const serveOptions: ServeOptions = {
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {},
-  entryPoints: ['src/index.tsx'],
+  entryPoints: ['./src/index.tsx'],
   external: [],
   format: 'esm',
   inject: ['./scripts/react-shim.ts'],
@@ -35,17 +35,16 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: false,
   minifyIdentifiers: false,
   minifySyntax: false,
-  outdir: 'public/static',
+  outdir: './public/static/',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
   target: 'es6',
   watch: false,
   write: false,
-  color: true,
   metafile: false,
-  publicPath: '/static',
-  sourceRoot: '/static',
+  publicPath: '/static/',
+  sourceRoot: '/static/',
 };
 
 (async () => {

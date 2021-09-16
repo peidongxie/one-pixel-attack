@@ -28,11 +28,14 @@
     "jsx": "preserve",
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
+    // Projects
+    "composite": true,
     // Completeness
     "skipLibCheck": true
   },
   "references": [
     { "path": "packages/backend" },
     { "path": "packages/frontend" }
-  ]
+  ],
+  "include": []
 }

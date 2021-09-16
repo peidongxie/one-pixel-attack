@@ -8,7 +8,7 @@ import { gzipSync } from 'zlib';
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {},
-  entryPoints: ['src/index.tsx'],
+  entryPoints: ['./src/index.tsx'],
   external: [],
   format: 'esm',
   inject: ['./scripts/react-shim.ts'],
@@ -27,17 +27,16 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  outdir: 'build/static',
+  outdir: './build/static/',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
   target: 'es6',
   watch: false,
   write: true,
-  color: true,
   metafile: true,
-  publicPath: '/static',
-  sourceRoot: '/static',
+  publicPath: '/static/',
+  sourceRoot: '/static/',
 };
 
 (async () => {
