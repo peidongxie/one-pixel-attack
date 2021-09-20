@@ -1,6 +1,16 @@
 import type { ServerResponse } from 'http';
 import { Stream } from 'stream';
 
+export type JsonItem =
+  | null
+  | boolean
+  | number
+  | string
+  | { [key: string]: JsonItem }
+  | JsonItem[];
+
+export type StrictJsonItem = { [key: string]: JsonItem } | JsonItem[];
+
 export const sendNothing = (res: ServerResponse, code?: number): void => {
   if (code || !res.statusCode) {
     res.statusCode = code || 204;
@@ -84,7 +94,7 @@ export const sendStream = (
 
 export const sendJson = (
   res: ServerResponse,
-  value: Record<string, unknown>,
+  value: StrictJsonItem,
   code?: number,
   type?: string,
   length?: number,
@@ -104,7 +114,7 @@ export const sendJson = (
 
 export const send = (
   res: ServerResponse,
-  value?: Record<string, unknown> | string | null,
+  value?: null | string | Error | Buffer | Stream | StrictJsonItem,
   code?: number,
   type?: string,
   length?: number,
