@@ -1,4 +1,4 @@
-import parse, { form, json, text } from 'co-body';
+import { form, json, text } from 'co-body';
 import type { IncomingMessage } from 'http';
 import typeis from 'type-is';
 
@@ -28,11 +28,7 @@ export const receiveXml = async <T>(req: IncomingMessage): Promise<T> => {
   return text(req);
 };
 
-export const receiveAny = async <T>(req: IncomingMessage): Promise<T> => {
-  return parse(req);
-};
-
-export const receive = async <T>(req: IncomingMessage): Promise<T> => {
+export const receive = async <T>(req: IncomingMessage): Promise<void | T> => {
   if (typeis(req, jsonTypes)) {
     return receiveJson<T>(req);
   } else if (typeis(req, formTypes)) {
@@ -41,7 +37,5 @@ export const receive = async <T>(req: IncomingMessage): Promise<T> => {
     return receiveText<T>(req);
   } else if (typeis(req, xmlTypes)) {
     return receiveXml<T>(req);
-  } else {
-    return receiveAny<T>(req);
   }
 };

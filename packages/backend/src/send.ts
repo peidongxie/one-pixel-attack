@@ -12,7 +12,7 @@ export type JsonItem =
 export type StrictJsonItem = { [key: string]: JsonItem } | JsonItem[];
 
 export const sendNothing = (res: ServerResponse, code?: number): void => {
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 204;
   }
   res.end();
@@ -26,7 +26,7 @@ export const sendText = (
   length?: number,
 ): void => {
   const str = value;
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -46,7 +46,7 @@ export const sendError = (
   length?: number,
 ): void => {
   const str = value.message || 'Internal Server Error';
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 500;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -65,7 +65,7 @@ export const sendBuffer = (
   type?: string,
   length?: number,
 ): void => {
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -83,7 +83,7 @@ export const sendStream = (
   code?: number,
   type?: string,
 ): void => {
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -100,7 +100,7 @@ export const sendJson = (
   length?: number,
 ): void => {
   const str = JSON.stringify(value);
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
