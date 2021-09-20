@@ -1,8 +1,18 @@
 import type { ServerResponse } from 'http';
 import { Stream } from 'stream';
 
+export type JsonItem =
+  | null
+  | boolean
+  | number
+  | string
+  | { [key: string]: JsonItem }
+  | JsonItem[];
+
+export type StrictJsonItem = { [key: string]: JsonItem } | JsonItem[];
+
 export const sendNothing = (res: ServerResponse, code?: number): void => {
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 204;
   }
   res.end();
@@ -16,7 +26,7 @@ export const sendText = (
   length?: number,
 ): void => {
   const str = value;
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -36,7 +46,7 @@ export const sendError = (
   length?: number,
 ): void => {
   const str = value.message || 'Internal Server Error';
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 500;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -55,7 +65,7 @@ export const sendBuffer = (
   type?: string,
   length?: number,
 ): void => {
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -73,7 +83,7 @@ export const sendStream = (
   code?: number,
   type?: string,
 ): void => {
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -84,13 +94,13 @@ export const sendStream = (
 
 export const sendJson = (
   res: ServerResponse,
-  value: Record<string, unknown>,
+  value: StrictJsonItem,
   code?: number,
   type?: string,
   length?: number,
 ): void => {
   const str = JSON.stringify(value);
-  if (code || !res.statusCode) {
+  if (code || res.statusCode === 200) {
     res.statusCode = code || 200;
   }
   if (type || !res.getHeader('Content-Type')) {
@@ -104,7 +114,7 @@ export const sendJson = (
 
 export const send = (
   res: ServerResponse,
-  value?: Record<string, unknown> | string | null,
+  value?: null | string | Error | Buffer | Stream | StrictJsonItem,
   code?: number,
   type?: string,
   length?: number,
