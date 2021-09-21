@@ -114,7 +114,7 @@ export const sendJson = (
 
 export const send = (
   res: ServerResponse,
-  value?: null | string | Error | Buffer | Stream | StrictJsonItem,
+  value?: undefined | null | string | Error | Buffer | Stream | StrictJsonItem,
   code?: number,
   type?: string,
   length?: number,

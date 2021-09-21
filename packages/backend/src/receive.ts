@@ -28,7 +28,7 @@ export const receiveXml = async <T>(req: IncomingMessage): Promise<T> => {
   return text(req);
 };
 
-export const receive = async <T>(req: IncomingMessage): Promise<void | T> => {
+export const receive = async <T>(req: IncomingMessage): Promise<T | void> => {
   if (typeis(req, jsonTypes)) {
     return receiveJson<T>(req);
   } else if (typeis(req, formTypes)) {
