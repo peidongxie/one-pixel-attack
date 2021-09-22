@@ -1,18 +1,18 @@
 import Server from './server';
 import type { Handler } from './server';
 
-const handler: Handler = async (
-  { body, headers, method, url },
-  { send, setHeader },
-) => {
-  setHeader('Access-Control-Allow-Credentials', 'true');
-  setHeader('Access-Control-Allow-Headers', '*');
-  setHeader('Access-Control-Allow-Methods', '*');
-  setHeader('Access-Control-Allow-Origin', headers.origin || url.host);
-  setHeader('Access-Control-Max-Age', '604800');
-  if (method === 'OPTIONS') return null;
-  if (url.pathname !== '/') send(null, 404);
-  console.log(body, headers, url);
+const handler: Handler = async (req, res) => {
+  const origin = req.getHeaders().origin || req.getUrl().host;
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Max-Age', '604800');
+  if (req.getMethod() === 'OPTIONS') return null;
+  if (req.getUrl().pathname !== '/') {
+    res.setCode(404);
+    res.setBody(null);
+  }
   return { value: 'hello world' };
 };
 
