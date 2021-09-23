@@ -96,14 +96,14 @@ const imageState = selector<FormItem | null>({
       return {
         name: 'image',
         value: imageFile,
-        filename: 'raw',
+        fileName: 'raw.png',
       };
     }
     const imageIsNormalized = get(imageIsNormalizedState);
     return {
       name: 'image',
       value: imageFile,
-      filename: imageIsNormalized ? 'normalized' : 'raw',
+      fileName: imageIsNormalized ? 'normalized.npy' : 'raw.npy',
     };
   },
 });
@@ -124,7 +124,7 @@ const modelState = selector<FormItem | null>({
     return {
       name: 'model',
       value: modelFile,
-      filename: modelIsNormalized ? 'normalized' : 'raw',
+      fileName: modelIsNormalized ? 'normalized.h5' : 'raw.h5',
     };
   },
 });
