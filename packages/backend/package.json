@@ -34,10 +34,12 @@
   },
   "dependencies": {
     "co-body": "^6.1.0",
+    "formidable": "^1.2.2",
     "type-is": "^1.6.18"
   },
   "devDependencies": {
     "@types/co-body": "^6.1.0",
+    "@types/formidable": "^1.2.4",
     "@types/node": "^16.9.2",
     "@types/type-is": "^1.6.3",
     "esbuild": "^0.12.28",

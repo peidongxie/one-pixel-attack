@@ -25,7 +25,7 @@ const buildOptions: BuildOptions = {
   bundle: true,
   define: {},
   entryPoints: ['./src/index.ts'],
-  external: ['co-body', 'type-is'],
+  external: ['co-body', 'formidable', 'type-is'],
   format: 'cjs', // esm
   inject: [],
   loader: {},

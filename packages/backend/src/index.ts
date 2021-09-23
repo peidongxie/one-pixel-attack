@@ -2,18 +2,25 @@ import Server from './server';
 import type { Handler } from './server';
 
 const handler: Handler = async (req, res) => {
-  const origin = req.getHeaders().origin || req.getUrl().host;
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Access-Control-Max-Age', '604800');
-  if (req.getMethod() === 'OPTIONS') return null;
-  if (req.getUrl().pathname !== '/') {
-    res.setCode(404);
-    res.setBody(null);
+  const { getBody, getHeaders, getMethod, getUrl } = req;
+  const { setBody, setHeader, setStatus, setType } = res;
+  const origin = getHeaders().origin || getUrl().host;
+  setHeader('Access-Control-Allow-Credentials', 'true');
+  setHeader('Access-Control-Allow-Headers', '*');
+  setHeader('Access-Control-Allow-Methods', '*');
+  setHeader('Access-Control-Allow-Origin', origin);
+  setHeader('Access-Control-Max-Age', '604800');
+  if (getMethod() === 'OPTIONS') {
+    return null;
   }
-  return { value: 'hello world' };
+  if (getUrl().pathname !== '/') {
+    setStatus(404);
+    setType('text/plain; charset=utf-8');
+    return 'Not Found';
+  }
+  const body = await getBody();
+  console.log(body);
+  setBody({ value: 'hello world' });
 };
 
 const server = new Server(handler);

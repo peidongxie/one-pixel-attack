@@ -8,6 +8,7 @@ export type Handler = <Body = unknown>(
   req: HandlerReq<Body>,
   res: HandlerRes,
 ) => Promise<void | Parameters<HandlerRes['setBody']>[0]>;
+
 class Server {
   server: HttpServer | HttpsServer;
 
@@ -19,10 +20,10 @@ class Server {
       const handlerReq = new HandlerReq(req);
       const handlerRes = new HandlerRes(res);
       try {
-        const handlerValue = await handler(handlerReq, handlerRes);
-        handlerRes.setBody(handlerValue ?? null);
+        const value = await handler(handlerReq, handlerRes);
+        handlerRes.setBody(value ?? null);
       } catch (e) {
-        handlerRes.setCode(500);
+        handlerRes.setStatus(500);
         if (e instanceof Error) handlerRes.setBody(e);
         else handlerRes.setBody('Internal Server Error');
       }
