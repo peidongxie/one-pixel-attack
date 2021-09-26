@@ -33,6 +33,7 @@
     "fix": "eslint src --ext .ts --fix"
   },
   "dependencies": {
+    "@tensorflow/tfjs-node": "^3.9.0",
     "co-body": "^6.1.0",
     "formidable": "^1.2.2",
     "type-is": "^1.6.18"
@@ -40,9 +41,10 @@
   "devDependencies": {
     "@types/co-body": "^6.1.0",
     "@types/formidable": "^1.2.4",
-    "@types/node": "^16.9.2",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^16.9.6",
     "@types/type-is": "^1.6.3",
-    "esbuild": "^0.12.28",
+    "esbuild": "^0.13.2",
     "eslint": "^7.32.0",
     "fs-extra": "^10.0.0",
     "prettier": "^2.4.1",

@@ -25,7 +25,13 @@ const buildOptions: BuildOptions = {
   bundle: true,
   define: {},
   entryPoints: ['./src/index.ts'],
-  external: ['co-body', 'formidable', 'type-is'],
+  external: [
+    '@tensorflow/tfjs-node',
+    'co-body',
+    'formidable',
+    'fs-extra',
+    'type-is',
+  ],
   format: 'cjs', // esm
   inject: [],
   loader: {},
@@ -48,7 +54,7 @@ const buildOptions: BuildOptions = {
 };
 
 (async () => {
-  await emptyDir('build');
+  await emptyDir('dist');
   await build(buildOptions);
   startChildProcess();
 })();
