@@ -4,7 +4,7 @@ import { existsSync, readFile, createWriteStream } from 'fs-extra';
 import type { IncomingMessage } from 'http';
 import { get } from 'https';
 
-export const downloadDefaultImages = async (): Promise<void> => {
+const downloadDefaultImages = async (): Promise<void> => {
   const stream = createWriteStream('./cache/images');
   const response = await new Promise<IncomingMessage>((resolve) =>
     get(
@@ -16,7 +16,7 @@ export const downloadDefaultImages = async (): Promise<void> => {
   await new Promise<IncomingMessage>((resolve) => stream.on('close', resolve));
 };
 
-export const getDefaultImages = async (): Promise<[Tensor4D, Tensor4D]> => {
+const createDefaultImages = async (): Promise<[Tensor4D, Tensor4D]> => {
   const isCached = existsSync('./cache/images');
   if (!isCached) await downloadDefaultImages();
   const file = await readFile('./cache/images');
@@ -27,4 +27,20 @@ export const getDefaultImages = async (): Promise<[Tensor4D, Tensor4D]> => {
   const train = images.slice(0, 50000);
   const test = images.slice(50000, 10000);
   return [train, test];
+};
+
+const defaultImages = createDefaultImages();
+
+export const getDefaultImages = (): Promise<[Tensor4D, Tensor4D]> => {
+  return defaultImages;
+};
+
+export const getDefaultImage = async (
+  key: number,
+): Promise<{ tensor: Tensor4D; value: number[][][] }> => {
+  const [images] = await getDefaultImages();
+  const index = Math.floor(key * 50000) % 50000;
+  const tensor = images.slice(index, 1);
+  const value = tensor.mul<Tensor4D>(255).round().arraySync()[0];
+  return { tensor, value };
 };
