@@ -4,7 +4,7 @@ import { existsSync } from 'fs-extra';
 import { getDefaultImages } from './image';
 import { getDefaultLabels } from './label';
 
-export const trainDefaultModel = async (): Promise<void> => {
+const trainDefaultModel = async (): Promise<void> => {
   const [trainXs, testXs] = await getDefaultImages();
   const [trainYs, testYs] = await getDefaultLabels();
   const model = tf.sequential();
@@ -57,9 +57,15 @@ export const trainDefaultModel = async (): Promise<void> => {
   await model.save('file://./cache');
 };
 
-export const getDefaultModel = async (): Promise<LayersModel> => {
+const createDefaultModel = async (): Promise<LayersModel> => {
   const isCached =
     existsSync('./cache/model.json') && existsSync('./cache/weights.bin');
   if (!isCached) await trainDefaultModel();
   return tf.loadLayersModel('file://./cache/model.json');
+};
+
+const defaultModel = createDefaultModel();
+
+export const getDefaultModel = (): Promise<LayersModel> => {
+  return defaultModel;
 };
