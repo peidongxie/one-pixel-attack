@@ -28,9 +28,9 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "yarn workspace backend lint && yarn workspace backend lint",
+    "dev": "yarn workspace backend dev && yarn workspace backend dev",
     "fix": "yarn workspace backend fix && yarn workspace backend fix",
-    "dev": "yarn workspace backend dev && yarn workspace backend dev"
+    "lint": "yarn workspace backend lint && yarn workspace backend lint"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.2",
@@ -41,7 +41,7 @@
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
     "prettier": "^2.4.1",
-    "sort-package-json": "^1.51.0",
+    "sort-package-json": "^1.52.0",
     "typescript": "^4.4.3"
   }
 }
