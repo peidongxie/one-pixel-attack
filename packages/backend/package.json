@@ -33,6 +33,7 @@
     "start": "node --experimental-loader @pipcook/boa/esm/loader.mjs ./dist/index.js"
   },
   "dependencies": {
+    "@pipcook/boa": "^1.3.1",
     "@tensorflow/tfjs-node": "^3.9.0",
     "co-body": "^6.1.0",
     "formidable": "^1.2.2",
