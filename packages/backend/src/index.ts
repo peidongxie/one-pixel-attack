@@ -1,9 +1,12 @@
-import { getDefaultImage } from './image';
-import { getDefaultLabel } from './label';
-import { getDefaultModel } from './model';
-import predict from './prediction';
+import pi from './adversarial-attack';
+import { getDefaultImage } from './machine-learning/image';
+import { getDefaultLabel } from './machine-learning/label';
+import { getDefaultModel } from './machine-learning/model';
+import predict from './machine-learning/prediction';
 import Server from './server';
 import type { Handler } from './server';
+
+console.error(pi);
 
 const handler: Handler = async (req, res) => {
   const { getBody, getUrl } = req;
