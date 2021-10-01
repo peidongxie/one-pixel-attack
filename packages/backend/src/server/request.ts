@@ -1,10 +1,10 @@
 import { json, text } from 'co-body';
-import { IncomingForm } from 'formidable';
+import formidable from 'formidable';
 import type { IncomingMessage, IncomingHttpHeaders } from 'http';
 import type { TLSSocket } from 'tls';
 import typeis from 'type-is';
 
-const form = new IncomingForm({ multiples: true });
+const form = formidable({ multiples: true });
 
 const formTypes = ['multipart/form-data', 'application/x-www-form-urlencoded'];
 

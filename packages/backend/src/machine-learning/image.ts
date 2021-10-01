@@ -1,11 +1,11 @@
 import tf from '@tensorflow/tfjs-node';
 import type { Tensor4D } from '@tensorflow/tfjs-node';
-import { existsSync, readFile, createWriteStream } from 'fs-extra';
+import fs from 'fs-extra';
 import type { IncomingMessage } from 'http';
 import { get } from 'https';
 
 const downloadDefaultImages = async (): Promise<void> => {
-  const stream = createWriteStream('./cache/images');
+  const stream = fs.createWriteStream('./cache/images');
   const response = await new Promise<IncomingMessage>((resolve) =>
     get(
       'https://storage.googleapis.com/learnjs-data/model-builder/cifar10_images.png',
@@ -17,9 +17,9 @@ const downloadDefaultImages = async (): Promise<void> => {
 };
 
 const createDefaultImages = async (): Promise<[Tensor4D, Tensor4D]> => {
-  const isCached = existsSync('./cache/images');
+  const isCached = fs.existsSync('./cache/images');
   if (!isCached) await downloadDefaultImages();
-  const file = await readFile('./cache/images');
+  const file = await fs.readFile('./cache/images');
   const images = tf.node
     .decodePng(file)
     .reshape<Tensor4D>([60000, 32, 32, 3])

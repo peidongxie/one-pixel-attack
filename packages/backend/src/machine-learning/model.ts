@@ -1,6 +1,6 @@
 import tf from '@tensorflow/tfjs-node';
 import type { LayersModel } from '@tensorflow/tfjs-node';
-import { existsSync } from 'fs-extra';
+import fs from 'fs-extra';
 import { getDefaultImages } from './image';
 import { getDefaultLabels } from './label';
 
@@ -59,7 +59,7 @@ const trainDefaultModel = async (): Promise<void> => {
 
 const createDefaultModel = async (): Promise<LayersModel> => {
   const isCached =
-    existsSync('./cache/model.json') && existsSync('./cache/weights.bin');
+    fs.existsSync('./cache/model.json') && fs.existsSync('./cache/weights.bin');
   if (!isCached) await trainDefaultModel();
   return tf.loadLayersModel('file://./cache/model.json');
 };

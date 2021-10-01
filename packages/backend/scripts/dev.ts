@@ -1,6 +1,6 @@
 import { build } from 'esbuild';
 import type { BuildOptions } from 'esbuild';
-import { emptyDir } from 'fs-extra';
+import fs from 'fs-extra';
 import { fork } from 'child_process';
 import type { ChildProcess } from 'child_process';
 
@@ -8,7 +8,9 @@ let childProcess: ChildProcess | null = null;
 
 const startChildProcess = () => {
   if (!childProcess) {
-    childProcess = fork('./dist/index.js');
+    childProcess = fork('./dist/index.js', {
+      execArgv: ['--experimental-loader=@pipcook/boa/esm/loader.mjs'],
+    });
     console.info('Service is up');
   }
 };
@@ -30,9 +32,10 @@ const buildOptions: BuildOptions = {
     'co-body',
     'formidable',
     'fs-extra',
+    'py:math',
     'type-is',
   ],
-  format: 'cjs', // esm
+  format: 'esm',
   inject: [],
   loader: {},
   minify: false,
@@ -42,8 +45,8 @@ const buildOptions: BuildOptions = {
   outdir: './dist/',
   platform: 'node',
   sourcemap: false,
-  splitting: false, // true
-  target: 'es6',
+  splitting: true,
+  target: 'node14',
   watch: {
     onRebuild: () => {
       stopChildProcess();
@@ -54,7 +57,7 @@ const buildOptions: BuildOptions = {
 };
 
 (async () => {
-  await emptyDir('dist');
+  await fs.emptyDir('dist');
   await build(buildOptions);
   startChildProcess();
 })();
