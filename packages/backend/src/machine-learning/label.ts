@@ -5,7 +5,7 @@ import type { IncomingMessage } from 'http';
 import { get } from 'https';
 
 const downloadDefaultLabels = async (): Promise<void> => {
-  const stream = fs.createWriteStream('./cache/labels');
+  const stream = fs.createWriteStream('./public/labels');
   const response = await new Promise<IncomingMessage>((resolve) =>
     get(
       'https://storage.googleapis.com/learnjs-data/model-builder/cifar10_labels_uint8',
@@ -17,9 +17,9 @@ const downloadDefaultLabels = async (): Promise<void> => {
 };
 
 const createDefaultLabels = async (): Promise<[Tensor2D, Tensor2D]> => {
-  const isCached = fs.existsSync('./cache/labels');
+  const isCached = fs.existsSync('./public/labels');
   if (!isCached) await downloadDefaultLabels();
-  const file = await fs.readFile('./cache/labels');
+  const file = await fs.readFile('./public/labels');
   const labels = tf.tensor2d(file, [60000, 10]);
   const train = labels.slice(0, 50000);
   const test = labels.slice(50000, 10000);

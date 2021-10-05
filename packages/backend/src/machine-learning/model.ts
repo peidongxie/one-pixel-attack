@@ -54,14 +54,15 @@ const trainDefaultModel = async (): Promise<void> => {
     epochs: 10,
     validationData: [testXs, testYs],
   });
-  await model.save('file://./cache');
+  await model.save('file://./public');
 };
 
 const createDefaultModel = async (): Promise<LayersModel> => {
   const isCached =
-    fs.existsSync('./cache/model.json') && fs.existsSync('./cache/weights.bin');
+    fs.existsSync('./public/model.json') &&
+    fs.existsSync('./public/weights.bin');
   if (!isCached) await trainDefaultModel();
-  return tf.loadLayersModel('file://./cache/model.json');
+  return tf.loadLayersModel('file://./public/model.json');
 };
 
 const defaultModel = createDefaultModel();
