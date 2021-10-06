@@ -4,8 +4,8 @@ import { Server as HttpsServer } from 'https';
 import HandlerReq from './request';
 import HandlerRes from './response';
 
-export type Handler = <Body = unknown>(
-  req: HandlerReq<Body>,
+export type Handler = (
+  req: HandlerReq,
   res: HandlerRes,
 ) => Promise<void | Parameters<HandlerRes['setBody']>[0]>;
 

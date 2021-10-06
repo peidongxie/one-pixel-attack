@@ -19,44 +19,48 @@ const textTypes = ['text/plain'];
 
 const xmlTypes = ['text/xml', 'application/xml'];
 
-class HandlerReq<Body = unknown> {
-  originalReq: IncomingMessage & { socket: TLSSocket };
+class HandlerReq {
+  originalValue: IncomingMessage & { socket: TLSSocket };
 
   constructor(req: IncomingMessage) {
-    this.originalReq = req as IncomingMessage & { socket: TLSSocket };
+    this.originalValue = req as IncomingMessage & { socket: TLSSocket };
   }
 
-  getBody = async (): Promise<Body | undefined> => {
-    const req = this.originalReq;
+  getBody = async <Body>(): Promise<Body | undefined> => {
+    const req = this.originalValue;
     if (typeis(req, formTypes)) {
-      return this.getBodyForm();
+      return this.getBodyForm<Body>();
     } else if (typeis(req, jsonTypes)) {
-      return this.getBodyJson();
+      return this.getBodyJson<Body>();
     } else if (typeis(req, textTypes)) {
-      return this.getBodyText();
+      return this.getBodyText<Body>();
     } else if (typeis(req, xmlTypes)) {
-      return this.getBodyXml();
+      return this.getBodyXml<Body>();
     }
   };
 
   getHeaders = (): IncomingHttpHeaders => {
-    return this.originalReq.headers;
+    return this.originalValue.headers;
   };
 
   getMethod = (): string => {
-    return this.originalReq.method || '';
+    return this.originalValue.method || '';
   };
 
   getUrl = (): URL => {
     return new URL(
-      this.originalReq.url || '',
+      this.originalValue.url || '',
       `${this.getProtocol()}://${this.getHost()}`,
     );
   };
 
-  private async getBodyForm(): Promise<Body> {
+  getVersion = (): string => {
+    return this.originalValue.httpVersion;
+  };
+
+  private async getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
-      form.parse(this.originalReq, (err, fields, files) => {
+      form.parse(this.originalValue, (err, fields, files) => {
         if (err) {
           const reason: unknown = err;
           reject(reason);
@@ -68,41 +72,42 @@ class HandlerReq<Body = unknown> {
     });
   }
 
-  private async getBodyJson(): Promise<Body> {
-    return json(this.originalReq);
+  private async getBodyJson<Body>(): Promise<Body> {
+    return json(this.originalValue);
   }
 
-  private async getBodyText(): Promise<Body> {
-    return text(this.originalReq);
+  private async getBodyText<Body>(): Promise<Body> {
+    return text(this.originalValue);
   }
 
-  private async getBodyXml(): Promise<Body> {
-    return text(this.originalReq);
+  private async getBodyXml<Body>(): Promise<Body> {
+    return text(this.originalValue);
   }
 
-  private getHeader(key: string): string {
+  private getHeaderContent(key: string): string {
     const header = this.getHeaders()[key];
     if (Array.isArray(header)) return header[0].split(/\s*,\s*/, 1)[0];
-    if (typeof header === 'string') return header.split(/\s*,\s*/, 1)[0];
+    if (header) return header.split(/\s*,\s*/, 1)[0];
     return '';
   }
 
   private getHost(): string {
-    const { httpVersionMajor } = this.originalReq;
+    const { httpVersionMajor } = this.originalValue;
     return (
-      this.getHeader('x-forwarded-host') ||
-      (httpVersionMajor >= 2 ? this.getHeader(':authority') : '') ||
-      this.getHeader('host')
+      this.getHeaderContent('x-forwarded-host') ||
+      (httpVersionMajor >= 2 ? this.getHeaderContent(':authority') : '') ||
+      this.getHeaderContent('host') ||
+      'localhost'
     );
   }
 
   private getProtocol(): string {
     const {
       socket: { encrypted },
-    } = this.originalReq;
+    } = this.originalValue;
     return (
       (encrypted ? 'https' : '') ||
-      this.getHeader('x-forwarded-proto') ||
+      this.getHeaderContent('x-forwarded-proto') ||
       'http'
     );
   }
