@@ -12,13 +12,15 @@ export type JsonItem =
 export type StrictJsonItem = { [key: string]: JsonItem } | JsonItem[];
 
 class HandlerRes {
-  originalRes: ServerResponse;
+  originalValue: ServerResponse;
 
   constructor(res: ServerResponse) {
     this.isEnd = false;
     this.statusCode = 0;
-    this.originalRes = res;
+    this.originalValue = res;
   }
+
+  // todo: version status(code/code+message) headers body
 
   setBody = (
     value?:
@@ -51,12 +53,13 @@ class HandlerRes {
     name: string,
     value: string | number | readonly string[],
   ): void => {
-    this.originalRes.setHeader(name, value);
+    this.originalValue.setHeader(name, value);
   };
 
   setStatus = (code: number): void => {
     this.statusCode = code;
-    this.originalRes.statusCode = code;
+    this.originalValue.statusCode = code;
+    this.originalValue.statusMessage = '';
   };
 
   setType = (type: string): void => {
@@ -68,7 +71,7 @@ class HandlerRes {
   private statusCode: number;
 
   private setBodyBuffer(value: Buffer): void {
-    const res = this.originalRes;
+    const res = this.originalValue;
     if (this.statusCode === 0) {
       this.setStatus(200);
     }
@@ -82,7 +85,7 @@ class HandlerRes {
   }
 
   private setBodyError(value: Error): void {
-    const res = this.originalRes;
+    const res = this.originalValue;
     const str = value.message || 'Internal Server Error';
     if (this.statusCode === 0) {
       this.setStatus(500);
@@ -97,7 +100,7 @@ class HandlerRes {
   }
 
   private setBodyJson = (value: StrictJsonItem): void => {
-    const res = this.originalRes;
+    const res = this.originalValue;
     const str = JSON.stringify(value);
     if (this.statusCode === 0) {
       this.setStatus(200);
@@ -112,7 +115,7 @@ class HandlerRes {
   };
 
   private setBodyNothing(): void {
-    const res = this.originalRes;
+    const res = this.originalValue;
     if (this.statusCode === 0) {
       this.setStatus(204);
     }
@@ -120,7 +123,7 @@ class HandlerRes {
   }
 
   private setBodyStream(value: Stream): void {
-    const res = this.originalRes;
+    const res = this.originalValue;
     if (this.statusCode === 0) {
       this.setStatus(200);
     }
@@ -131,7 +134,7 @@ class HandlerRes {
   }
 
   private setBodyText(value: string): void {
-    const res = this.originalRes;
+    const res = this.originalValue;
     if (this.statusCode === 0) {
       this.setStatus(200);
     }
