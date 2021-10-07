@@ -37,7 +37,7 @@ class Server {
       try {
         handlerRes.setHeader('Vary', 'Origin');
         if (!allowOrigin(origin)) {
-          handlerRes.setStatus(400);
+          handlerRes.setCode(400);
           handlerRes.setBody(null);
         } else if (handlerReq.getMethod() === 'OPTIONS') {
           handlerRes.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -53,7 +53,7 @@ class Server {
           handlerRes.setBody(value ?? null);
         }
       } catch (e) {
-        handlerRes.setStatus(500);
+        handlerRes.setCode(500);
         if (e instanceof Error) handlerRes.setBody(e);
         else handlerRes.setBody('Internal Server Error');
       }
