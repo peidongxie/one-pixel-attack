@@ -54,10 +54,6 @@ class HandlerReq {
     );
   };
 
-  getVersion = (): string => {
-    return this.originalValue.httpVersion;
-  };
-
   private async getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
       form.parse(this.originalValue, (err, fields, files) => {

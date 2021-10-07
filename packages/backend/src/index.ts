@@ -10,9 +10,9 @@ console.error(pi);
 
 const handler: Handler = async (req, res) => {
   const { getBody, getUrl } = req;
-  const { setStatus } = res;
+  const { setCode } = res;
   if (getUrl().pathname !== '/') {
-    setStatus(404);
+    setCode(404);
     return null;
   }
   const body = await getBody();
