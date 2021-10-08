@@ -1,4 +1,4 @@
-import type { ServerResponse } from 'http';
+import type { OutgoingHttpHeaders, ServerResponse } from 'http';
 import { Stream } from 'stream';
 
 export type JsonItem =
@@ -28,7 +28,7 @@ class HandlerRes {
       | Stream
       | StrictJsonItem,
   ): void => {
-    if (this.getEnded()) return;
+    if (this.originalValue.writableEnded) return;
     if (value === undefined || value === null) {
       this.setBodyNothing();
     } else if (typeof value === 'string') {
@@ -48,15 +48,16 @@ class HandlerRes {
     this.originalValue.statusCode = code;
   };
 
-  // todo: setHeaders
+  setHeaders = (headers: OutgoingHttpHeaders): void => {
+    for (const key in headers) {
+      const value = headers[key];
+      if (value !== undefined) this.setHeader(key, value);
+    }
+  };
 
   setMessage = (message: string): void => {
     this.originalValue.statusMessage = message;
   };
-
-  private getEnded(): boolean {
-    return this.originalValue.writableEnded;
-  }
 
   private setBodyBuffer(value: Buffer): void {
     const res = this.originalValue;
@@ -105,8 +106,7 @@ class HandlerRes {
     res.end(value);
   }
 
-  // todo: private
-  setHeader = (
+  private setHeader = (
     name: string,
     value: string | number | readonly string[],
   ): void => {

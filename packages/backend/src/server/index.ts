@@ -1,5 +1,9 @@
 import { Server as HttpServer } from 'http';
-import type { IncomingMessage, ServerResponse } from 'http';
+import type {
+  IncomingMessage,
+  OutgoingHttpHeaders,
+  ServerResponse,
+} from 'http';
 import { Server as HttpsServer } from 'https';
 import HandlerReq from './request';
 import HandlerRes from './response';
@@ -35,20 +39,23 @@ class Server {
       const handlerRes = new HandlerRes(res);
       const origin = handlerReq.getHeaders().origin || '';
       try {
-        handlerRes.setHeader('Vary', 'Origin');
+        const headers: OutgoingHttpHeaders = { Vary: 'Origin' };
         if (!allowOrigin(origin)) {
           handlerRes.setCode(400);
+          handlerRes.setHeaders(headers);
           handlerRes.setBody(null);
         } else if (handlerReq.getMethod() === 'OPTIONS') {
-          handlerRes.setHeader('Access-Control-Allow-Credentials', 'true');
-          handlerRes.setHeader('Access-Control-Allow-Headers', allowHeaders);
-          handlerRes.setHeader('Access-Control-Allow-Methods', allowMethods);
-          handlerRes.setHeader('Access-Control-Allow-Origin', origin);
-          handlerRes.setHeader('Access-Control-Max-Age', maxAge);
+          headers['Access-Control-Allow-Credentials'] = 'true';
+          headers['Access-Control-Allow-Headers'] = allowHeaders;
+          headers['Access-Control-Allow-Methods'] = allowMethods;
+          headers['Access-Control-Allow-Origin'] = origin;
+          headers['Access-Control-Max-Age'] = maxAge;
+          handlerRes.setHeaders(headers);
           handlerRes.setBody(null);
         } else {
-          handlerRes.setHeader('Access-Control-Allow-Credentials', 'true');
-          handlerRes.setHeader('Access-Control-Allow-Origin', origin);
+          headers['Access-Control-Allow-Credentials'] = 'true';
+          headers['Access-Control-Allow-Origin'] = origin;
+          handlerRes.setHeaders(headers);
           const value = await handler(handlerReq, handlerRes);
           handlerRes.setBody(value ?? null);
         }
