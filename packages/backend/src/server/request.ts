@@ -29,13 +29,13 @@ class HandlerReq {
   getBody = async <Body>(): Promise<Body | undefined> => {
     const req = this.originalValue;
     if (typeis(req, formTypes)) {
-      return this.getBodyForm<Body>();
+      return this.#getBodyForm<Body>();
     } else if (typeis(req, jsonTypes)) {
-      return this.getBodyJson<Body>();
+      return this.#getBodyJson<Body>();
     } else if (typeis(req, textTypes)) {
-      return this.getBodyText<Body>();
+      return this.#getBodyText<Body>();
     } else if (typeis(req, xmlTypes)) {
-      return this.getBodyXml<Body>();
+      return this.#getBodyXml<Body>();
     }
   };
 
@@ -50,11 +50,11 @@ class HandlerReq {
   getUrl = (): URL => {
     return new URL(
       this.originalValue.url || '',
-      `${this.getProtocol()}://${this.getHost()}`,
+      `${this.#getProtocol()}://${this.#getHost()}`,
     );
   };
 
-  private async getBodyForm<Body>(): Promise<Body> {
+  async #getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
       form.parse(this.originalValue, (err, fields, files) => {
         if (err) {
@@ -68,42 +68,42 @@ class HandlerReq {
     });
   }
 
-  private async getBodyJson<Body>(): Promise<Body> {
+  async #getBodyJson<Body>(): Promise<Body> {
     return json(this.originalValue);
   }
 
-  private async getBodyText<Body>(): Promise<Body> {
+  async #getBodyText<Body>(): Promise<Body> {
     return text(this.originalValue);
   }
 
-  private async getBodyXml<Body>(): Promise<Body> {
+  async #getBodyXml<Body>(): Promise<Body> {
     return text(this.originalValue);
   }
 
-  private getHeaderContent(key: string): string {
+  #getHeaderContent(key: string): string {
     const header = this.getHeaders()[key];
     if (Array.isArray(header)) return header[0].split(/\s*,\s*/, 1)[0];
     if (header) return header.split(/\s*,\s*/, 1)[0];
     return '';
   }
 
-  private getHost(): string {
+  #getHost(): string {
     const { httpVersionMajor } = this.originalValue;
     return (
-      this.getHeaderContent('x-forwarded-host') ||
-      (httpVersionMajor >= 2 ? this.getHeaderContent(':authority') : '') ||
-      this.getHeaderContent('host') ||
+      this.#getHeaderContent('x-forwarded-host') ||
+      (httpVersionMajor >= 2 ? this.#getHeaderContent(':authority') : '') ||
+      this.#getHeaderContent('host') ||
       'localhost'
     );
   }
 
-  private getProtocol(): string {
+  #getProtocol(): string {
     const {
       socket: { encrypted },
     } = this.originalValue;
     return (
       (encrypted ? 'https' : '') ||
-      this.getHeaderContent('x-forwarded-proto') ||
+      this.#getHeaderContent('x-forwarded-proto') ||
       'http'
     );
   }
