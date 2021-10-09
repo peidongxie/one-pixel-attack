@@ -30,17 +30,17 @@ class HandlerRes {
   ): void => {
     if (this.originalValue.writableEnded) return;
     if (value === undefined || value === null) {
-      this.setBodyNothing();
+      this.#setBodyNothing();
     } else if (typeof value === 'string') {
-      this.setBodyText(value);
+      this.#setBodyText(value);
     } else if (value instanceof Error) {
-      this.setBodyError(value);
+      this.#setBodyError(value);
     } else if (Buffer.isBuffer(value)) {
-      this.setBodyBuffer(value);
+      this.#setBodyBuffer(value);
     } else if (value instanceof Stream) {
-      this.setBodyStream(value);
+      this.#setBodyStream(value);
     } else {
-      this.setBodyJson(value);
+      this.#setBodyJson(value);
     }
   };
 
@@ -51,7 +51,7 @@ class HandlerRes {
   setHeaders = (headers: OutgoingHttpHeaders): void => {
     for (const key in headers) {
       const value = headers[key];
-      if (value !== undefined) this.setHeader(key, value);
+      if (value !== undefined) this.#setHeader(key, value);
     }
   };
 
@@ -59,54 +59,54 @@ class HandlerRes {
     this.originalValue.statusMessage = message;
   };
 
-  private setBodyBuffer(value: Buffer): void {
+  #setBodyBuffer(value: Buffer): void {
     const res = this.originalValue;
     this.setCode(200);
-    this.setHeader('Content-Type', 'application/octet-stream');
-    this.setHeader('Content-Length', value.length);
+    this.#setHeader('Content-Type', 'application/octet-stream');
+    this.#setHeader('Content-Length', value.length);
     res.end(value);
   }
 
-  private setBodyError(value: Error): void {
+  #setBodyError(value: Error): void {
     const res = this.originalValue;
     const str = value.message || 'Internal Server Error';
     this.setCode(500);
-    this.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    this.setHeader('Content-Length', Buffer.byteLength(str));
+    this.#setHeader('Content-Type', 'text/plain; charset=utf-8');
+    this.#setHeader('Content-Length', Buffer.byteLength(str));
     res.end(str);
   }
 
-  private setBodyJson = (value: StrictJsonItem): void => {
+  #setBodyJson = (value: StrictJsonItem): void => {
     const res = this.originalValue;
     const str = JSON.stringify(value);
     this.setCode(200);
-    this.setHeader('Content-Type', 'application/json; charset=utf-8');
-    this.setHeader('Content-Length', Buffer.byteLength(str));
+    this.#setHeader('Content-Type', 'application/json; charset=utf-8');
+    this.#setHeader('Content-Length', Buffer.byteLength(str));
     res.end(str);
   };
 
-  private setBodyNothing(): void {
+  #setBodyNothing(): void {
     const res = this.originalValue;
     this.setCode(204);
     res.end();
   }
 
-  private setBodyStream(value: Stream): void {
+  #setBodyStream(value: Stream): void {
     const res = this.originalValue;
     this.setCode(200);
-    this.setHeader('Content-Type', 'application/octet-stream');
+    this.#setHeader('Content-Type', 'application/octet-stream');
     value.pipe(res);
   }
 
-  private setBodyText(value: string): void {
+  #setBodyText(value: string): void {
     const res = this.originalValue;
     this.setCode(200);
-    this.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    this.setHeader('Content-Length', Buffer.byteLength(value));
+    this.#setHeader('Content-Type', 'text/plain; charset=utf-8');
+    this.#setHeader('Content-Length', Buffer.byteLength(value));
     res.end(value);
   }
 
-  private setHeader = (
+  #setHeader = (
     name: string,
     value: string | number | readonly string[],
   ): void => {
