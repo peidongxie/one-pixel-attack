@@ -1,7 +1,6 @@
 import { json, text } from 'co-body';
 import formidable from 'formidable';
 import type { IncomingMessage, IncomingHttpHeaders } from 'http';
-import type { TLSSocket } from 'tls';
 import typeis from 'type-is';
 
 const form = formidable({ multiples: true });
@@ -19,11 +18,18 @@ const textTypes = ['text/plain'];
 
 const xmlTypes = ['text/xml', 'application/xml'];
 
-class HandlerReq {
-  originalValue: IncomingMessage & { socket: TLSSocket };
+export interface HandlerRequest {
+  getMethod: Request['getMethod'];
+  getUrl: Request['getUrl'];
+  getHeaders: Request['getHeaders'];
+  getBody: Request['getBody'];
+}
+
+class Request {
+  originalValue: IncomingMessage;
 
   constructor(req: IncomingMessage) {
-    this.originalValue = req as IncomingMessage & { socket: TLSSocket };
+    this.originalValue = req;
   }
 
   getBody = async <Body>(): Promise<Body | undefined> => {
@@ -53,6 +59,11 @@ class HandlerReq {
       `${this.#getProtocol()}://${this.#getHost()}`,
     );
   };
+
+  getRequest(): HandlerRequest {
+    const { getBody, getHeaders, getMethod, getUrl } = this;
+    return { getMethod, getUrl, getHeaders, getBody };
+  }
 
   async #getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
@@ -88,7 +99,7 @@ class HandlerReq {
   }
 
   #getHost(): string {
-    const { httpVersionMajor } = this.originalValue;
+    const httpVersionMajor = this.originalValue.httpVersionMajor;
     return (
       this.#getHeaderContent('x-forwarded-host') ||
       (httpVersionMajor >= 2 ? this.#getHeaderContent(':authority') : '') ||
@@ -98,9 +109,7 @@ class HandlerReq {
   }
 
   #getProtocol(): string {
-    const {
-      socket: { encrypted },
-    } = this.originalValue;
+    const encrypted = Reflect.has(this.originalValue.socket, 'encrypted');
     return (
       (encrypted ? 'https' : '') ||
       this.#getHeaderContent('x-forwarded-proto') ||
@@ -109,4 +118,4 @@ class HandlerReq {
   }
 }
 
-export default HandlerReq;
+export default Request;

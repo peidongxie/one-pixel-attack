@@ -8,13 +8,10 @@ import type { Handler } from './server';
 
 console.error(pi);
 
-const handler: Handler = async (req, res) => {
-  const { getBody, getUrl } = req;
-  const { setCode } = res;
-  if (getUrl().pathname !== '/') {
-    setCode(404);
-    return null;
-  }
+const handler: Handler = async (req) => {
+  const { getBody, getMethod, getUrl } = req;
+  if (getMethod() === 'OPTIONS') return {};
+  if (getUrl().pathname !== '/') return { code: 404 };
   const body = await getBody();
   console.info(body);
   const key = Math.random();
@@ -22,7 +19,9 @@ const handler: Handler = async (req, res) => {
   const label = await getDefaultLabel(key);
   const model = await getDefaultModel();
   const prediction = predict(model, image.tensor);
-  return { image: image.value, label: label, prediction: prediction.top };
+  return {
+    body: { image: image.value, label: label, prediction: prediction.top },
+  };
 };
 
 const server = new Server(handler, {
