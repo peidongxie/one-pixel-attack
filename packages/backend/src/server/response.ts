@@ -11,7 +11,14 @@ export type JsonItem =
 
 export type StrictJsonItem = { [key: string]: JsonItem } | JsonItem[];
 
-class HandlerRes {
+export interface HandlerResponse {
+  code?: Parameters<Response['setCode']>[0];
+  message?: Parameters<Response['setMessage']>[0];
+  headers?: Parameters<Response['setHeaders']>[0];
+  body?: Parameters<Response['setBody']>[0];
+}
+
+class Response {
   originalValue: ServerResponse;
 
   constructor(res: ServerResponse) {
@@ -19,17 +26,10 @@ class HandlerRes {
   }
 
   setBody = (
-    value?:
-      | undefined
-      | null
-      | string
-      | Error
-      | Buffer
-      | Stream
-      | StrictJsonItem,
+    value: null | string | Error | Buffer | Stream | StrictJsonItem,
   ): void => {
     if (this.originalValue.writableEnded) return;
-    if (value === undefined || value === null) {
+    if (value === null) {
       this.#setBodyNothing();
     } else if (typeof value === 'string') {
       this.#setBodyText(value);
@@ -58,6 +58,14 @@ class HandlerRes {
   setMessage = (message: string): void => {
     this.originalValue.statusMessage = message;
   };
+
+  setResponse(res: HandlerResponse): void {
+    const { body, code, headers, message } = res;
+    if (body !== undefined) this.setBody(body);
+    if (code !== undefined) this.setCode(code);
+    if (headers !== undefined) this.setHeaders(headers);
+    if (message !== undefined) this.setMessage(message);
+  }
 
   #setBodyBuffer(value: Buffer): void {
     const res = this.originalValue;
@@ -114,4 +122,4 @@ class HandlerRes {
   };
 }
 
-export default HandlerRes;
+export default Response;
