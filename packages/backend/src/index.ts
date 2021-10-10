@@ -9,7 +9,8 @@ import type { Handler } from './server';
 console.error(pi);
 
 const handler: Handler = async (req) => {
-  const { getBody, getUrl } = req;
+  const { getBody, getMethod, getUrl } = req;
+  if (getMethod() === 'OPTIONS') return {};
   if (getUrl().pathname !== '/') return { code: 404 };
   const body = await getBody();
   console.info(body);

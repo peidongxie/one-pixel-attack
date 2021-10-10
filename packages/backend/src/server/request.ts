@@ -62,7 +62,7 @@ class Request {
 
   getRequest(): HandlerRequest {
     const { getBody, getHeaders, getMethod, getUrl } = this;
-    return { getBody, getHeaders, getMethod, getUrl };
+    return { getMethod, getUrl, getHeaders, getBody };
   }
 
   async #getBodyForm<Body>(): Promise<Body> {

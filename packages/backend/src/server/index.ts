@@ -13,7 +13,7 @@ export type Handler = (
 export interface CorsOptions {
   allowHeaders?: string;
   allowMethods?: string;
-  allowOrigin?: (orgin: string) => boolean;
+  allowOrigin?: (origin: string) => boolean;
   maxAge?: number;
 }
 
@@ -24,8 +24,8 @@ class Server {
     const { allowHeaders, allowMethods, allowOrigin, maxAge } = {
       allowHeaders: '*',
       allowMethods: '*',
-      allowOrigin: (origin: string) => !!origin,
-      maxAge: 604800,
+      allowOrigin: () => true,
+      maxAge: 600,
       ...corsOptions,
     };
     const requestListener = async (
@@ -34,25 +34,26 @@ class Server {
     ) => {
       const request = new Request(req);
       const response = new Response(res);
-      const origin = request.getHeaders().origin || '';
+      const origin = request.getHeaders().origin;
+      const corsForbidden = origin !== undefined && !allowOrigin(origin);
+      const corsHeaders = corsForbidden
+        ? {}
+        : request.getMethod() === 'OPTIONS'
+        ? {
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Headers': allowHeaders,
+            'Access-Control-Allow-Methods': allowMethods,
+            'Access-Control-Allow-Origin': origin,
+            'Access-Control-Max-Age': maxAge,
+          }
+        : {
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Origin': origin,
+          };
       try {
-        if (!allowOrigin(origin)) {
+        if (corsForbidden) {
           response.setResponse({
             code: 400,
-            headers: {
-              Vary: 'Origin',
-            },
-          });
-        } else if (request.getMethod() === 'OPTIONS') {
-          response.setResponse({
-            headers: {
-              'Access-Control-Allow-Credentials': 'true',
-              'Access-Control-Allow-Headers': allowHeaders,
-              'Access-Control-Allow-Methods': allowMethods,
-              'Access-Control-Allow-Origin': origin,
-              'Access-Control-Max-Age': maxAge,
-              Vary: 'Origin',
-            },
           });
         } else {
           const handlerRequest = request.getRequest();
@@ -60,16 +61,14 @@ class Server {
           response.setResponse({
             ...handlerResponse,
             headers: {
-              'Access-Control-Allow-Credentials': 'true',
-              'Access-Control-Allow-Origin': origin,
-              Vary: 'Origin',
+              ...corsHeaders,
               ...handlerResponse.headers,
             },
           });
         }
       } catch (e) {
-        response.setCode(500);
-        if (e instanceof Error) response.setBody(e);
+        if (e instanceof Error) response.setResponse({ body: e });
+        else response.setResponse({ code: 500 });
       }
     };
     const server = new HttpServer(requestListener);
