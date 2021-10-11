@@ -4,15 +4,22 @@ import { getDefaultLabel } from './machine-learning/label';
 import { getDefaultModel } from './machine-learning/model';
 import predict from './machine-learning/prediction';
 import Server from './server';
-import type { Handler } from './server';
+import type { Handler, MultipartFile } from './server';
 
 console.error(pi);
 
+interface Body {
+  image: 'default' | MultipartFile;
+  model: 'default' | MultipartFile;
+  label: string;
+  perturbation: string;
+}
+
 const handler: Handler = async (req) => {
   const { getBody, getMethod, getUrl } = req;
-  if (getMethod() === 'OPTIONS') return {};
+  if (getMethod() === 'OPTIONS') return;
   if (getUrl().pathname !== '/') return { code: 404 };
-  const body = await getBody();
+  const body = await getBody<Body>();
   console.info(body);
   const key = Math.random();
   const image = await getDefaultImage(key);
@@ -24,10 +31,5 @@ const handler: Handler = async (req) => {
   };
 };
 
-const server = new Server(handler, {
-  allowOrigin: (origin) => {
-    const { hostname } = new URL(origin);
-    return 'localhost' === hostname || '127.0.0.1' === hostname;
-  },
-});
+const server = new Server(handler);
 server.start(3001);

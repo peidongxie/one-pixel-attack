@@ -17,6 +17,11 @@ export interface CorsOptions {
   maxAge?: number;
 }
 
+export interface MultipartFile {
+  name: string;
+  path: string;
+}
+
 class Server {
   server: HttpServer | HttpsServer;
 
