@@ -2,13 +2,11 @@ import { Server as HttpServer } from 'http';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { Server as HttpsServer } from 'https';
 import Request from './request';
-import type { HandlerRequest } from './request';
+import type { HandlerRequest, MultipartFile } from './request';
 import Response from './response';
 import type { HandlerResponse } from './response';
 
-export type Handler = (
-  req: HandlerRequest,
-) => void | HandlerResponse | Promise<void | HandlerResponse>;
+export type { HandlerRequest, HandlerResponse, MultipartFile };
 
 export interface CorsOptions {
   allowHeaders?: string;
@@ -17,10 +15,9 @@ export interface CorsOptions {
   maxAge?: number;
 }
 
-export interface MultipartFile {
-  name: string;
-  path: string;
-}
+export type Handler = (
+  req: HandlerRequest,
+) => void | HandlerResponse | Promise<void | HandlerResponse>;
 
 class Server {
   server: HttpServer | HttpsServer;

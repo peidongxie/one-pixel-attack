@@ -18,6 +18,13 @@ const textTypes = ['text/plain'];
 
 const xmlTypes = ['text/xml', 'application/xml'];
 
+export interface MultipartFile {
+  name: string | null;
+  path: string;
+  size: number;
+  type: string | null;
+}
+
 export interface HandlerRequest {
   getMethod: Request['getMethod'];
   getUrl: Request['getUrl'];
@@ -69,10 +76,23 @@ class Request {
     return new Promise((resolve, reject) => {
       form.parse(this.originalValue, (err, fields, files) => {
         if (err) {
-          const reason: unknown = err;
+          const reason = err;
           reject(reason);
         } else {
-          const value: unknown = { ...fields, ...files };
+          const newFiles: Record<string, MultipartFile | MultipartFile[]> = {};
+          for (const key in files) {
+            const value = files[key];
+            if (!Array.isArray(value)) {
+              const { name, path, size, type } = value;
+              newFiles[key] = { name, path, size, type };
+            } else {
+              newFiles[key] = value.map((value) => {
+                const { name, path, size, type } = value;
+                return { name, path, size, type };
+              });
+            }
+          }
+          const value: unknown = { ...fields, ...newFiles };
           resolve(value as Body);
         }
       });
