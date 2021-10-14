@@ -1,12 +1,6 @@
-import pi from './adversarial-attack';
-import { getDefaultImage } from './machine-learning/image';
-import { getDefaultLabel } from './machine-learning/label';
-import { getDefaultModel } from './machine-learning/model';
-import predict from './machine-learning/prediction';
+import { getDefaultImage, getDefaultLabel } from './machine-learning/default';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
-
-console.error(pi);
 
 interface Body {
   image: 'default' | MultipartFile;
@@ -22,12 +16,8 @@ const handler: Handler = async (req) => {
   const body = await getBody<Body>();
   console.info(body);
   const key = Math.random();
-  const image = await getDefaultImage(key);
-  const label = await getDefaultLabel(key);
-  const model = await getDefaultModel();
-  const prediction = predict(model, image.tensor);
   return {
-    body: { image: image.value, label: label, prediction: prediction.top },
+    body: { image: getDefaultImage(key), label: getDefaultLabel(key) },
   };
 };
 

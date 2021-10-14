@@ -29,7 +29,7 @@
     "build": "cat scripts/build.ts | esbuild --loader=ts --format=cjs | node",
     "dev": "cat scripts/dev.ts | esbuild --loader=ts --format=cjs | node",
     "fix": "eslint src --ext .ts --fix",
-    "postinstall": "bip install --upgrade numpy scipy",
+    "postinstall": "bip install --upgrade numpy scipy tensorflow",
     "lint": "eslint src --ext .ts",
     "start": "node --experimental-loader @pipcook/boa/esm/loader.mjs ./dist/index.js"
   },
