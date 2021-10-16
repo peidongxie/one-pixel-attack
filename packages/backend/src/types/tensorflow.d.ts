@@ -1,18 +1,52 @@
 declare module 'py:tensorflow' {
   import type { NumpyArray2D, NumpyArray4D } from 'py:numpy';
-  export interface Layer {
-    [key: string]: unknown;
+  class Loss {
+    constructor(kwargs?: BoaKwargs);
   }
-  export interface Loss {
-    [key: string]: unknown;
+  class SparseCategoricalCrossentropy extends Loss {
+    constructor(kwargs?: BoaKwargs);
   }
-  export class Sequential {
-    add: (layer: Layer) => void;
+  class Layer {
+    constructor(kwargs?: BoaKwargs);
+  }
+  class Conv2D extends Layer {
+    constructor(
+      filters: number,
+      kernel_size: number | [number, number],
+      kwargs?: BoaKwargs,
+    );
+  }
+  class Dense extends Layer {
+    constructor(units: number, kwargs?: BoaKwargs);
+  }
+  class Flatten extends Layer {
+    constructor(kwargs?: BoaKwargs);
+  }
+  class MaxPooling2D extends Layer {
+    constructor(kwargs?: BoaKwargs);
+  }
+  class Model extends Layer {
+    constructor(kwargs?: BoaKwargs);
     compile: (kwargs?: BoaKwargs) => void;
     evaluate: (kwargs?: BoaKwargs) => [number, number];
     fit: (kwargs?: BoaKwargs) => void;
     summary: (kwargs?: BoaKwargs) => void;
   }
+  class Sequential extends Model {
+    constructor(kwargs?: BoaKwargs);
+    add: (layer: Layer) => void;
+  }
+  export type {
+    Conv2D,
+    Dense,
+    Flatten,
+    Layer,
+    Loss,
+    MaxPooling2D,
+    Model,
+    Sequential,
+    SparseCategoricalCrossentropy,
+  };
   const tf: {
     keras: {
       datasets: {
@@ -24,20 +58,19 @@ declare module 'py:tensorflow' {
         };
       };
       layers: {
-        Conv2D: (
-          filters: number,
-          kernel_size: number | [number, number],
-          kwargs?: BoaKwargs,
-        ) => Layer;
-        Dense: (units: number, kwargs?: BoaKwargs) => Layer;
-        Flatten: (kwargs?: BoaKwargs) => Layer;
-        MaxPooling2D: (kwargs?: BoaKwargs) => Layer;
+        Conv2D: typeof Conv2D;
+        Dense: typeof Dense;
+        Flatten: typeof Flatten;
+        Layer: typeof Layer;
+        MaxPooling2D: typeof MaxPooling2D;
       };
       losses: {
-        SparseCategoricalCrossentropy: (kwargs?: BoaKwargs) => Loss;
+        SparseCategoricalCrossentropy: typeof SparseCategoricalCrossentropy;
       };
       models: {
-        Sequential: (kwargs?: BoaKwargs) => Sequential;
+        Model: typeof Model;
+        Sequential: typeof Sequential;
+        load_model: (filepath: string, kwargs?: BoaKwargs) => Model;
       };
     };
   };
