@@ -29,7 +29,6 @@ const buildOptions: BuildOptions = {
   entryPoints: ['./src/index.ts'],
   external: [
     '@pipcook/boa',
-    '@tensorflow/tfjs-node',
     'co-body',
     'formidable',
     'fs-extra',
