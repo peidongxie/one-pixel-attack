@@ -1,12 +1,7 @@
 import boa from '@pipcook/boa';
 import fs from 'fs-extra';
 import np from 'py:numpy';
-import type {
-  NumpyArray1D,
-  NumpyArray2D,
-  NumpyArray3D,
-  NumpyArray4D,
-} from 'py:numpy';
+import type { NumpyArray2D, NumpyArray3D, NumpyArray4D } from 'py:numpy';
 import tf from 'py:tensorflow';
 import type { Model } from 'py:tensorflow';
 
@@ -15,7 +10,7 @@ const {
     datasets: {
       cifar10: { load_data },
     },
-    layers: { Conv2D, Dense, Flatten, MaxPooling2D },
+    layers: { Conv2D, Dense, Flatten, MaxPooling2D, Softmax },
     losses: { SparseCategoricalCrossentropy },
     models: { Sequential, load_model },
   },
@@ -56,6 +51,7 @@ const trainModel = (): Model => {
   model.add(new Flatten());
   model.add(new Dense(64, boa.kwargs({ activation: 'relu' })));
   model.add(new Dense(10));
+  model.add(new Softmax());
   model.compile(
     boa.kwargs({
       optimizer: 'adam',
@@ -91,7 +87,7 @@ export const getDefaultImage = (key: number): NumpyArray3D => {
 
 export const getDefaultModel = (): Model => model;
 
-export const getDefaultLabel = (key: number): NumpyArray1D => {
+export const getDefaultLabel = (key: number): number => {
   const index = Math.floor(key * 10000) % 10000;
-  return testLabels[index];
+  return testLabels[index][0];
 };

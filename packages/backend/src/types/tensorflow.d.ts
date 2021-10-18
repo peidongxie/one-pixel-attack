@@ -1,5 +1,5 @@
 declare module 'py:tensorflow' {
-  import type { NumpyArray2D, NumpyArray4D } from 'py:numpy';
+  import type { NumpyArray, NumpyArray2D, NumpyArray4D } from 'py:numpy';
   class Loss {
     constructor(kwargs?: BoaKwargs);
   }
@@ -25,11 +25,15 @@ declare module 'py:tensorflow' {
   class MaxPooling2D extends Layer {
     constructor(kwargs?: BoaKwargs);
   }
+  class Softmax extends Layer {
+    constructor(kwargs?: BoaKwargs);
+  }
   class Model extends Layer {
     constructor(kwargs?: BoaKwargs);
     compile: (kwargs?: BoaKwargs) => void;
     evaluate: (kwargs?: BoaKwargs) => [number, number];
     fit: (kwargs?: BoaKwargs) => void;
+    predict: <T extends NumpyArray>(NumpyArray) => T;
     summary: (kwargs?: BoaKwargs) => void;
   }
   class Sequential extends Model {
@@ -45,6 +49,7 @@ declare module 'py:tensorflow' {
     MaxPooling2D,
     Model,
     Sequential,
+    Softmax,
     SparseCategoricalCrossentropy,
   };
   const tf: {
@@ -63,6 +68,7 @@ declare module 'py:tensorflow' {
         Flatten: typeof Flatten;
         Layer: typeof Layer;
         MaxPooling2D: typeof MaxPooling2D;
+        Softmax: typeof Softmax;
       };
       losses: {
         SparseCategoricalCrossentropy: typeof SparseCategoricalCrossentropy;
