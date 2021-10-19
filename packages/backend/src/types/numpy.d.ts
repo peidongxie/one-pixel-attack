@@ -27,6 +27,7 @@ declare module 'py:numpy' {
   const np: {
     around: <T extends NumpyArray>(a: T, kwargs?: BoaKwargs) => T;
     divide: <T extends NumpyArray>(x1: T, x2: number) => T;
+    load: <T extends NumpyArray>(file: string) => T;
     multiply: <T extends NumpyArray>(x1: T, x2: number) => T;
   };
   export default np;

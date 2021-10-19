@@ -1,9 +1,6 @@
 import np from 'py:numpy';
-import {
-  getDefaultImage,
-  getDefaultLabel,
-  getDefaultModel,
-} from './machine-learning/default';
+import { getImage } from './machine-learning';
+import { getDefaultLabel } from './machine-learning/default';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
 
@@ -19,10 +16,11 @@ const handler: Handler = async (req) => {
   if (getMethod() === 'OPTIONS') return;
   if (getUrl().pathname !== '/') return { code: 404 };
   const body = await getBody<Body>();
+  if (!body) return { code: 400 };
   console.info(body);
-  const key = Math.random();
-  const image = getDefaultImage(key);
-  const label = getDefaultLabel(key);
+  const input = { ...body, key: Math.random() };
+  const image = getImage(input);
+  const label = getDefaultLabel(input.key);
   // const model = getDefaultModel();
   return {
     body: {
