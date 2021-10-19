@@ -1,5 +1,10 @@
 declare module 'py:tensorflow' {
-  import type { NumpyArray, NumpyArray2D, NumpyArray4D } from 'py:numpy';
+  import type {
+    NumpyArray,
+    NumpyArray2D,
+    NumpyArray3D,
+    NumpyArray4D,
+  } from 'py:numpy';
   class Loss {
     constructor(kwargs?: BoaKwargs);
   }
@@ -60,6 +65,12 @@ declare module 'py:tensorflow' {
             [NumpyArray4D, NumpyArray2D],
             [NumpyArray4D, NumpyArray2D],
           ];
+        };
+      };
+      preprocessing: {
+        image: {
+          img_to_array: (img: PilImage, kwargs?: BoaKwargs) => NumpyArray3D;
+          load_img: (path: string, kwargs?: BoaKwargs) => PilImage;
         };
       };
       layers: {
