@@ -17,7 +17,7 @@ declare module 'py:tensorflow' {
   class Conv2D extends Layer {
     constructor(
       filters: number,
-      kernel_size: number | [number, number],
+      kernel_size: number | [number, number] | Tuple<0 | 1, number>,
       kwargs?: BoaKwargs,
     );
   }
@@ -61,10 +61,10 @@ declare module 'py:tensorflow' {
     keras: {
       datasets: {
         cifar10: {
-          load_data: () => [
-            [NumpyArray4D, NumpyArray2D],
-            [NumpyArray4D, NumpyArray2D],
-          ];
+          load_data: () => Tuple<
+            0 | 1,
+            Tuple<0 | 1, NumpyArray2D | NumpyArray4D>
+          >;
         };
       };
       preprocessing: {

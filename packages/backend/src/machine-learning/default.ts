@@ -24,10 +24,10 @@ const loadData = (): {
 } => {
   const [[trainImages, trainLabels], [testImages, testLabels]] = load_data();
   return {
-    trainImages: np.divide(trainImages, 255),
-    trainLabels,
-    testImages: np.divide(testImages, 255),
-    testLabels,
+    trainImages: np.divide(trainImages as NumpyArray4D, 255),
+    trainLabels: trainLabels as NumpyArray2D,
+    testImages: np.divide(testImages as NumpyArray4D, 255),
+    testLabels: testLabels as NumpyArray2D,
   };
 };
 
@@ -51,7 +51,7 @@ const trainModel = (): Model => {
   model.add(new Flatten());
   model.add(new Dense(64, boa.kwargs({ activation: 'relu' })));
   model.add(new Dense(10));
-  model.add(new Softmax());
+  // todo
   model.compile(
     boa.kwargs({
       optimizer: 'adam',
