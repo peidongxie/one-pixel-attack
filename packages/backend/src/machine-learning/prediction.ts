@@ -1,7 +1,5 @@
 import np from 'py:numpy';
 import type {
-  NumpyArray,
-  NumpyArray1D,
   NumpyArray2D,
   NumpyArray3D,
   NumpyArray4D,
