@@ -1,6 +1,6 @@
 import np from 'py:numpy';
-import { getImage, getPrediction } from './machine-learning';
-import { getDefaultLabel, getDefaultModel } from './machine-learning/default';
+import { getImage, getModel, getPrediction } from './machine-learning';
+import { getDefaultLabel } from './machine-learning/default';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
 
@@ -21,9 +21,9 @@ const handler: Handler = async (req) => {
   const input = { ...body, key: Math.random() };
   const image = getImage(input);
   const label = getDefaultLabel(input.key);
-  const model = getDefaultModel();
+  const model = getModel(input);
   const prediction = getPrediction(model, image);
-  console.log(prediction);
+  console.log(prediction.tolist());
   return {
     body: {
       image: np.around(np.multiply(image, 255)).tolist(),

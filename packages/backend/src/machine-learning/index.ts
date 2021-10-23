@@ -1,4 +1,5 @@
 import getImage from './image';
+import getModel from './model';
 import getPrediction from './prediction';
 
-export { getImage, getPrediction };
+export { getImage, getModel, getPrediction };
