@@ -79,6 +79,10 @@ declare module 'py:numpy' {
       }[N]
     : never;
   const np: {
+    argmax: <T extends number | NumpyArray>(
+      a: NumpyArray,
+      kwargs?: BoaKwargs,
+    ) => T;
     around: <T extends NumpyArray>(a: T, kwargs?: BoaKwargs) => T;
     divide: <T extends NumpyArray>(x1: T, x2: number) => T;
     expand_dims: <T extends NumpyArray>(

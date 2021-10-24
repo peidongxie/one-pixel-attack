@@ -85,9 +85,9 @@ export const getDefaultImage = (key: number): NumpyArray3D => {
   return testImages[index];
 };
 
-export const getDefaultModel = (): Model => model;
-
 export const getDefaultLabel = (key: number): number => {
   const index = Math.floor(key * 10000) % 10000;
   return testLabels[index][0];
 };
+
+export const getDefaultModel = (): Model => model;

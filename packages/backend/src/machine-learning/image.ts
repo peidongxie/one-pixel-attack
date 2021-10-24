@@ -13,17 +13,11 @@ const {
   },
 } = tf;
 
-interface Input {
-  image: 'default' | MultipartFile;
-  key: number;
-}
-
-const getImage = (input: Input): NumpyArray3D => {
-  const { image, key } = input;
-  if (image === 'default') return getDefaultImage(key);
-  if (image.name === 'normalized.npy') return np.load(image.path);
-  if (image.name === 'raw.npy') return np.divide(np.load(image.path), 255);
-  const img = load_img(image.path);
+const getImage = (option: number | MultipartFile): NumpyArray3D => {
+  if (typeof option === 'number') return getDefaultImage(option);
+  if (option.name === 'normalized.npy') return np.load(option.path);
+  if (option.name === 'raw.npy') return np.divide(np.load(option.path), 255);
+  const img = load_img(option.path);
   const array = img_to_array(img, boa.kwargs({ dtype: 'float64' }));
   return np.divide(array, 255);
 };
