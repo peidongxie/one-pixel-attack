@@ -3,7 +3,9 @@ import {
   getImage,
   getLabel,
   getModel,
+  getPerturbation,
   getPrediction,
+  getShape,
 } from './machine-learning';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
@@ -33,12 +35,17 @@ const handler: Handler = async (req) => {
       ? prediction
       : body.label,
   );
+  const shape = getShape(image);
+  const perturbation = getPerturbation(
+    body.perturbation === 'default' ? shape : body.perturbation,
+  );
   return {
     body: {
       image: np.around(np.multiply(image, 255)).tolist(),
       label: label,
-      perturbation: null,
+      perturbation: perturbation,
       prediction: prediction.tolist(),
+      shape: shape,
     },
   };
 };

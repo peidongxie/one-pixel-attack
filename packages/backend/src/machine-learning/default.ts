@@ -10,7 +10,7 @@ const {
     datasets: {
       cifar10: { load_data },
     },
-    layers: { Conv2D, Dense, Flatten, MaxPooling2D, Softmax },
+    layers: { Conv2D, Dense, Flatten, MaxPooling2D },
     losses: { SparseCategoricalCrossentropy },
     models: { Sequential, load_model },
   },
