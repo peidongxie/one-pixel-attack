@@ -28,18 +28,20 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "yarn workspace backend build && yarn workspace frontend build",
     "dev": "yarn workspace backend dev & yarn workspace frontend dev",
-    "fix": "yarn workspace backend fix && yarn workspace frontend fix",
-    "lint": "yarn workspace backend lint && yarn workspace frontend lint"
+    "fix": "yarn workspace backend fix && yarn workspace frontend fix && sort-package-json",
+    "lint": "yarn workspace backend lint && yarn workspace frontend lint",
+    "start": "yarn workspace backend start & yarn workspace frontend start"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.2",
-    "lint-staged": "^11.2.3",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.4",
     "prettier": "^2.4.1",
     "sort-package-json": "^1.52.0",
     "typescript": "^4.4.4"
