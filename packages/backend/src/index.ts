@@ -1,12 +1,6 @@
 import np from 'py:numpy';
-import {
-  getImage,
-  getLabel,
-  getModel,
-  getPerturbation,
-  getPrediction,
-  getShape,
-} from './machine-learning';
+import AdversarialAttacker from './adversarial-attacker';
+import ImageClassifier from './image-classifier';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
 
@@ -24,28 +18,19 @@ const handler: Handler = async (req) => {
   const body = await getBody<Body>();
   if (!body) return { code: 400 };
   console.info(body);
-  const key = Math.random();
-  const image = getImage(body.image === 'default' ? key : body.image);
-  const model = getModel(body.model === 'default' ? undefined : body.model);
-  const prediction = getPrediction(model, image);
-  const label = getLabel(
-    body.image === 'default'
-      ? key
-      : body.label === 'default'
-      ? prediction
-      : body.label,
+  const imageClassifier = new ImageClassifier(
+    body.model === 'default' ? undefined : body.model,
+    body.image === 'default' ? undefined : body.image,
+    isNaN(Number(body.label)) ? undefined : Number(body.label),
   );
-  const shape = getShape(image);
-  const perturbation = getPerturbation(
-    body.perturbation === 'default' ? shape : body.perturbation,
-  );
+  const adversarialAttacker = new AdversarialAttacker(imageClassifier);
   return {
     body: {
-      image: np.around(np.multiply(image, 255)).tolist(),
-      label: label,
-      perturbation: perturbation,
-      prediction: prediction.tolist(),
-      shape: shape,
+      image: np.around(np.multiply(imageClassifier.image, 255)).tolist(),
+      label: imageClassifier.label,
+      perturbation: adversarialAttacker.perturbation,
+      prediction: imageClassifier.getPrediction().tolist(),
+      shape: imageClassifier.getShape(),
     },
   };
 };
