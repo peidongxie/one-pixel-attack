@@ -1,11 +1,6 @@
 import boa from '@pipcook/boa';
 import np from 'py:numpy';
-import type {
-  NumpyArray1D,
-  NumpyArray2D,
-  NumpyArray3D,
-  NumpyArray4D,
-} from 'py:numpy';
+import type { NumpyArray1D, NumpyArray2D, NumpyArray3D } from 'py:numpy';
 import tf from 'py:tensorflow';
 import type { Model } from 'py:tensorflow';
 import { getDefaultImage, getDefaultLabel, getDefaultModel } from './default';
@@ -28,23 +23,36 @@ class ImageClassifier {
 
   model: Model;
 
+  normalized: boolean;
+
+  shape: [number, number];
+
   constructor(model?: MultipartFile, image?: MultipartFile, label?: number) {
     const key = Math.random();
     if (model === undefined) {
       this.model = getDefaultModel();
+      this.normalized = true;
       this.image = getDefaultImage(key);
+      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = getDefaultLabel(key);
     } else if (image === undefined) {
       this.model = this.#getModel(model);
+      this.normalized = model.name === 'normalized.h5';
       this.image = getDefaultImage(key);
+      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = getDefaultLabel(key);
+      this.normalized = true;
     } else if (label === undefined) {
       this.model = this.#getModel(model);
+      this.normalized = model.name === 'normalized.h5';
       this.image = this.#getImage(image);
+      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = np.argmax(this.getPrediction());
     } else {
       this.model = this.#getModel(model);
+      this.normalized = model.name === 'normalized.h5';
       this.image = this.#getImage(image);
+      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = label;
     }
   }
@@ -53,21 +61,23 @@ class ImageClassifier {
     return this.model.predict<NumpyArray2D>(np.expand_dims(this.image, 0))[0];
   }
 
-  getPredictions(images: NumpyArray4D): NumpyArray2D {
-    return this.model.predict<NumpyArray2D>(images);
-  }
-
-  getShape(): [number, number] {
-    const [height, width] = this.image.shape;
-    return [width, height];
-  }
-
   #getImage(image: MultipartFile): NumpyArray3D {
-    if (image.name === 'normalized.npy') return np.load(image.path);
-    if (image.name === 'raw.npy') return np.divide(np.load(image.path), 255);
-    const img = load_img(image.path);
-    const array = img_to_array(img, boa.kwargs({ dtype: 'float64' }));
-    return np.divide(array, 255);
+    if (image.name === 'normalized.npy') {
+      const array = np.load<NumpyArray3D>(image.path).astype('float64');
+      if (this.normalized) return array;
+      return np.around(np.multiply(array, 255));
+    }
+    if (image.name === 'raw.npy') {
+      const array = np.load<NumpyArray3D>(image.path).astype('float64');
+      if (this.normalized) return np.divide(array, 255);
+      return np.load(image.path);
+    }
+    const array = img_to_array(
+      load_img(image.path),
+      boa.kwargs({ dtype: 'float64' }),
+    );
+    if (this.normalized) np.divide(array, 255);
+    return array;
   }
 
   #getModel(model: MultipartFile): Model {

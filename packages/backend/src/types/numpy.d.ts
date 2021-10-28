@@ -1,35 +1,40 @@
 declare module 'py:numpy' {
-  export interface NumpyArray {
+  interface NumpyArray {
+    astype: (dtype: string) => NumpyArray;
     ndim: number;
     shape: Tuple<number, number>;
     tolist: () => number[] | number[][] | number[][][] | number[][][][];
     [key: number]: NumpyArray | number;
   }
-  export interface NumpyArray1D extends NumpyArray {
+  interface NumpyArray1D extends NumpyArray {
+    astype: (dtype: string) => NumpyArray1D;
     ndim: 1;
     shape: Tuple<0, number>;
     tolist: () => number[];
     [key: number]: number;
   }
-  export interface NumpyArray2D extends NumpyArray {
+  interface NumpyArray2D extends NumpyArray {
+    astype: (dtype: string) => NumpyArray2D;
     ndim: 2;
     shape: Tuple<0 | 1, number>;
     tolist: () => number[][];
     [key: number]: NumpyArray1D;
   }
-  export interface NumpyArray3D extends NumpyArray {
+  interface NumpyArray3D extends NumpyArray {
+    astype: (dtype: string) => NumpyArray3D;
     ndim: 3;
     shape: Tuple<0 | 1 | 2, number>;
     tolist: () => number[][][];
     [key: number]: NumpyArray2D;
   }
-  export interface NumpyArray4D extends NumpyArray {
+  interface NumpyArray4D extends NumpyArray {
+    astype: (dtype: string) => NumpyArray4D;
     ndim: 4;
     shape: Tuple<0 | 1 | 2 | 3, number>;
     tolist: () => number[][][][];
     [key: number]: NumpyArray3D;
   }
-  export type OtherNumpyArray<
+  type OtherNumpyArray<
     T extends
       | number
       | NumpyArray1D
@@ -78,6 +83,14 @@ declare module 'py:numpy' {
         2: never;
       }[N]
     : never;
+  export type {
+    NumpyArray,
+    NumpyArray1D,
+    NumpyArray2D,
+    NumpyArray3D,
+    NumpyArray4D,
+    OtherNumpyArray,
+  };
   const np: {
     argmax: <T extends number | NumpyArray>(
       a: NumpyArray,
