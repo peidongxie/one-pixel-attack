@@ -1,9 +1,14 @@
 declare module 'py:numpy' {
+  type NumberArray = number[] | NumberArray[];
   interface NumpyArray {
+    __getitem__: <T extends NumpyArray>(
+      key: number | Slice | (number | Slice)[] | Tuple<number, number | Slice>,
+    ) => T;
     astype: (dtype: string) => NumpyArray;
     ndim: number;
     shape: Tuple<number, number>;
-    tolist: () => number[] | number[][] | number[][][] | number[][][][];
+    tolist: () => NumberArray;
+    [Symbol.iterator]: () => IterableIterator<number | NumpyArray>;
     [key: number]: NumpyArray | number;
   }
   interface NumpyArray1D extends NumpyArray {
@@ -11,6 +16,7 @@ declare module 'py:numpy' {
     ndim: 1;
     shape: Tuple<0, number>;
     tolist: () => number[];
+    [Symbol.iterator]: () => IterableIterator<number>;
     [key: number]: number;
   }
   interface NumpyArray2D extends NumpyArray {
@@ -18,6 +24,7 @@ declare module 'py:numpy' {
     ndim: 2;
     shape: Tuple<0 | 1, number>;
     tolist: () => number[][];
+    [Symbol.iterator]: () => IterableIterator<NumpyArray1D>;
     [key: number]: NumpyArray1D;
   }
   interface NumpyArray3D extends NumpyArray {
@@ -25,6 +32,7 @@ declare module 'py:numpy' {
     ndim: 3;
     shape: Tuple<0 | 1 | 2, number>;
     tolist: () => number[][][];
+    [Symbol.iterator]: () => IterableIterator<NumpyArray2D>;
     [key: number]: NumpyArray2D;
   }
   interface NumpyArray4D extends NumpyArray {
@@ -32,6 +40,7 @@ declare module 'py:numpy' {
     ndim: 4;
     shape: Tuple<0 | 1 | 2 | 3, number>;
     tolist: () => number[][][][];
+    [Symbol.iterator]: () => IterableIterator<NumpyArray3D>;
     [key: number]: NumpyArray3D;
   }
   type OtherNumpyArray<
@@ -104,6 +113,14 @@ declare module 'py:numpy' {
     ) => T;
     load: <T extends NumpyArray>(file: string) => T;
     multiply: <T extends NumpyArray>(x1: T, x2: number) => T;
+    split: <T extends NumpyArray>(
+      ary: T,
+      indices_or_sections: number | NumpyArray1D,
+    ) => T[];
+    tile: <T extends NumpyArray>(
+      A: NumpyArray,
+      reps: number | number[] | Tuple<number, number>,
+    ) => T;
   };
   export default np;
 }
