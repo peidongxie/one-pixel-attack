@@ -1,4 +1,5 @@
 declare module 'py:tensorflow' {
+  import type { Image } from 'py:PIL';
   import type {
     NumpyArray,
     NumpyArray2D,
@@ -69,8 +70,8 @@ declare module 'py:tensorflow' {
       };
       preprocessing: {
         image: {
-          img_to_array: (img: PilImage, kwargs?: BoaKwargs) => NumpyArray3D;
-          load_img: (path: string, kwargs?: BoaKwargs) => PilImage;
+          img_to_array: (img: Image, kwargs?: BoaKwargs) => NumpyArray3D;
+          load_img: (path: string, kwargs?: BoaKwargs) => Image;
         };
       };
       layers: {
