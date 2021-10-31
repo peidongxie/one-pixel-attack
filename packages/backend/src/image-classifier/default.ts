@@ -51,7 +51,6 @@ const trainModel = (): Model => {
   model.add(new Flatten());
   model.add(new Dense(64, boa.kwargs({ activation: 'relu' })));
   model.add(new Dense(10));
-  // todo
   model.compile(
     boa.kwargs({
       optimizer: 'adam',
