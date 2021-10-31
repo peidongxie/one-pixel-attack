@@ -33,6 +33,7 @@ const buildOptions: BuildOptions = {
     'formidable',
     'fs-extra',
     'py:numpy',
+    'py:scipy.optimize',
     'py:tensorflow',
     'type-is',
   ],

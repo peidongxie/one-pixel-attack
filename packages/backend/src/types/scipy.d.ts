@@ -1,5 +1,5 @@
-declare module 'py:scipy' {
-  import type { NumpyArray, NumpyArray1D } from 'py:numpy';
+declare module 'py:scipy.optimize' {
+  import type { NumpyArray } from 'py:numpy';
   class Bounds {
     constructor(
       lb: number[] | Tuple<number, number>,
@@ -12,14 +12,13 @@ declare module 'py:scipy' {
     success: boolean;
   }
   export type { Bounds, OptimizeResult };
-  const scipy: {
-    optimize: {
-      differential_evolution: <T extends NumpyArray>(
-        func: (x: NumpyArray1D, kwargs?: BoaKwargs) => void,
-        bounds: Bounds,
-        kwargs?: BoaKwargs,
-      ) => OptimizeResult<T>;
-    };
+  const optimize: {
+    Bounds: typeof Bounds;
+    differential_evolution: <T extends NumpyArray>(
+      func: (x: T, kwargs?: BoaKwargs) => void,
+      bounds: Bounds,
+      kwargs?: BoaKwargs,
+    ) => OptimizeResult<T>;
   };
-  export default scipy;
+  export default optimize;
 }
