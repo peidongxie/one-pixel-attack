@@ -69,8 +69,11 @@ class Server {
           });
         }
       } catch (e) {
-        if (e instanceof Error) response.setResponse({ body: e });
-        else response.setResponse({ code: 500 });
+        if (e instanceof Error) {
+          response.setResponse({ headers: corsHeaders, body: e });
+        } else {
+          response.setResponse({ code: 500, headers: corsHeaders });
+        }
       }
     };
     const server = new HttpServer(requestListener);
