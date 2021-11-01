@@ -25,9 +25,9 @@ class Response {
     this.originalValue = res;
   }
 
-  setBody = (
+  setBody(
     value: null | string | Error | Buffer | Stream | StrictJsonItem,
-  ): void => {
+  ): void {
     if (this.originalValue.writableEnded) return;
     if (value === null) {
       this.#setBodyNothing();
@@ -42,22 +42,22 @@ class Response {
     } else {
       this.#setBodyJson(value);
     }
-  };
+  }
 
-  setCode = (code: number): void => {
+  setCode(code: number): void {
     this.originalValue.statusCode = code;
-  };
+  }
 
-  setHeaders = (headers: OutgoingHttpHeaders): void => {
+  setHeaders(headers: OutgoingHttpHeaders): void {
     for (const key in headers) {
       const value = headers[key];
       if (value !== undefined) this.#setHeader(key, value);
     }
-  };
+  }
 
-  setMessage = (message: string): void => {
+  setMessage(message: string): void {
     this.originalValue.statusMessage = message;
-  };
+  }
 
   setResponse(res: HandlerResponse): void {
     const { body, code, headers, message } = res;
@@ -100,7 +100,9 @@ class Response {
 
   #setBodyNothing(): void {
     const res = this.originalValue;
-    this.setCode(204);
+    if (this.originalValue.statusCode === 200) {
+      this.setCode(204);
+    }
     res.end();
   }
 

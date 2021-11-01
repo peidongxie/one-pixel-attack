@@ -39,7 +39,7 @@ class Request {
     this.originalValue = req;
   }
 
-  getBody = async <Body>(): Promise<Body | undefined> => {
+  async getBody<Body>(): Promise<Body | undefined> {
     const req = this.originalValue;
     if (typeis(req, formTypes)) {
       return this.#getBodyForm<Body>();
@@ -50,26 +50,30 @@ class Request {
     } else if (typeis(req, xmlTypes)) {
       return this.#getBodyXml<Body>();
     }
-  };
+  }
 
-  getHeaders = (): IncomingHttpHeaders => {
+  getHeaders(): IncomingHttpHeaders {
     return this.originalValue.headers;
-  };
+  }
 
-  getMethod = (): string => {
+  getMethod(): string {
     return this.originalValue.method || '';
-  };
+  }
 
-  getUrl = (): URL => {
+  getUrl(): URL {
     return new URL(
       this.originalValue.url || '',
       `${this.#getProtocol()}://${this.#getHost()}`,
     );
-  };
+  }
 
   getRequest(): HandlerRequest {
-    const { getBody, getHeaders, getMethod, getUrl } = this;
-    return { getMethod, getUrl, getHeaders, getBody };
+    return {
+      getMethod: this.getMethod.bind(this),
+      getUrl: this.getUrl.bind(this),
+      getHeaders: this.getHeaders.bind(this),
+      getBody: this.getBody.bind(this),
+    };
   }
 
   async #getBodyForm<Body>(): Promise<Body> {
