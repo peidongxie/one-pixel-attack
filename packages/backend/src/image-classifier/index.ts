@@ -47,7 +47,7 @@ class ImageClassifier {
       this.normalized = model.name === 'normalized.h5';
       this.image = this.#getImage(image);
       this.shape = [this.image.shape[0], this.image.shape[1]];
-      this.label = np.argmax(this.getPrediction());
+      this.label = Number(np.argmax(this.getPrediction()));
     } else {
       this.model = this.#getModel(model);
       this.normalized = model.name === 'normalized.h5';

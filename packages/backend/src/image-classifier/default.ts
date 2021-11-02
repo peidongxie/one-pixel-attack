@@ -10,7 +10,7 @@ const {
     datasets: {
       cifar10: { load_data },
     },
-    layers: { Conv2D, Dense, Flatten, MaxPooling2D },
+    layers: { Conv2D, Dense, Flatten, MaxPooling2D, Softmax },
     losses: { SparseCategoricalCrossentropy },
     models: { Sequential, load_model },
   },
@@ -86,7 +86,13 @@ export const getDefaultImage = (key: number): NumpyArray3D => {
 
 export const getDefaultLabel = (key: number): number => {
   const index = Math.floor(key * 10000) % 10000;
-  return testLabels[index][0];
+  return testLabels[index][0].tolist();
 };
 
-export const getDefaultModel = (): Model => model;
+export const getDefaultModel = (): Model => {
+  return new Sequential(
+    boa.kwargs({
+      layers: [model, new Softmax()],
+    }),
+  );
+};
