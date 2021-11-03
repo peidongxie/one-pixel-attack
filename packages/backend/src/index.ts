@@ -1,3 +1,4 @@
+import np from 'py:numpy';
 import AdversarialAttacker from './adversarial-attacker';
 import ImageClassifier from './image-classifier';
 import Server from './server';
@@ -26,13 +27,17 @@ const handler: Handler = async (req) => {
     imageClassifier,
     isNaN(Number(body.perturbation)) ? undefined : Number(body.perturbation),
   );
-  // adversarialAttacker.attack();
+  const image = imageClassifier.normalized
+    ? np.around(np.multiply(imageClassifier.image, 255)).tolist()
+    : imageClassifier.image.tolist();
+  const label = imageClassifier.label;
+  const x = adversarialAttacker.attack();
+  const predictions = [
+    imageClassifier.getPrediction().tolist(),
+    adversarialAttacker.getPrediction(x).tolist(),
+  ];
   return {
-    body: {
-      image: imageClassifier.image.tolist(),
-      label: imageClassifier.label,
-      perturbation: adversarialAttacker.perturbation,
-    },
+    body: { image, label, predictions, x: x.tolist() },
   };
 };
 

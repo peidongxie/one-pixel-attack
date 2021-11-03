@@ -70,7 +70,7 @@ class ImageClassifier {
     if (image.name === 'raw.npy') {
       const array = np.load<NumpyArray3D>(image.path).astype('float64');
       if (this.normalized) return np.divide(array, 255);
-      return np.load(image.path);
+      return array;
     }
     const array = img_to_array(
       load_img(image.path),
