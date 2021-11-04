@@ -10,6 +10,7 @@ declare module 'py:numpy' {
         | Tuple<number, number | NumpyArray0D | Slice>,
     ) => T;
     astype: (dtype: string) => NumpyArray;
+    copy: (kwargs?: BoaKwargs) => NumpyArray;
     ndim: number;
     shape: Tuple<number, number>;
     tolist: () => NumberArray;
@@ -69,6 +70,7 @@ declare module 'py:numpy' {
       a: NumpyArray,
       kwargs?: BoaKwargs,
     ) => T;
+    array: <T extends NumpyArray>(a: unknown, kwargs?: BoaKwargs) => T;
     around: <T extends NumpyArray>(a: T, kwargs?: BoaKwargs) => T;
     divide: <T extends NumpyArray>(x1: T, x2: number) => T;
     expand_dims: <T extends NumpyArray>(
@@ -81,7 +83,7 @@ declare module 'py:numpy' {
     split: <T extends NumpyArray>(
       ary: T,
       indices_or_sections: number | NumpyArray1D,
-    ) => T[];
+    ) => List<number, T>;
     tile: <T extends NumpyArray>(
       A: NumpyArray,
       reps: number | number[] | Tuple<number, number>,
