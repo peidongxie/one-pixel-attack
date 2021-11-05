@@ -2,19 +2,8 @@ import boa from '@pipcook/boa';
 import fs from 'fs-extra';
 import np from 'py:numpy';
 import type { NumpyArray2D, NumpyArray3D, NumpyArray4D } from 'py:numpy';
-import tf from 'py:tensorflow';
-import type { Model } from 'py:tensorflow';
-
-const {
-  keras: {
-    datasets: {
-      cifar10: { load_data },
-    },
-    layers: { Conv2D, Dense, Flatten, MaxPooling2D, Softmax },
-    losses: { SparseCategoricalCrossentropy },
-    models: { Sequential, load_model },
-  },
-} = tf;
+import keras from 'py:tensorflow.keras';
+import type { Model } from 'py:tensorflow.keras';
 
 const loadData = (): {
   trainImages: NumpyArray4D;
@@ -22,7 +11,8 @@ const loadData = (): {
   testImages: NumpyArray4D;
   testLabels: NumpyArray2D;
 } => {
-  const [[trainImages, trainLabels], [testImages, testLabels]] = load_data();
+  const [[trainImages, trainLabels], [testImages, testLabels]] =
+    keras.datasets.cifar10.load_data();
   return {
     trainImages: np.divide(trainImages as NumpyArray4D, 255),
     trainLabels: trainLabels as NumpyArray2D,
@@ -32,29 +22,33 @@ const loadData = (): {
 };
 
 const loadModel = (): Model => {
-  return load_model('./public/model.h5');
+  return keras.models.load_model('./public/model.h5');
 };
 
 const trainModel = (): Model => {
-  const model = new Sequential();
+  const model = new keras.models.Sequential();
   model.add(
-    new Conv2D(
+    new keras.layers.Conv2D(
       32,
       [3, 3],
       boa.kwargs({ activation: 'relu', input_shape: [32, 32, 3] }),
     ),
   );
-  model.add(new MaxPooling2D(boa.kwargs({ pool_size: [2, 2] })));
-  model.add(new Conv2D(64, [3, 3], boa.kwargs({ activation: 'relu' })));
-  model.add(new MaxPooling2D(boa.kwargs({ pool_size: [2, 2] })));
-  model.add(new Conv2D(64, [3, 3], boa.kwargs({ activation: 'relu' })));
-  model.add(new Flatten());
-  model.add(new Dense(64, boa.kwargs({ activation: 'relu' })));
-  model.add(new Dense(10));
+  model.add(new keras.layers.MaxPooling2D(boa.kwargs({ pool_size: [2, 2] })));
+  model.add(
+    new keras.layers.Conv2D(64, [3, 3], boa.kwargs({ activation: 'relu' })),
+  );
+  model.add(new keras.layers.MaxPooling2D(boa.kwargs({ pool_size: [2, 2] })));
+  model.add(
+    new keras.layers.Conv2D(64, [3, 3], boa.kwargs({ activation: 'relu' })),
+  );
+  model.add(new keras.layers.Flatten());
+  model.add(new keras.layers.Dense(64, boa.kwargs({ activation: 'relu' })));
+  model.add(new keras.layers.Dense(10));
   model.compile(
     boa.kwargs({
       optimizer: 'adam',
-      loss: new SparseCategoricalCrossentropy(
+      loss: new keras.losses.SparseCategoricalCrossentropy(
         boa.kwargs({ from_logits: true }),
       ),
       metrics: ['accuracy'],
@@ -90,9 +84,9 @@ export const getDefaultLabel = (key: number): number => {
 };
 
 export const getDefaultModel = (): Model => {
-  return new Sequential(
+  return new keras.models.Sequential(
     boa.kwargs({
-      layers: [model, new Softmax()],
+      layers: [model, new keras.layers.Softmax()],
     }),
   );
 };

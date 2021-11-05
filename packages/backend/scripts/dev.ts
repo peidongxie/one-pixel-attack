@@ -34,7 +34,7 @@ const buildOptions: BuildOptions = {
     'fs-extra',
     'py:numpy',
     'py:scipy.optimize',
-    'py:tensorflow',
+    'py:tensorflow.keras',
     'type-is',
   ],
   format: 'esm',

@@ -19,6 +19,7 @@ declare module 'py:numpy' {
   }
   interface NumpyArray0D extends NumpyArray {
     astype: (dtype: string) => NumpyArray0D;
+    copy: (kwargs?: BoaKwargs) => NumpyArray0D;
     ndim: 0;
     shape: Tuple<never, number>;
     tolist: () => number;
@@ -27,6 +28,7 @@ declare module 'py:numpy' {
   }
   interface NumpyArray1D extends NumpyArray {
     astype: (dtype: string) => NumpyArray1D;
+    copy: (kwargs?: BoaKwargs) => NumpyArray1D;
     ndim: 1;
     shape: Tuple<0, number>;
     tolist: () => number[];
@@ -35,6 +37,7 @@ declare module 'py:numpy' {
   }
   interface NumpyArray2D extends NumpyArray {
     astype: (dtype: string) => NumpyArray2D;
+    copy: (kwargs?: BoaKwargs) => NumpyArray2D;
     ndim: 2;
     shape: Tuple<0 | 1, number>;
     tolist: () => number[][];
@@ -43,6 +46,7 @@ declare module 'py:numpy' {
   }
   interface NumpyArray3D extends NumpyArray {
     astype: (dtype: string) => NumpyArray3D;
+    copy: (kwargs?: BoaKwargs) => NumpyArray3D;
     ndim: 3;
     shape: Tuple<0 | 1 | 2, number>;
     tolist: () => number[][][];
@@ -51,20 +55,13 @@ declare module 'py:numpy' {
   }
   interface NumpyArray4D extends NumpyArray {
     astype: (dtype: string) => NumpyArray4D;
+    copy: (kwargs?: BoaKwargs) => NumpyArray4D;
     ndim: 4;
     shape: Tuple<0 | 1 | 2 | 3, number>;
     tolist: () => number[][][][];
     [Symbol.iterator]: () => IterableIterator<NumpyArray3D>;
     [key: number]: NumpyArray3D;
   }
-  export type {
-    NumpyArray,
-    NumpyArray0D,
-    NumpyArray1D,
-    NumpyArray2D,
-    NumpyArray3D,
-    NumpyArray4D,
-  };
   const np: {
     argmax: <T extends number | NumpyArray>(
       a: NumpyArray,
@@ -84,10 +81,14 @@ declare module 'py:numpy' {
       ary: T,
       indices_or_sections: number | NumpyArray1D,
     ) => List<number, T>;
-    tile: <T extends NumpyArray>(
-      A: NumpyArray,
-      reps: number | number[] | Tuple<number, number>,
-    ) => T;
   };
   export default np;
+  export type {
+    NumpyArray,
+    NumpyArray0D,
+    NumpyArray1D,
+    NumpyArray2D,
+    NumpyArray3D,
+    NumpyArray4D,
+  };
 }

@@ -8,7 +8,6 @@ declare global {
     step: null | number;
     stop: number;
   }
-
   interface List<K extends number, T> extends PyObject {
     __mul__: (n: number) => Tuple<K, T>;
     [Symbol.iterator]: () => IterableIterator<T>;

@@ -1,20 +1,10 @@
 import boa from '@pipcook/boa';
 import np from 'py:numpy';
 import type { NumpyArray1D, NumpyArray2D, NumpyArray3D } from 'py:numpy';
-import tf from 'py:tensorflow';
-import type { Model } from 'py:tensorflow';
+import keras from 'py:tensorflow.keras';
+import type { Model } from 'py:tensorflow.keras';
 import { getDefaultImage, getDefaultLabel, getDefaultModel } from './default';
 import type { MultipartFile } from '../server';
-
-const {
-  keras: {
-    layers: { Softmax },
-    models: { Sequential, load_model },
-    preprocessing: {
-      image: { img_to_array, load_img },
-    },
-  },
-} = tf;
 
 class ImageClassifier {
   image: NumpyArray3D;
@@ -72,8 +62,8 @@ class ImageClassifier {
       if (this.normalized) return np.divide(array, 255);
       return array;
     }
-    const array = img_to_array(
-      load_img(image.path),
+    const array = keras.preprocessing.image.img_to_array(
+      keras.preprocessing.image.load_img(image.path),
       boa.kwargs({ dtype: 'float64' }),
     );
     if (this.normalized) np.divide(array, 255);
@@ -81,9 +71,12 @@ class ImageClassifier {
   }
 
   #getModel(model: MultipartFile): Model {
-    return new Sequential(
+    return new keras.models.Sequential(
       boa.kwargs({
-        layers: [load_model(model.path), new Softmax()],
+        layers: [
+          keras.models.load_model(model.path),
+          new keras.layers.Softmax(),
+        ],
       }),
     );
   }
