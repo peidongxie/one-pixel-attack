@@ -11,7 +11,6 @@ declare module 'py:scipy.optimize' {
     x: T;
     success: boolean;
   }
-  export type { Bounds, OptimizeResult };
   const optimize: {
     Bounds: typeof Bounds;
     differential_evolution: <T extends NumpyArray>(

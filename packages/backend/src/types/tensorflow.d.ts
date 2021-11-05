@@ -1,4 +1,4 @@
-declare module 'py:tensorflow' {
+declare module 'py:tensorflow.keras' {
   import type { Image } from 'py:PIL';
   import type {
     NumpyArray,
@@ -46,51 +46,36 @@ declare module 'py:tensorflow' {
     constructor(kwargs?: BoaKwargs);
     add: (layer: Layer) => void;
   }
-  export type {
-    Conv2D,
-    Dense,
-    Flatten,
-    Layer,
-    Loss,
-    MaxPooling2D,
-    Model,
-    Sequential,
-    Softmax,
-    SparseCategoricalCrossentropy,
-  };
-  const tf: {
-    keras: {
-      datasets: {
-        cifar10: {
-          load_data: () => Tuple<
-            0 | 1,
-            Tuple<0 | 1, NumpyArray2D | NumpyArray4D>
-          >;
-        };
+  const keras: {
+    datasets: {
+      cifar10: {
+        load_data: () => Tuple<
+          0 | 1,
+          Tuple<0 | 1, NumpyArray2D | NumpyArray4D>
+        >;
       };
-      preprocessing: {
-        image: {
-          img_to_array: (img: Image, kwargs?: BoaKwargs) => NumpyArray3D;
-          load_img: (path: string, kwargs?: BoaKwargs) => Image;
-        };
-      };
-      layers: {
-        Conv2D: typeof Conv2D;
-        Dense: typeof Dense;
-        Flatten: typeof Flatten;
-        Layer: typeof Layer;
-        MaxPooling2D: typeof MaxPooling2D;
-        Softmax: typeof Softmax;
-      };
-      losses: {
-        SparseCategoricalCrossentropy: typeof SparseCategoricalCrossentropy;
-      };
-      models: {
-        Model: typeof Model;
-        Sequential: typeof Sequential;
-        load_model: (filepath: string, kwargs?: BoaKwargs) => Model;
+    };
+    layers: {
+      Conv2D: typeof Conv2D;
+      Dense: typeof Dense;
+      Flatten: typeof Flatten;
+      MaxPooling2D: typeof MaxPooling2D;
+      Softmax: typeof Softmax;
+    };
+    losses: {
+      SparseCategoricalCrossentropy: typeof SparseCategoricalCrossentropy;
+    };
+    models: {
+      Sequential: typeof Sequential;
+      load_model: (filepath: string, kwargs?: BoaKwargs) => Model;
+    };
+    preprocessing: {
+      image: {
+        img_to_array: (img: Image, kwargs?: BoaKwargs) => NumpyArray3D;
+        load_img: (path: string, kwargs?: BoaKwargs) => Image;
       };
     };
   };
-  export default tf;
+  export default keras;
+  export type { Model };
 }
