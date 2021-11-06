@@ -1,6 +1,7 @@
 import np from 'py:numpy';
 import AdversarialAttacker from './adversarial-attacker';
 import ImageClassifier from './image-classifier';
+import ImageClassifierFactory from './image-classifier-factory';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
 
@@ -18,10 +19,10 @@ const handler: Handler = async (req) => {
   const body = await getBody<Body>();
   if (!body) return { code: 400 };
   console.info(body);
-  const imageClassifier = new ImageClassifier(
-    body.model === 'default' ? undefined : body.model,
-    body.image === 'default' ? undefined : body.image,
-    isNaN(Number(body.label)) ? undefined : Number(body.label),
+  const imageClassifier = ImageClassifierFactory.createImageClassifier(
+    body.image,
+    body.model,
+    body.label,
   );
   const adversarialAttacker = new AdversarialAttacker(
     imageClassifier,

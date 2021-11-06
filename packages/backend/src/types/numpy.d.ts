@@ -63,6 +63,10 @@ declare module 'py:numpy' {
     [key: number]: NumpyArray3D;
   }
   const np: {
+    amax: <T extends number | NumpyArray>(
+      a: NumpyArray,
+      kwargs?: BoaKwargs,
+    ) => T;
     argmax: <T extends number | NumpyArray>(
       a: NumpyArray,
       kwargs?: BoaKwargs,

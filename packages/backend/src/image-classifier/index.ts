@@ -21,30 +21,24 @@ class ImageClassifier {
     const key = Math.random();
     if (model === undefined) {
       this.model = getDefaultModel();
-      this.normalized = true;
       this.image = getDefaultImage(key);
-      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = getDefaultLabel(key);
     } else if (image === undefined) {
       this.model = this.#getModel(model);
-      this.normalized = model.name === 'normalized.h5';
       this.image = getDefaultImage(key);
-      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = getDefaultLabel(key);
       this.normalized = true;
     } else if (label === undefined) {
       this.model = this.#getModel(model);
-      this.normalized = model.name === 'normalized.h5';
       this.image = this.#getImage(image);
-      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = Number(np.argmax(this.getPrediction()));
     } else {
       this.model = this.#getModel(model);
-      this.normalized = model.name === 'normalized.h5';
       this.image = this.#getImage(image);
-      this.shape = [this.image.shape[0], this.image.shape[1]];
       this.label = label;
     }
+    this.normalized = model?.name !== 'raw.h5';
+    this.shape = [this.image.shape[0], this.image.shape[1]];
   }
 
   getPrediction(): NumpyArray1D {
