@@ -2,7 +2,7 @@ import boa from '@pipcook/boa';
 import np from 'py:numpy';
 import type { NumpyArray0D, NumpyArray1D, NumpyArray2D } from 'py:numpy';
 import optimize from 'py:scipy.optimize';
-import ImageClassifier from '../image-classifier';
+import type ImageClassifier from '../image-classifier';
 
 const { len, tuple } = boa.builtins();
 
