@@ -47,18 +47,18 @@ class ImageClassifier {
 
   #getImage(image: MultipartFile): NumpyArray3D {
     if (image.name === 'normalized.npy') {
-      const array = np.load<NumpyArray3D>(image.path).astype('float64');
+      const array = np.load<NumpyArray3D>(image.path).astype('float32');
       if (this.normalized) return array;
       return np.around(np.multiply(array, 255));
     }
     if (image.name === 'raw.npy') {
-      const array = np.load<NumpyArray3D>(image.path).astype('float64');
+      const array = np.load<NumpyArray3D>(image.path).astype('float32');
       if (this.normalized) return np.divide(array, 255);
       return array;
     }
     const array = keras.preprocessing.image.img_to_array(
       keras.preprocessing.image.load_img(image.path),
-      boa.kwargs({ dtype: 'float64' }),
+      boa.kwargs({ dtype: 'float32' }),
     );
     if (this.normalized) np.divide(array, 255);
     return array;
