@@ -14,9 +14,17 @@ const loadData = (): {
   const [[trainImages, trainLabels], [testImages, testLabels]] =
     keras.datasets.cifar10.load_data();
   return {
-    trainImages: np.divide(trainImages as NumpyArray4D, 255),
+    trainImages: np.divide(
+      trainImages as NumpyArray4D,
+      255,
+      boa.kwargs({ dtype: 'float32' }),
+    ),
     trainLabels: trainLabels as NumpyArray2D,
-    testImages: np.divide(testImages as NumpyArray4D, 255),
+    testImages: np.divide(
+      testImages as NumpyArray4D,
+      255,
+      boa.kwargs({ dtype: 'float32' }),
+    ),
     testLabels: testLabels as NumpyArray2D,
   };
 };
