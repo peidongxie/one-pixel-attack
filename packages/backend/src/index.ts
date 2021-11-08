@@ -1,6 +1,5 @@
 import np from 'py:numpy';
 import AdversarialAttacker from './adversarial-attacker';
-import ImageClassifier from './image-classifier';
 import ImageClassifierFactory from './image-classifier-factory';
 import Server from './server';
 import type { Handler, MultipartFile } from './server';
@@ -29,13 +28,13 @@ const handler: Handler = async (req) => {
     isNaN(Number(body.perturbation)) ? undefined : Number(body.perturbation),
   );
   const image = imageClassifier.normalized
-    ? np.around(np.multiply(imageClassifier.image, 255)).tolist()
-    : imageClassifier.image.tolist();
+    ? np.around(np.multiply(imageClassifier.image, 255))
+    : imageClassifier.image;
   const label = imageClassifier.label;
-  const pixels = adversarialAttacker.attack().tolist();
+  const pixels = adversarialAttacker.attack();
   const predictions = [
-    imageClassifier.getPrediction().tolist(),
-    adversarialAttacker.getPrediction()?.tolist() || [],
+    imageClassifier.getPrediction(),
+    adversarialAttacker.getPrediction() || [],
   ];
   return {
     body: { image, label, pixels, predictions },

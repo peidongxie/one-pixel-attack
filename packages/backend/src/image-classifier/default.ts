@@ -5,6 +5,8 @@ import type { NumpyArray2D, NumpyArray3D, NumpyArray4D } from 'py:numpy';
 import keras from 'py:tensorflow.keras';
 import type { Model } from 'py:tensorflow.keras';
 
+const { tuple } = boa.builtins();
+
 const loadData = (): {
   trainImages: NumpyArray4D;
   trainLabels: NumpyArray2D;
@@ -67,7 +69,7 @@ const trainModel = (): Model => {
       x: trainImages,
       y: trainLabels,
       epochs: 10,
-      validation_data: boa.builtins().tuple([testImages, testLabels]),
+      validation_data: tuple([testImages, testLabels]),
     }),
   );
   const [testLoss, testAcc] = model.evaluate(
@@ -88,7 +90,7 @@ export const getDefaultImage = (key: number): NumpyArray3D => {
 
 export const getDefaultLabel = (key: number): number => {
   const index = Math.floor(key * 10000) % 10000;
-  return testLabels[index][0].tolist();
+  return testLabels[index][0].item();
 };
 
 export const getDefaultModel = (): Model => {
