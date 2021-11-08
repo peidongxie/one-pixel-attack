@@ -1,15 +1,7 @@
 import type { OutgoingHttpHeaders, ServerResponse } from 'http';
 import { Stream } from 'stream';
 
-export type JsonItem =
-  | null
-  | boolean
-  | number
-  | string
-  | { [key: string]: JsonItem }
-  | JsonItem[];
-
-export type StrictJsonItem = { [key: string]: JsonItem } | JsonItem[];
+export type JsonItem = object;
 
 export interface HandlerResponse {
   code?: Parameters<Response['setCode']>[0];
@@ -25,9 +17,7 @@ class Response {
     this.originalValue = res;
   }
 
-  setBody(
-    value: null | string | Error | Buffer | Stream | StrictJsonItem,
-  ): void {
+  setBody(value: null | string | Error | Buffer | Stream | JsonItem): void {
     if (this.originalValue.writableEnded) return;
     if (value === null) {
       this.#setBodyNothing();
@@ -88,9 +78,11 @@ class Response {
     res.end(str);
   }
 
-  #setBodyJson = (value: StrictJsonItem): void => {
+  #setBodyJson = (value: JsonItem): void => {
     const res = this.originalValue;
-    const str = JSON.stringify(value);
+    const str = JSON.stringify(value, (key, value) => {
+      return typeof value === 'bigint' ? value.toString() + 'n' : value;
+    });
     if (!this.originalValue.hasHeader('Content-Type')) {
       this.#setHeader('Content-Type', 'application/json; charset=utf-8');
     }
