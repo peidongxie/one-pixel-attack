@@ -33,14 +33,14 @@ export interface HandlerRequest {
 }
 
 class Request {
-  originalValue: IncomingMessage;
+  #originalValue: IncomingMessage;
 
   constructor(req: IncomingMessage) {
-    this.originalValue = req;
+    this.#originalValue = req;
   }
 
   async getBody<Body>(): Promise<Body | undefined> {
-    const req = this.originalValue;
+    const req = this.#originalValue;
     if (typeis(req, formTypes)) {
       return this.#getBodyForm<Body>();
     } else if (typeis(req, jsonTypes)) {
@@ -53,16 +53,16 @@ class Request {
   }
 
   getHeaders(): IncomingHttpHeaders {
-    return this.originalValue.headers;
+    return this.#originalValue.headers;
   }
 
   getMethod(): string {
-    return this.originalValue.method || '';
+    return this.#originalValue.method || '';
   }
 
   getUrl(): URL {
     return new URL(
-      this.originalValue.url || '',
+      this.#originalValue.url || '',
       `${this.#getProtocol()}://${this.#getHost()}`,
     );
   }
@@ -78,7 +78,7 @@ class Request {
 
   async #getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
-      form.parse(this.originalValue, (err, fields, files) => {
+      form.parse(this.#originalValue, (err, fields, files) => {
         if (err) {
           const reason = err;
           reject(reason);
@@ -104,15 +104,15 @@ class Request {
   }
 
   async #getBodyJson<Body>(): Promise<Body> {
-    return json(this.originalValue);
+    return json(this.#originalValue);
   }
 
   async #getBodyText<Body>(): Promise<Body> {
-    return text(this.originalValue);
+    return text(this.#originalValue);
   }
 
   async #getBodyXml<Body>(): Promise<Body> {
-    return text(this.originalValue);
+    return text(this.#originalValue);
   }
 
   #getHeaderContent(key: string): string {
@@ -123,7 +123,7 @@ class Request {
   }
 
   #getHost(): string {
-    const httpVersionMajor = this.originalValue.httpVersionMajor;
+    const httpVersionMajor = this.#originalValue.httpVersionMajor;
     return (
       this.#getHeaderContent('x-forwarded-host') ||
       (httpVersionMajor >= 2 ? this.#getHeaderContent(':authority') : '') ||
@@ -133,7 +133,7 @@ class Request {
   }
 
   #getProtocol(): string {
-    const encrypted = Reflect.has(this.originalValue.socket, 'encrypted');
+    const encrypted = Reflect.has(this.#originalValue.socket, 'encrypted');
     return (
       (encrypted ? 'https' : '') ||
       this.#getHeaderContent('x-forwarded-proto') ||

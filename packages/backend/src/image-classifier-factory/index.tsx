@@ -11,9 +11,12 @@ class ImageClassifierFactory {
     while (image === 'default') {
       const imageClassifier = this.#createImageClassifier(model, image, label);
       const prediction = imageClassifier.getPrediction();
-      if (Number(np.argmax(prediction)) !== imageClassifier.label) continue;
-      if (Number(np.amax(prediction)) >= 0.95) continue;
-      return imageClassifier;
+      if (
+        Number(np.argmax(prediction)) === imageClassifier.getLabel() &&
+        Number(np.amax(prediction)) < 0.95
+      ) {
+        return imageClassifier;
+      }
     }
     return this.#createImageClassifier(model, image, label);
   }
