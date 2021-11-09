@@ -27,10 +27,10 @@ const handler: Handler = async (req) => {
     imageClassifier,
     isNaN(Number(body.perturbation)) ? undefined : Number(body.perturbation),
   );
-  const image = imageClassifier.normalized
-    ? np.around(np.multiply(imageClassifier.image, 255))
-    : imageClassifier.image;
-  const label = imageClassifier.label;
+  const image = imageClassifier.getNormalized()
+    ? np.around(np.multiply(imageClassifier.getImage(), 255))
+    : imageClassifier.getImage();
+  const label = imageClassifier.getLabel();
   const pixels = adversarialAttacker.attack();
   const predictions = [
     imageClassifier.getPrediction(),

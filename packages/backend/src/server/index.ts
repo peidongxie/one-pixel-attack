@@ -1,4 +1,4 @@
-import { Server as HttpServer } from 'http';
+import { Server as HttpServer, RequestListener } from 'http';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { Server as HttpsServer } from 'https';
 import Request from './request';
@@ -20,7 +20,7 @@ export type Handler = (
 ) => void | HandlerResponse | Promise<void | HandlerResponse>;
 
 class Server {
-  server: HttpServer | HttpsServer;
+  #originalValue: HttpServer | HttpsServer;
 
   constructor(handler: Handler, corsOptions?: CorsOptions) {
     const { allowHeaders, allowMethods, allowOrigin, maxAge } = {
@@ -30,10 +30,7 @@ class Server {
       maxAge: 600,
       ...corsOptions,
     };
-    const requestListener = async (
-      req: IncomingMessage,
-      res: ServerResponse,
-    ) => {
+    const requestListener: RequestListener = async (req, res) => {
       const request = new Request(req);
       const response = new Response(res);
       const origin = request.getHeaders().origin;
@@ -77,11 +74,13 @@ class Server {
       }
     };
     const server = new HttpServer(requestListener);
-    this.server = server;
+    this.#originalValue = server;
   }
 
   start(port?: number): void {
-    this.server.listen(port || (this.server instanceof HttpsServer ? 443 : 80));
+    this.#originalValue.listen(
+      port || (this.#originalValue instanceof HttpsServer ? 443 : 80),
+    );
   }
 }
 
