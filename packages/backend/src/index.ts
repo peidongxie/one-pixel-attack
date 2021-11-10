@@ -5,8 +5,8 @@ import Server from './server';
 import type { Handler, MultipartFile } from './server';
 
 interface Body {
-  image: 'default' | MultipartFile;
   model: 'default' | MultipartFile;
+  image: 'default' | MultipartFile;
   label: string;
   perturbation: string;
 }
@@ -19,8 +19,8 @@ const handler: Handler = async (req) => {
   if (!body) return { code: 400 };
   console.info(body);
   const imageClassifier = ImageClassifierFactory.createImageClassifier(
-    body.image,
     body.model,
+    body.image,
     body.label,
   );
   const adversarialAttacker = new AdversarialAttacker(

@@ -29,8 +29,8 @@ const InputPaper: FC<InputPaperProps> = () => {
   const classes = useStyles();
   return (
     <Paper className={classes.root}>
-      <ImageControl />
       <ModelControl />
+      <ImageControl />
       <LabelControl />
       <PerturbationControl />
       <SubmitControl />

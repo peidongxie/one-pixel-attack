@@ -10,23 +10,6 @@ interface Result {
   [key: string]: unknown;
 }
 
-// image control
-
-const imageIsDefaultState = atom({
-  key: 'imageIsDefaultState',
-  default: false,
-});
-
-const imageFileState = atom<File | null>({
-  key: 'imageIsFileState',
-  default: null,
-});
-
-const imageIsNormalizedState = atom({
-  key: 'imageIsNormalizedState',
-  default: true,
-});
-
 // model control
 
 const modelIsDefaultState = atom({
@@ -41,6 +24,23 @@ const modelFileState = atom<File | null>({
 
 const modelIsNormalizedState = atom({
   key: 'modelIsNormalizedState',
+  default: true,
+});
+
+// image control
+
+const imageIsDefaultState = atom({
+  key: 'imageIsDefaultState',
+  default: false,
+});
+
+const imageFileState = atom<File | null>({
+  key: 'imageIsFileState',
+  default: null,
+});
+
+const imageIsNormalizedState = atom({
+  key: 'imageIsNormalizedState',
   default: true,
 });
 
@@ -69,6 +69,27 @@ const perturbationPixelState = atom({
 });
 
 // form field
+
+const modelState = selector<FormItem | null>({
+  key: 'modelState',
+  get: ({ get }) => {
+    const modelIsDefault = get(modelIsDefaultState);
+    if (modelIsDefault) {
+      return {
+        name: 'model',
+        value: 'default',
+      };
+    }
+    const modelFile = get(modelFileState);
+    if (!modelFile) return null;
+    const modelIsNormalized = get(modelIsNormalizedState);
+    return {
+      name: 'model',
+      value: modelFile,
+      fileName: modelIsNormalized ? 'normalized.h5' : 'raw.h5',
+    };
+  },
+});
 
 const imageIsNumpyState = selector({
   key: 'imageIsNumpyState',
@@ -104,27 +125,6 @@ const imageState = selector<FormItem | null>({
       name: 'image',
       value: imageFile,
       fileName: imageIsNormalized ? 'normalized.npy' : 'raw.npy',
-    };
-  },
-});
-
-const modelState = selector<FormItem | null>({
-  key: 'modelState',
-  get: ({ get }) => {
-    const modelIsDefault = get(modelIsDefaultState);
-    if (modelIsDefault) {
-      return {
-        name: 'model',
-        value: 'default',
-      };
-    }
-    const modelFile = get(modelFileState);
-    if (!modelFile) return null;
-    const modelIsNormalized = get(modelIsNormalizedState);
-    return {
-      name: 'model',
-      value: modelFile,
-      fileName: modelIsNormalized ? 'normalized.h5' : 'raw.h5',
     };
   },
 });
@@ -172,10 +172,10 @@ const perturbationState = selector<FormItem | null>({
 const formState = selector({
   key: 'formState',
   get: ({ get }) => {
-    const image = get(imageState);
-    if (image === null) return null;
     const model = get(modelState);
     if (model === null) return null;
+    const image = get(imageState);
+    if (image === null) return null;
     const label = get(labelState);
     if (label === null) return null;
     const perturbation = get(perturbationState);
