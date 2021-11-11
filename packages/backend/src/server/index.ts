@@ -1,5 +1,4 @@
 import { Server as HttpServer, RequestListener } from 'http';
-import type { IncomingMessage, ServerResponse } from 'http';
 import { Server as HttpsServer } from 'https';
 import Request from './request';
 import type { HandlerRequest, MultipartFile } from './request';
