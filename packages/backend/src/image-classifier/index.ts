@@ -18,26 +18,41 @@ class ImageClassifier {
     const key = Math.random();
     if (model === undefined) {
       this.#model = getDefaultModel();
+      this.#normalized = true;
       this.#image = getDefaultImage(key);
+      this.#shape = [this.#image.shape[0], this.#image.shape[1]];
+      this.#prediction = this.#model.predict<NumpyArray2D>(
+        np.expand_dims(this.#image, 0),
+      )[0];
       this.#label = getDefaultLabel(key);
     } else if (image === undefined) {
       this.#model = this.#getModel(model);
+      this.#normalized = model.name !== 'raw.h5';
       this.#image = getDefaultImage(key);
+      this.#shape = [this.#image.shape[0], this.#image.shape[1]];
+      this.#prediction = this.#model.predict<NumpyArray2D>(
+        np.expand_dims(this.#image, 0),
+      )[0];
       this.#label = getDefaultLabel(key);
     } else if (label === undefined) {
       this.#model = this.#getModel(model);
+      this.#normalized = model.name !== 'raw.h5';
       this.#image = this.#getImage(image);
+      this.#shape = [this.#image.shape[0], this.#image.shape[1]];
+      this.#prediction = this.#model.predict<NumpyArray2D>(
+        np.expand_dims(this.#image, 0),
+      )[0];
       this.#label = Number(np.argmax(this.getPrediction()));
     } else {
       this.#model = this.#getModel(model);
+      this.#normalized = model.name !== 'raw.h5';
       this.#image = this.#getImage(image);
+      this.#shape = [this.#image.shape[0], this.#image.shape[1]];
+      this.#prediction = this.#model.predict<NumpyArray2D>(
+        np.expand_dims(this.#image, 0),
+      )[0];
       this.#label = label;
     }
-    this.#normalized = model?.name !== 'raw.h5';
-    this.#shape = [this.#image.shape[0], this.#image.shape[1]];
-    this.#prediction = this.#model.predict<NumpyArray2D>(
-      np.expand_dims(this.#image, 0),
-    )[0];
   }
 
   getImage(): NumpyArray3D {
@@ -79,7 +94,7 @@ class ImageClassifier {
       keras.preprocessing.image.load_img(image.path),
       boa.kwargs({ dtype: 'float32' }),
     );
-    if (this.#normalized) np.divide(array, 255);
+    if (this.#normalized) return np.divide(array, 255);
     return array;
   }
 
