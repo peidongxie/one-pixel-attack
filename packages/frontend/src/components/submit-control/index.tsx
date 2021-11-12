@@ -31,7 +31,10 @@ const SubmitControl: FC<SubmitControlProps> = () => {
             if (fileName) formData.append(name, value, fileName);
             else formData.append(name, value);
           }
-          const response = await fetch('/', { body: formData, method: 'POST' });
+          const response = await fetch(
+            'https://run.mocky.io/v3/a92e320b-9e08-4481-9e39-ec713b92004f',
+            { body: formData, method: 'POST' },
+          );
           try {
             const result = await response.json();
             set(resultState, result);
