@@ -87,13 +87,19 @@ class Request {
           for (const key in files) {
             const value = files[key];
             if (!Array.isArray(value)) {
-              const { name, path, size, type } = value;
-              newFiles[key] = { name, path, size, type };
+              newFiles[key] = {
+                name: value.originalFilename,
+                path: value.filepath,
+                size: value.size,
+                type: value.mimetype,
+              };
             } else {
-              newFiles[key] = value.map((value) => {
-                const { name, path, size, type } = value;
-                return { name, path, size, type };
-              });
+              newFiles[key] = value.map((value) => ({
+                name: value.originalFilename,
+                path: value.filepath,
+                size: value.size,
+                type: value.mimetype,
+              }));
             }
           }
           const value: unknown = { ...fields, ...newFiles };
