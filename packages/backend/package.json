@@ -28,8 +28,8 @@
   "scripts": {
     "build": "cat scripts/build.ts | esbuild --format=cjs --loader=ts | node",
     "dev": "cat scripts/dev.ts | esbuild --format=cjs --loader=ts | node",
-    "fix": "eslint src --ext .ts --fix && sort-package-json",
-    "lint": "eslint src --ext .ts",
+    "fix": "eslint scripts src --ext .ts --fix && sort-package-json",
+    "lint": "eslint scripts src --ext .ts",
     "start": "node --experimental-loader @pipcook/boa/esm/loader.mjs ./dist/index.js"
   },
   "dependencies": {
