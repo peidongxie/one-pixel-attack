@@ -129,12 +129,12 @@ class Request {
   }
 
   #getHost(): string {
-    const httpVersionMajor = this.#originalValue.httpVersionMajor;
+    const http2 = this.#originalValue.httpVersionMajor >= 2;
     return (
       this.#getHeaderContent('x-forwarded-host') ||
-      (httpVersionMajor >= 2 ? this.#getHeaderContent(':authority') : '') ||
+      (http2 ? this.#getHeaderContent(':authority') : '') ||
       this.#getHeaderContent('host') ||
-      'localhost'
+      'unknown'
     );
   }
 
