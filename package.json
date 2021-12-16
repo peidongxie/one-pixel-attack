@@ -2,7 +2,7 @@
   "name": "one-pixel-attack",
   "version": "0.2.0-alpha.0",
   "private": true,
-  "description": "A tool for adversarial attacks in 2D images",
+  "description": "An adversarial image generator",
   "keywords": [
     "machine learning",
     "adversarial attack",
