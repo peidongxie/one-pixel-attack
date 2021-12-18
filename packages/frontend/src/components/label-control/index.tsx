@@ -1,8 +1,6 @@
-import FormGroup from '@material-ui/core/FormGroup';
-import { makeStyles } from '@material-ui/core/styles';
+import { FormGroup, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { useCallback } from 'react';
-import type { FC } from 'react';
+import { useCallback, type FC } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
 import CustomDefaultSwitch from '../custom-default-switch';

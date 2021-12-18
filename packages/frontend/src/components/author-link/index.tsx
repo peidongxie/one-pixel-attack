@@ -1,6 +1,6 @@
-import Link from '@material-ui/core/Link';
+import { Link } from '@material-ui/core';
 import clsx from 'clsx';
-import type { FC } from 'react';
+import { type FC } from 'react';
 
 interface AuthorLinkProps {
   className?: string;

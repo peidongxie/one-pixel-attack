@@ -1,6 +1,5 @@
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
-import type { FC } from 'react';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { type FC } from 'react';
 import { RecoilRoot } from 'recoil';
 import MainBody from './components/main-body';
 import StickyFooter from './components/sticky-footer';

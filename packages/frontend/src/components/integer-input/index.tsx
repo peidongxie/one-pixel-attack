@@ -1,15 +1,15 @@
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import type { InputProps } from '@material-ui/core/Input';
-import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import {
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+  makeStyles,
+  type InputProps,
+} from '@material-ui/core';
+import { Add as AddIcon, Remove as RemoveIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
-import type { FC } from 'react';
+import { useCallback, useMemo, useState, type FC } from 'react';
 
 interface IntegerInputProps {
   className?: string;

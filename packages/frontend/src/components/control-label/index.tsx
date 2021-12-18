@@ -1,7 +1,6 @@
-import Typography from '@material-ui/core/Typography';
-import type { TypographyProps } from '@material-ui/core/Typography';
+import { Typography, type TypographyProps } from '@material-ui/core';
 import clsx from 'clsx';
-import type { FC } from 'react';
+import { type FC } from 'react';
 
 interface ControlLabelProps {
   className?: string;

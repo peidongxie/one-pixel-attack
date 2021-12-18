@@ -1,7 +1,5 @@
-import Button from '@material-ui/core/Button';
-import FormGroup from '@material-ui/core/FormGroup';
-import { makeStyles } from '@material-ui/core/styles';
-import type { FC } from 'react';
+import { Button, FormGroup, makeStyles } from '@material-ui/core';
+import { type FC } from 'react';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { formState, isValidState, resultState } from '../../utils/form';
 

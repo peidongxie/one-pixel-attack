@@ -1,10 +1,11 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import type { SwitchProps } from '@material-ui/core/Switch';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+  FormControlLabel,
+  Switch,
+  makeStyles,
+  type SwitchProps,
+} from '@material-ui/core';
 import clsx from 'clsx';
-import { useCallback } from 'react';
-import type { FC } from 'react';
+import { useCallback, type FC } from 'react';
 import ControlLabel from '../control-label';
 
 interface CustomDefaultSwitchProps {
