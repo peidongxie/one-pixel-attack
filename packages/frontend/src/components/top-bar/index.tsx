@@ -1,8 +1,5 @@
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { makeStyles } from '@material-ui/core/styles';
-import { Fragment } from 'react';
-import type { FC } from 'react';
+import { AppBar, Toolbar, makeStyles } from '@material-ui/core';
+import { Fragment, type FC } from 'react';
 import LogoPic from '../logo-pic';
 import RepoIcon from '../repo-icon';
 import TitlePic from '../title-pic';

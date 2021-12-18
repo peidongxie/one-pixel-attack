@@ -1,5 +1,4 @@
-import { build } from 'esbuild';
-import type { BuildOptions } from 'esbuild';
+import { build, type BuildOptions } from 'esbuild';
 import filesize from 'filesize';
 import { copy, emptyDir, readFileSync } from 'fs-extra';
 import { basename, dirname, sep } from 'path';

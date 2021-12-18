@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import logo from './logo.svg';
 
 interface LogoPicProps {

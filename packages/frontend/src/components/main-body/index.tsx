@@ -1,6 +1,5 @@
-import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
-import type { FC } from 'react';
+import { Box, makeStyles } from '@material-ui/core';
+import { type FC } from 'react';
 import InputPaper from '../input-paper';
 import OutputPaper from '../output-paper';
 

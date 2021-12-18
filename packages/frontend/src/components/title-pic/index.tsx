@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import title from './title.svg';
 
 interface TitlePicProps {

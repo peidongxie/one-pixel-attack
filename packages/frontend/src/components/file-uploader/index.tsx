@@ -1,11 +1,12 @@
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { makeStyles } from '@material-ui/core/styles';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  makeStyles,
+} from '@material-ui/core';
+import { CloudUpload as CloudUploadIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
-import type { ChangeEventHandler, FC } from 'react';
+import { useCallback, useMemo, type ChangeEventHandler, type FC } from 'react';
 
 interface FileUploaderProps {
   className?: string;

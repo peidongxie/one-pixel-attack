@@ -1,7 +1,7 @@
-import IconButton from '@material-ui/core/IconButton';
-import GitHubIcon from '@material-ui/icons/GitHub';
+import { IconButton } from '@material-ui/core';
+import { GitHub as GitHubIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import type { FC } from 'react';
+import { type FC } from 'react';
 
 interface RepoIconProps {
   className?: string;

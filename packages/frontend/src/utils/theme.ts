@@ -1,5 +1,8 @@
-import { createTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import type { ThemeOptions } from '@material-ui/core/styles';
+import {
+  createTheme,
+  responsiveFontSizes,
+  type ThemeOptions,
+} from '@material-ui/core';
 
 const fonts = [
   '-apple-system',

@@ -1,6 +1,5 @@
 import { ip } from 'address';
-import { serve } from 'esbuild';
-import type { BuildOptions, ServeOptions } from 'esbuild';
+import { serve, type BuildOptions, type ServeOptions } from 'esbuild';
 import { readJson } from 'fs-extra';
 import { format } from 'url';
 

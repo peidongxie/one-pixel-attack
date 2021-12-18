@@ -1,7 +1,5 @@
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import type { FC } from 'react';
+import { Container, Typography, makeStyles } from '@material-ui/core';
+import { type FC } from 'react';
 import Copyright from '../copyright';
 import AuthorLink from '../author-link';
 

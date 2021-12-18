@@ -1,5 +1,4 @@
-import { Fragment } from 'react';
-import type { FC } from 'react';
+import { Fragment, type FC } from 'react';
 
 interface CopyrightProps {
   startYear?: number;
