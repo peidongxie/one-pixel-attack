@@ -48,7 +48,7 @@ const buildOptions: BuildOptions = {
   platform: 'node',
   sourcemap: false,
   splitting: true,
-  target: 'node14',
+  target: 'node15',
   watch: {
     onRebuild: () => {
       stopChildProcess();
