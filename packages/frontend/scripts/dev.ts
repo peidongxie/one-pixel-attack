@@ -1,7 +1,6 @@
 import { ip } from 'address';
 import { serve, type BuildOptions, type ServeOptions } from 'esbuild';
 import { readJson } from 'fs-extra';
-import { format } from 'url';
 
 const serveOptions: ServeOptions = {
   port: 3000,
@@ -74,8 +73,8 @@ const buildOptions: BuildOptions = {
   console.log();
   console.log(`You can now view ${appName} in the browser.`);
   console.log();
-  for (const { label, ...url } of outputs) {
-    console.log(`  ${only ? '' : label}${format(url)}`);
+  for (const { label, protocol, hostname, port } of outputs) {
+    console.log(`  ${only ? '' : label}${protocol}://${hostname}:${port}`);
   }
   console.log();
   console.log('Note that the development build is not optimized.');
