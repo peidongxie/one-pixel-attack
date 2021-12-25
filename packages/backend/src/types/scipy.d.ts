@@ -1,5 +1,5 @@
 declare module 'py:scipy.optimize' {
-  import type { NumpyArray } from 'py:numpy';
+  import { type NumpyArray } from 'py:numpy';
   class Bounds {
     constructor(
       lb: number[] | Tuple<number, number>,
@@ -19,5 +19,5 @@ declare module 'py:scipy.optimize' {
       kwargs?: BoaKwargs,
     ) => OptimizeResult<T>;
   };
-  export default optimize;
+  export { optimize as default };
 }

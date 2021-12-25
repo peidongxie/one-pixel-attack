@@ -1,6 +1,9 @@
 import boa from '@pipcook/boa';
-import np from 'py:numpy';
-import type { NumpyArray0D, NumpyArray1D, NumpyArray2D } from 'py:numpy';
+import np, {
+  type NumpyArray0D,
+  type NumpyArray1D,
+  type NumpyArray2D,
+} from 'py:numpy';
 import optimize from 'py:scipy.optimize';
 import type ImageClassifier from '../image-classifier';
 
@@ -93,4 +96,4 @@ class AdversarialAttacker {
   }
 }
 
-export default AdversarialAttacker;
+export { AdversarialAttacker as default };

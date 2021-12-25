@@ -1,9 +1,11 @@
 import boa from '@pipcook/boa';
 import fs from 'fs-extra';
-import np from 'py:numpy';
-import type { NumpyArray2D, NumpyArray3D, NumpyArray4D } from 'py:numpy';
-import keras from 'py:tensorflow.keras';
-import type { Model } from 'py:tensorflow.keras';
+import np, {
+  type NumpyArray2D,
+  type NumpyArray3D,
+  type NumpyArray4D,
+} from 'py:numpy';
+import keras, { type Model } from 'py:tensorflow.keras';
 
 const { tuple } = boa.builtins();
 
@@ -83,20 +85,22 @@ const { trainImages, trainLabels, testImages, testLabels } = loadData();
 const model = fs.existsSync('./public/model.h5') ? loadModel() : trainModel();
 model.summary();
 
-export const getDefaultImage = (key: number): NumpyArray3D => {
+const getDefaultImage = (key: number): NumpyArray3D => {
   const index = Math.floor(key * 10000) % 10000;
   return testImages[index];
 };
 
-export const getDefaultLabel = (key: number): number => {
+const getDefaultLabel = (key: number): number => {
   const index = Math.floor(key * 10000) % 10000;
   return testLabels[index][0].item();
 };
 
-export const getDefaultModel = (): Model => {
+const getDefaultModel = (): Model => {
   return new keras.models.Sequential(
     boa.kwargs({
       layers: [model, new keras.layers.Softmax()],
     }),
   );
 };
+
+export { getDefaultImage, getDefaultLabel, getDefaultModel };

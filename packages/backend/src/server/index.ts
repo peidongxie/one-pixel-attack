@@ -1,20 +1,16 @@
 import { Server as HttpServer, RequestListener } from 'http';
 import { Server as HttpsServer } from 'https';
-import Request from './request';
-import type { HandlerRequest, MultipartFile } from './request';
-import Response from './response';
-import type { HandlerResponse } from './response';
+import Request, { type HandlerRequest, type MultipartFile } from './request';
+import Response, { type HandlerResponse, type JsonItem } from './response';
 
-export type { HandlerRequest, HandlerResponse, MultipartFile };
-
-export interface CorsOptions {
+interface CorsOptions {
   allowHeaders?: string;
   allowMethods?: string;
   allowOrigin?: (origin: string) => boolean;
   maxAge?: number;
 }
 
-export type Handler = (
+type Handler = (
   req: HandlerRequest,
 ) => void | HandlerResponse | Promise<void | HandlerResponse>;
 
@@ -83,4 +79,12 @@ class Server {
   }
 }
 
-export default Server;
+export {
+  Server as default,
+  type CorsOptions,
+  type Handler,
+  type HandlerRequest,
+  type HandlerResponse,
+  type JsonItem,
+  type MultipartFile,
+};

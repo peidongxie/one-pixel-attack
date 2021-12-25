@@ -1,8 +1,7 @@
 import np from 'py:numpy';
 import AdversarialAttacker from './adversarial-attacker';
 import ImageClassifierFactory from './image-classifier-factory';
-import Server from './server';
-import type { Handler, MultipartFile } from './server';
+import Server, { type Handler, type MultipartFile } from './server';
 
 interface Body {
   model: 'default' | MultipartFile;
