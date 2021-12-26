@@ -1,8 +1,6 @@
-import { build } from 'esbuild';
-import type { BuildOptions } from 'esbuild';
+import { build, type BuildOptions } from 'esbuild';
 import fs from 'fs-extra';
-import { fork } from 'child_process';
-import type { ChildProcess } from 'child_process';
+import { fork, type ChildProcess } from 'child_process';
 
 let childProcess: ChildProcess | null = null;
 

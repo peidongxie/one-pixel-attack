@@ -86,13 +86,13 @@ declare module 'py:numpy' {
       kwargs?: BoaKwargs,
     ) => List<number, T>;
   };
-  export default np;
-  export type {
-    NumpyArray,
-    NumpyArray0D,
-    NumpyArray1D,
-    NumpyArray2D,
-    NumpyArray3D,
-    NumpyArray4D,
+  export {
+    np as default,
+    type NumpyArray,
+    type NumpyArray0D,
+    type NumpyArray1D,
+    type NumpyArray2D,
+    type NumpyArray3D,
+    type NumpyArray4D,
   };
 }

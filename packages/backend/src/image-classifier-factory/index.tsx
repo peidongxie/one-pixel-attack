@@ -1,6 +1,6 @@
 import np from 'py:numpy';
 import ImageClassifier from '../image-classifier';
-import type { MultipartFile } from '../server';
+import { type MultipartFile } from '../server';
 
 class ImageClassifierFactory {
   static createImageClassifier(
@@ -34,4 +34,4 @@ class ImageClassifierFactory {
   }
 }
 
-export default ImageClassifierFactory;
+export { ImageClassifierFactory as default };

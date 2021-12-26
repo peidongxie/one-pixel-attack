@@ -1,10 +1,12 @@
 import boa from '@pipcook/boa';
-import np from 'py:numpy';
-import type { NumpyArray1D, NumpyArray2D, NumpyArray3D } from 'py:numpy';
-import keras from 'py:tensorflow.keras';
-import type { Model } from 'py:tensorflow.keras';
+import np, {
+  type NumpyArray1D,
+  type NumpyArray2D,
+  type NumpyArray3D,
+} from 'py:numpy';
+import keras, { type Model } from 'py:tensorflow.keras';
 import { getDefaultImage, getDefaultLabel, getDefaultModel } from './default';
-import type { MultipartFile } from '../server';
+import { type MultipartFile } from '../server';
 
 class ImageClassifier {
   #image: NumpyArray3D;
@@ -110,4 +112,4 @@ class ImageClassifier {
   }
 }
 
-export default ImageClassifier;
+export { ImageClassifier as default };

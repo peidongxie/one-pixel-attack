@@ -1,9 +1,9 @@
-import type { OutgoingHttpHeaders, ServerResponse } from 'http';
+import { type OutgoingHttpHeaders, type ServerResponse } from 'http';
 import { Stream } from 'stream';
 
-export type JsonItem = object;
+type JsonItem = object;
 
-export interface HandlerResponse {
+interface HandlerResponse {
   code?: Parameters<Response['setCode']>[0];
   message?: Parameters<Response['setMessage']>[0];
   headers?: Parameters<Response['setHeaders']>[0];
@@ -123,4 +123,4 @@ class Response {
   };
 }
 
-export default Response;
+export { Response as default, type HandlerResponse, type JsonItem };
