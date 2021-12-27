@@ -26,7 +26,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  outdir: './build/static/',
+  outdir: './dist/static/',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
@@ -39,8 +39,8 @@ const buildOptions: BuildOptions = {
 };
 
 (async () => {
-  await emptyDir('build');
-  await copy('public', 'build');
+  await emptyDir('dist');
+  await copy('public', 'dist');
   const { errors, metafile, warnings } = await build(buildOptions);
   for (const error of errors) console.error(error);
   for (const warning of warnings) console.warn(warning);
@@ -71,6 +71,6 @@ const buildOptions: BuildOptions = {
       console.log(`  ${gzipSize.padEnd(length, ' ')}  ${dirName}${baseName}`);
     }
     console.log();
-    console.log('The \x1b[36mbuild\x1b[39m folder is ready to be deployed.');
+    console.log('The \x1b[36mdist\x1b[39m folder is ready to be deployed.');
   }
 })();

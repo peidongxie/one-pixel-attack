@@ -6,7 +6,7 @@ let childProcess: ChildProcess | null = null;
 
 const startChildProcess = () => {
   if (!childProcess) {
-    childProcess = fork('./build/index.js', {
+    childProcess = fork('./dist/index.js', {
       execArgv: ['--experimental-loader=@pipcook/boa/esm/loader.mjs'],
     });
     console.info('Service is up');
@@ -42,7 +42,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: false,
   minifyIdentifiers: false,
   minifySyntax: false,
-  outdir: './build/',
+  outdir: './dist/',
   platform: 'node',
   sourcemap: false,
   splitting: true,
@@ -57,7 +57,7 @@ const buildOptions: BuildOptions = {
 };
 
 (async () => {
-  await fs.emptyDir('build');
+  await fs.emptyDir('dist');
   await build(buildOptions);
   startChildProcess();
 })();
