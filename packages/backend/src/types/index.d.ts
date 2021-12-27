@@ -1,5 +1,4 @@
-import boa from '@pipcook/boa';
-
+import type boa from '@pipcook/boa';
 declare global {
   type PyObject = ReturnType<typeof boa['eval']>;
   type BoaKwargs = PyObject;
