@@ -17,4 +17,4 @@ const ControlLabel: FC<ControlLabelProps> = (props) => {
   );
 };
 
-export default ControlLabel;
+export { ControlLabel as default };

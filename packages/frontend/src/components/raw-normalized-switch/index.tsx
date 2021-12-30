@@ -62,4 +62,4 @@ const RawNormalizedSwitch: FC<RawNormalizedSwitchProps> = (props) => {
   );
 };
 
-export default RawNormalizedSwitch;
+export { RawNormalizedSwitch as default };

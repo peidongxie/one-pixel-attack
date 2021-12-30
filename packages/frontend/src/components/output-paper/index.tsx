@@ -24,4 +24,4 @@ const OutputPaper: FC<OutputPaperProps> = () => {
   return <Paper className={classes.root}></Paper>;
 };
 
-export default OutputPaper;
+export { OutputPaper as default };

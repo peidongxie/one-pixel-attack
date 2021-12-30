@@ -56,4 +56,4 @@ const PerturbationControl: FC<PerturbationControlProps> = () => {
   );
 };
 
-export default PerturbationControl;
+export { PerturbationControl as default };

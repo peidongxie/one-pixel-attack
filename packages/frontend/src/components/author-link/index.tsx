@@ -19,4 +19,4 @@ const AuthorLink: FC<AuthorLinkProps> = (props) => {
   );
 };
 
-export default AuthorLink;
+export { AuthorLink as default };

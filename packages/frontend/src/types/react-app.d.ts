@@ -7,37 +7,37 @@ declare namespace NodeJS {
 
 declare module '*.avif' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.bmp' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.gif' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.jpg' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.jpeg' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.png' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.webp' {
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.svg' {
@@ -48,20 +48,20 @@ declare module '*.svg' {
   >;
 
   const src: string;
-  export default src;
+  export { src as default };
 }
 
 declare module '*.module.css' {
   const classes: { readonly [key: string]: string };
-  export default classes;
+  export { classes as default };
 }
 
 declare module '*.module.scss' {
   const classes: { readonly [key: string]: string };
-  export default classes;
+  export { classes as default };
 }
 
 declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
-  export default classes;
+  export { classes as default };
 }

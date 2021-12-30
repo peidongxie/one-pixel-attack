@@ -62,4 +62,4 @@ const CustomDefaultSwitch: FC<CustomDefaultSwitchProps> = (props) => {
   );
 };
 
-export default CustomDefaultSwitch;
+export { CustomDefaultSwitch as default };

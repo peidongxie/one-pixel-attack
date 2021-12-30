@@ -109,4 +109,4 @@ const IntegerInput: FC<IntegerInputProps> = (props) => {
   );
 };
 
-export default IntegerInput;
+export { IntegerInput as default };

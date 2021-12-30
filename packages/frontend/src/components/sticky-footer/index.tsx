@@ -25,4 +25,4 @@ const StickyFooter: FC<StickyFooterProps> = () => {
   );
 };
 
-export default StickyFooter;
+export { StickyFooter as default };

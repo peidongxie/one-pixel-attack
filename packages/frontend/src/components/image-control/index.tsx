@@ -85,4 +85,4 @@ const ImageControl: FC<ImageControlProps> = () => {
   );
 };
 
-export default ImageControl;
+export { ImageControl as default };

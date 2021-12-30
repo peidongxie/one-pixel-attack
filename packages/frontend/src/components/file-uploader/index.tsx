@@ -69,4 +69,4 @@ const FileUploader: FC<FileUploaderProps> = (props) => {
   );
 };
 
-export default FileUploader;
+export { FileUploader as default };
