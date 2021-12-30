@@ -11,4 +11,4 @@ const LogoPic: FC<LogoPicProps> = (props) => {
   return <img alt={'logo'} className={clsx(className)} src={logo} />;
 };
 
-export default LogoPic;
+export { LogoPic as default };

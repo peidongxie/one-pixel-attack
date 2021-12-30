@@ -16,4 +16,4 @@ const Copyright: FC<CopyrightProps> = (props) => {
   );
 };
 
-export default Copyright;
+export { Copyright as default };

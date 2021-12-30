@@ -80,4 +80,4 @@ const ModelControl: FC<ModelControlProps> = () => {
   );
 };
 
-export default ModelControl;
+export { ModelControl as default };

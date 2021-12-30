@@ -58,4 +58,4 @@ const SubmitControl: FC<SubmitControlProps> = () => {
   );
 };
 
-export default SubmitControl;
+export { SubmitControl as default };

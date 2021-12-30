@@ -29,4 +29,4 @@ const MainBody: FC<MainBodyProps> = () => {
   );
 };
 
-export default MainBody;
+export { MainBody as default };

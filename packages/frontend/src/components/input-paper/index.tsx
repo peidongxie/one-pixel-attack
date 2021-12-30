@@ -37,4 +37,4 @@ const InputPaper: FC<InputPaperProps> = () => {
   );
 };
 
-export default InputPaper;
+export { InputPaper as default };

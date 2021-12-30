@@ -11,4 +11,4 @@ const TitlePic: FC<TitlePicProps> = (props) => {
   return <img alt={'title'} className={clsx(className)} src={title} />;
 };
 
-export default TitlePic;
+export { TitlePic as default };

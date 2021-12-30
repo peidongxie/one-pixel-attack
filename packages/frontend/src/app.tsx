@@ -23,4 +23,4 @@ const App: FC<AppProps> = () => {
   );
 };
 
-export default App;
+export { App as default };

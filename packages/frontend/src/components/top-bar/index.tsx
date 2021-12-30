@@ -42,4 +42,4 @@ const TopBar: FC<TopBarProps> = () => {
   );
 };
 
-export default TopBar;
+export { TopBar as default };

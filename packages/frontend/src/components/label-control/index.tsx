@@ -70,4 +70,4 @@ const LabelControl: FC<LabelControlProps> = () => {
   );
 };
 
-export default LabelControl;
+export { LabelControl as default };

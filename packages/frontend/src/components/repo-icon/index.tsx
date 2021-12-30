@@ -21,4 +21,4 @@ const RepoIcon: FC<RepoIconProps> = (props) => {
   );
 };
 
-export default RepoIcon;
+export { RepoIcon as default };
