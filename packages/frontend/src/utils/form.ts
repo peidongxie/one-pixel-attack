@@ -7,7 +7,10 @@ interface FormItem {
 }
 
 interface Result {
-  [key: string]: unknown;
+  image: [number, number, number][][];
+  label: number;
+  pixels: [number, number, number, number, number][];
+  predictions: [number[], number[]];
 }
 
 // model control
@@ -192,13 +195,40 @@ const isValidState = selector({
   },
 });
 
+// result data
+
 const resultState = atom<Result | null>({
   key: 'resultState',
   default: null,
 });
 
+const imageBeforeState = selector({
+  key: 'imageBeforeState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    return result?.image || [];
+  },
+});
+
+const imageAftreState = selector({
+  key: 'imageAfterState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    if (!result) return [];
+    const newImage = result.image.map((line) => {
+      return line.map((pixel) => pixel);
+    });
+    for (const [x, y, ...pixel] of result.pixels) {
+      newImage[x][y] = pixel;
+    }
+    return newImage;
+  },
+});
+
 export {
   formState,
+  imageAftreState,
+  imageBeforeState,
   imageFileState,
   imageIsDefaultState,
   imageIsNormalizedState,
