@@ -1,5 +1,7 @@
 import { Paper, makeStyles } from '@material-ui/core';
 import { type FC } from 'react';
+import { useRecoilValue } from 'recoil';
+import { resultState } from '../../utils/form';
 
 interface OutputPaperProps {
   className?: string;
@@ -21,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 const OutputPaper: FC<OutputPaperProps> = () => {
   const classes = useStyles();
-  return <Paper className={classes.root}></Paper>;
+  const result = useRecoilValue(resultState);
+  return <Paper className={classes.root}>{JSON.stringify(result)}</Paper>;
 };
 
 export { OutputPaper as default };
