@@ -1,8 +1,14 @@
 import {
+  ThemeProvider as MuiThemeProvider,
   createTheme,
   responsiveFontSizes,
   type ThemeOptions,
 } from '@material-ui/core';
+import { type FC } from 'react';
+
+interface ThemeProviderProps {
+  [key: string]: never;
+}
 
 const fonts = [
   '-apple-system',
@@ -44,4 +50,9 @@ const themeOptions: ThemeOptions = {
 
 const theme = responsiveFontSizes(createTheme(themeOptions));
 
-export { theme as default };
+const ThemeProvider: FC<ThemeProviderProps> = (props) => {
+  const { children } = props;
+  return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>;
+};
+
+export { ThemeProvider as default };
