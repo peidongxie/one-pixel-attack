@@ -1,10 +1,10 @@
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
 import { type FC } from 'react';
 import { RecoilRoot } from 'recoil';
 import MainBody from './components/main-body';
 import StickyFooter from './components/sticky-footer';
 import TopBar from './components/top-bar';
-import theme from './utils/theme';
+import ThemeProvider from './utils/theme';
 
 interface AppProps {
   [key: string]: never;
@@ -13,7 +13,7 @@ interface AppProps {
 const App: FC<AppProps> = () => {
   return (
     <RecoilRoot>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider>
         <CssBaseline />
         <TopBar />
         <MainBody />
