@@ -1,7 +1,8 @@
 import { Paper, makeStyles } from '@material-ui/core';
 import { type FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import { resultState } from '../../utils/form';
+import PicCanvas from '../pic-canvas';
+import { imageBeforeState, imageAfterState } from '../../utils/form';
 
 interface OutputPaperProps {
   className?: string;
@@ -23,8 +24,14 @@ const useStyles = makeStyles((theme) => ({
 
 const OutputPaper: FC<OutputPaperProps> = () => {
   const classes = useStyles();
-  const result = useRecoilValue(resultState);
-  return <Paper className={classes.root}>{JSON.stringify(result)}</Paper>;
+  const imageBefore = useRecoilValue(imageBeforeState);
+  const imageAfter = useRecoilValue(imageAfterState);
+  return (
+    <Paper className={classes.root}>
+      <PicCanvas minWidth={200} picture={imageBefore} />
+      <PicCanvas minWidth={200} picture={imageAfter} />
+    </Paper>
+  );
 };
 
 export { OutputPaper as default };

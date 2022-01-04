@@ -210,7 +210,7 @@ const imageBeforeState = selector({
   },
 });
 
-const imageAftreState = selector({
+const imageAfterState = selector({
   key: 'imageAfterState',
   get: ({ get }) => {
     const result = get(resultState);
@@ -218,8 +218,8 @@ const imageAftreState = selector({
     const newImage = result.image.map((line) => {
       return line.map((pixel) => pixel);
     });
-    for (const [x, y, ...pixel] of result.pixels) {
-      newImage[x][y] = pixel;
+    for (const [row, column, ...pixel] of result.pixels) {
+      newImage[row][column] = pixel;
     }
     return newImage;
   },
@@ -227,7 +227,7 @@ const imageAftreState = selector({
 
 export {
   formState,
-  imageAftreState,
+  imageAfterState,
   imageBeforeState,
   imageFileState,
   imageIsDefaultState,
