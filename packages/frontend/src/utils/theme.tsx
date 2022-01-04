@@ -4,10 +4,10 @@ import {
   responsiveFontSizes,
   type ThemeOptions,
 } from '@material-ui/core';
-import { type FC } from 'react';
+import { type FC, type ReactNode } from 'react';
 
 interface ThemeProviderProps {
-  [key: string]: never;
+  children: ReactNode;
 }
 
 const fonts = [
