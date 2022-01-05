@@ -1,8 +1,12 @@
 import { Paper, makeStyles } from '@material-ui/core';
 import { type FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import PicCanvas from '../pic-canvas';
-import { imageBeforeState, imageAfterState } from '../../utils/form';
+import ImageCanvas from '../image-canvas';
+import {
+  imageBeforeState,
+  imageAfterState,
+  shapeState,
+} from '../../utils/form';
 
 interface OutputPaperProps {
   className?: string;
@@ -26,10 +30,11 @@ const OutputPaper: FC<OutputPaperProps> = () => {
   const classes = useStyles();
   const imageBefore = useRecoilValue(imageBeforeState);
   const imageAfter = useRecoilValue(imageAfterState);
+  const shape = useRecoilValue(shapeState);
   return (
     <Paper className={classes.root}>
-      <PicCanvas minWidth={200} picture={imageBefore} />
-      <PicCanvas minWidth={200} picture={imageAfter} />
+      <ImageCanvas image={imageBefore} shape={shape} />
+      <ImageCanvas image={imageAfter} shape={shape} />
     </Paper>
   );
 };

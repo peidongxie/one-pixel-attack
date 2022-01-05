@@ -202,11 +202,23 @@ const resultState = atom<Result | null>({
   default: null,
 });
 
+const shapeState = selector<[number, number, number]>({
+  key: 'shapeState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    if (!result?.image) return [0, 0, 4];
+    return [result.image.length, result.image[0].length, 4];
+  },
+});
+
 const imageBeforeState = selector({
   key: 'imageBeforeState',
   get: ({ get }) => {
     const result = get(resultState);
-    return result?.image || [];
+    if (!result?.image) return [];
+    return result.image
+      .map((line) => line.map((column) => [...column, 100]))
+      .flat(2);
   },
 });
 
@@ -214,14 +226,17 @@ const imageAfterState = selector({
   key: 'imageAfterState',
   get: ({ get }) => {
     const result = get(resultState);
-    if (!result) return [];
-    const newImage = result.image.map((line) => {
-      return line.map((pixel) => pixel);
-    });
-    for (const [row, column, ...pixel] of result.pixels) {
-      newImage[row][column] = pixel;
+    const shape = get(shapeState);
+    const imageBefore = get(imageBeforeState);
+    if (!result?.image) return [];
+    const imageAfter = [...imageBefore];
+    for (const [row, column, red, green, blue] of result.pixels) {
+      const offset = (row * shape[1] + column) * shape[2];
+      imageAfter[offset] = red;
+      imageAfter[offset + 1] = green;
+      imageAfter[offset + 2] = blue;
     }
-    return newImage;
+    return imageAfter;
   },
 });
 
@@ -246,4 +261,5 @@ export {
   perturbationPixelState,
   perturbationState,
   resultState,
+  shapeState,
 };
