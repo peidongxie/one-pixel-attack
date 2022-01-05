@@ -217,7 +217,7 @@ const imageBeforeState = selector({
     const result = get(resultState);
     if (!result?.image) return [];
     return result.image
-      .map((line) => line.map((column) => [...column, 0]))
+      .map((line) => line.map((column) => [...column, 100]))
       .flat(2);
   },
 });
@@ -230,11 +230,11 @@ const imageAfterState = selector({
     const imageBefore = get(imageBeforeState);
     if (!result?.image) return [];
     const imageAfter = [...imageBefore];
-    for (const [row, column, r, g, b] of result.pixels) {
+    for (const [row, column, red, green, blue] of result.pixels) {
       const offset = (row * shape[1] + column) * shape[2];
-      imageAfter[offset] = r;
-      imageAfter[offset + 1] = g;
-      imageAfter[offset + 2] = b;
+      imageAfter[offset] = red;
+      imageAfter[offset + 1] = green;
+      imageAfter[offset + 2] = blue;
     }
     return imageAfter;
   },
