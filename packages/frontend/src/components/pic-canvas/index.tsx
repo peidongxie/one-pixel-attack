@@ -1,25 +1,25 @@
-import { useEffect, useMemo, useRef, type FC } from 'react';
+import { useEffect, useRef, type FC } from 'react';
 
 interface PicCanvasProps {
   className?: string;
-  minWidth: number;
-  picture: [number, number, number][][];
+  minHeight?: number;
+  minWidth?: number;
+  picture: number[];
+  shape: [number, number, number];
 }
 
 const PicCanvas: FC<PicCanvasProps> = (props) => {
-  const { className, minWidth, picture } = props;
-  const size = useMemo(() => {
-    const row = picture.length;
-    const column = picture[0]?.length || 0;
-    const times = column === 0 ? 0 : Math.ceil(minWidth / column);
-    return [row, column, row * times, column * times];
-  }, [minWidth, picture]);
+  const { className, minHeight = 200, minWidth = 200, picture, shape } = props;
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!ref.current) return;
-    ref.current.height = size[2];
-    ref.current.width = size[3];
-  }, [size]);
+    const times = Math.max(
+      Math.ceil(minHeight / shape[0]),
+      Math.ceil(minWidth / shape[1]),
+    );
+    ref.current.height = shape[0] * times;
+    ref.current.width = shape[1] * times;
+  }, [minHeight, minWidth, shape]);
   return <canvas className={className} ref={ref} />;
 };
 
