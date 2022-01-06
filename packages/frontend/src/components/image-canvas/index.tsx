@@ -2,46 +2,43 @@ import { useEffect, useMemo, useRef, type FC } from 'react';
 
 interface ImageCanvasProps {
   className?: string;
-  image: number[];
+  image: ImageData | null;
   minHeight?: number;
   minWidth?: number;
-  shape: [number, number, number];
 }
 
 const ImageCanvas: FC<ImageCanvasProps> = (props) => {
-  const { className, image, minHeight = 200, minWidth = 200, shape } = props;
-  const imageData = useMemo(() => {
-    if (!image.length) return null;
-    return new ImageData(Uint8ClampedArray.from(image), shape[1], shape[0]);
-  }, [image, shape]);
+  const { className, image, minHeight = 200, minWidth = 200 } = props;
   const times = useMemo(() => {
+    if (!image) return 0;
     return Math.max(
-      Math.ceil(minHeight / shape[0]),
-      Math.ceil(minWidth / shape[1]),
+      Math.ceil(minHeight / image.height),
+      Math.ceil(minWidth / image.width),
     );
-  }, [minHeight, minWidth, shape]);
+  }, [image, minHeight, minWidth]);
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    if (!ref.current || !imageData) return;
-    ref.current.height = shape[0] * times;
-    ref.current.width = shape[1] * times;
+    if (!ref.current) return;
+    if (!image) return;
+    ref.current.height = image.height * times;
+    ref.current.width = image.width * times;
     const context = ref.current.getContext('2d');
     if (!context) return;
-    context?.putImageData(imageData, 0, 0);
+    context?.putImageData(image, 0, 0);
     context?.scale(times, times);
     context.globalCompositeOperation = 'copy';
     context?.drawImage(
       ref.current,
       0,
       0,
-      shape[1],
-      shape[0],
+      image.width,
+      image.height,
       0,
       0,
-      shape[1],
-      shape[0],
+      image.width,
+      image.height,
     );
-  }, [imageData, shape, times]);
+  }, [image, times]);
   return <canvas className={className} ref={ref} />;
 };
 

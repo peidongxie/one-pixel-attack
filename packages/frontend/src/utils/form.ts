@@ -211,36 +211,66 @@ const shapeState = selector<[number, number, number]>({
   },
 });
 
+const bufferState = selector({
+  key: 'BufferState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    const shape = get(shapeState);
+    const length = shape[0] * shape[1] * shape[2];
+    const bufferBefore = new Uint8ClampedArray(length);
+    let offset = 0;
+    if (result?.image) {
+      for (const line of result.image) {
+        for (const pixel of line) {
+          bufferBefore[offset] = pixel[0];
+          bufferBefore[offset + 1] = pixel[1];
+          bufferBefore[offset + 2] = pixel[2];
+          bufferBefore[offset + 3] = 100;
+          offset += 4;
+        }
+      }
+    }
+    const bufferAfter = bufferBefore.slice();
+    if (result?.pixels) {
+      for (const [row, column, red, green, blue] of result.pixels) {
+        const offset = (row * shape[1] + column) * shape[2];
+        bufferAfter[offset] = red;
+        bufferAfter[offset + 1] = green;
+        bufferAfter[offset + 2] = blue;
+      }
+    }
+    return [bufferBefore, bufferAfter];
+  },
+});
+
 const imageBeforeState = selector({
   key: 'imageBeforeState',
   get: ({ get }) => {
-    const result = get(resultState);
-    if (!result?.image) return [];
-    return result.image
-      .map((line) => line.map((column) => [...column, 100]))
-      .flat(2);
+    const shape = get(shapeState);
+    const buffer = get(bufferState);
+    if (shape[0] * shape[1] * shape[2]) {
+      return new ImageData(buffer[0], shape[1], shape[0]);
+    } else {
+      return null;
+    }
   },
 });
 
 const imageAfterState = selector({
   key: 'imageAfterState',
   get: ({ get }) => {
-    const result = get(resultState);
     const shape = get(shapeState);
-    const imageBefore = get(imageBeforeState);
-    if (!result?.image) return [];
-    const imageAfter = [...imageBefore];
-    for (const [row, column, red, green, blue] of result.pixels) {
-      const offset = (row * shape[1] + column) * shape[2];
-      imageAfter[offset] = red;
-      imageAfter[offset + 1] = green;
-      imageAfter[offset + 2] = blue;
+    const buffer = get(bufferState);
+    if (shape[0] * shape[1] * shape[2]) {
+      return new ImageData(buffer[1], shape[1], shape[0]);
+    } else {
+      return null;
     }
-    return imageAfter;
   },
 });
 
 export {
+  bufferState,
   formState,
   imageAfterState,
   imageBeforeState,
