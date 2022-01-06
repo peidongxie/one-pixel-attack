@@ -30,11 +30,10 @@ const OutputPaper: FC<OutputPaperProps> = () => {
   const classes = useStyles();
   const imageBefore = useRecoilValue(imageBeforeState);
   const imageAfter = useRecoilValue(imageAfterState);
-  const shape = useRecoilValue(shapeState);
   return (
     <Paper className={classes.root}>
-      <ImageCanvas image={imageBefore} shape={shape} />
-      <ImageCanvas image={imageAfter} shape={shape} />
+      <ImageCanvas image={imageBefore} />
+      <ImageCanvas image={imageAfter} />
     </Paper>
   );
 };
