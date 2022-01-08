@@ -2,11 +2,7 @@ import { Paper, makeStyles } from '@material-ui/core';
 import { type FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import ImageCanvas from '../image-canvas';
-import {
-  imageBeforeState,
-  imageAfterState,
-  shapeState,
-} from '../../utils/form';
+import { imageBeforeState, imageAfterState } from '../../utils/form';
 
 interface OutputPaperProps {
   className?: string;
