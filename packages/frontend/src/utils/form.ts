@@ -282,6 +282,22 @@ const imageAfterState = selector({
   },
 });
 
+const predictionBeforeState = selector({
+  key: 'predictionBeforeState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    return result?.predictions[0] || null;
+  },
+});
+
+const predictionAfterState = selector({
+  key: 'predictionAfterState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    return result?.predictions[1] || null;
+  },
+});
+
 export {
   bufferState,
   formState,
@@ -303,6 +319,8 @@ export {
   perturbationIsDefaultState,
   perturbationPixelState,
   perturbationState,
+  predictionAfterState,
+  predictionBeforeState,
   resultState,
   shapeState,
 };
