@@ -202,12 +202,16 @@ const resultState = atom<Result | null>({
   default: null,
 });
 
-const shapeState = selector<[number, number, number]>({
+const shapeState = selector<[number, number, number, number, number]>({
   key: 'shapeState',
   get: ({ get }) => {
     const result = get(resultState);
-    if (!result?.image) return [0, 0, 4];
-    return [result.image.length, result.image[0].length, 4];
+    if (!result?.image) return [0, 0, 0, 0, 4];
+    const rowFamily = result.image.length;
+    const row = Math.ceil(200 / rowFamily);
+    const columnFamily = result.image[0].length;
+    const column = Math.ceil(200 / columnFamily);
+    return [rowFamily, row, columnFamily, column, 4];
   },
 });
 
@@ -215,28 +219,37 @@ const bufferState = selector({
   key: 'BufferState',
   get: ({ get }) => {
     const result = get(resultState);
-    const shape = get(shapeState);
-    const length = shape[0] * shape[1] * shape[2];
+    const [s0, s1, s2, s3, s4] = get(shapeState);
+    const length = s0 * s1 * s2 * s3 * s4;
     const bufferBefore = new Uint8ClampedArray(length);
-    let offset = 0;
     if (result?.image) {
-      for (const line of result.image) {
-        for (const pixel of line) {
-          bufferBefore[offset] = pixel[0];
-          bufferBefore[offset + 1] = pixel[1];
-          bufferBefore[offset + 2] = pixel[2];
-          bufferBefore[offset + 3] = 100;
-          offset += 4;
+      for (let i0 = 0; i0 < s0; i0++) {
+        for (let i1 = 0; i1 < s1; i1++) {
+          for (let i2 = 0; i2 < s2; i2++) {
+            for (let i3 = 0; i3 < s3; i3++) {
+              const offset = (((i0 * s1 + i1) * s2 + i2) * s3 + i3) * s4;
+              const [red, green, blue, alpha = 100] = result.image[i0][i2];
+              bufferBefore[offset] = red;
+              bufferBefore[offset + 1] = green;
+              bufferBefore[offset + 2] = blue;
+              bufferBefore[offset + 3] = alpha;
+            }
+          }
         }
       }
     }
-    const bufferAfter = bufferBefore.slice();
+    const bufferAfter = new Uint8ClampedArray(bufferBefore);
     if (result?.pixels) {
-      for (const [row, column, red, green, blue] of result.pixels) {
-        const offset = (row * shape[1] + column) * shape[2];
-        bufferAfter[offset] = red;
-        bufferAfter[offset + 1] = green;
-        bufferAfter[offset + 2] = blue;
+      for (const [i0, i2, red, green, blue, alpha = 100] of result.pixels) {
+        for (let i1 = 0; i1 < s1; i1++) {
+          for (let i3 = 0; i3 < s3; i3++) {
+            const offset = (((i0 * s1 + i1) * s2 + i2) * s3 + i3) * s4;
+            bufferAfter[offset] = red;
+            bufferAfter[offset + 1] = green;
+            bufferAfter[offset + 2] = blue;
+            bufferAfter[offset + 3] = alpha;
+          }
+        }
       }
     }
     return [bufferBefore, bufferAfter];
@@ -246,10 +259,10 @@ const bufferState = selector({
 const imageBeforeState = selector({
   key: 'imageBeforeState',
   get: ({ get }) => {
-    const shape = get(shapeState);
+    const [s0, s1, s2, s3, s4] = get(shapeState);
     const buffer = get(bufferState);
-    if (shape[0] * shape[1] * shape[2]) {
-      return new ImageData(buffer[0], shape[1], shape[0]);
+    if (s0 * s1 * s2 * s3 * s4) {
+      return new ImageData(buffer[0], s2 * s3, s0 * s1);
     } else {
       return null;
     }
@@ -259,13 +272,29 @@ const imageBeforeState = selector({
 const imageAfterState = selector({
   key: 'imageAfterState',
   get: ({ get }) => {
-    const shape = get(shapeState);
+    const [s0, s1, s2, s3, s4] = get(shapeState);
     const buffer = get(bufferState);
-    if (shape[0] * shape[1] * shape[2]) {
-      return new ImageData(buffer[1], shape[1], shape[0]);
+    if (s0 * s1 * s2 * s3 * s4) {
+      return new ImageData(buffer[1], s2 * s3, s0 * s1);
     } else {
       return null;
     }
+  },
+});
+
+const predictionBeforeState = selector({
+  key: 'predictionBeforeState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    return result?.predictions[0] || null;
+  },
+});
+
+const predictionAfterState = selector({
+  key: 'predictionAfterState',
+  get: ({ get }) => {
+    const result = get(resultState);
+    return result?.predictions[1] || null;
   },
 });
 
@@ -290,6 +319,8 @@ export {
   perturbationIsDefaultState,
   perturbationPixelState,
   perturbationState,
+  predictionAfterState,
+  predictionBeforeState,
   resultState,
   shapeState,
 };
