@@ -11,14 +11,9 @@ const ImageCanvas: FC<ImageCanvasProps> = (props) => {
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
-    if (image) {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      canvas.getContext('2d')?.putImageData(image, 0, 0);
-    } else {
-      canvas.width = 0;
-      canvas.height = 0;
-    }
+    canvas.width = image?.width || 0;
+    canvas.height = image?.height || 0;
+    image && canvas.getContext('2d')?.putImageData(image, 0, 0);
   }, [image]);
   return <canvas className={className} ref={ref} />;
 };

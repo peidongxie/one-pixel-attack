@@ -35,7 +35,7 @@ const options: ChartOptions<'bar'> = {
 const PredictionChart: FC<PredictionChartProps> = (props) => {
   const { className, predictions } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const chartRef = useRef<Chart>();
+  const chartRef = useRef<Chart<'bar', number[], string>>();
   const theme = useTheme();
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -43,8 +43,8 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
     chartRef.current = new Chart(canvasRef.current, {
       type: 'bar',
       data: {
-        labels: [],
         datasets: [],
+        labels: [],
       },
       options: options,
     });
@@ -52,43 +52,25 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
-    if (predictions) {
-      chart.data = {
-        datasets: [
-          {
-            data: predictions[0],
-            label: 'Probabilities Before Attack',
-            backgroundColor: theme.palette.primary.main,
-            hoverBackgroundColor: theme.palette.primary.main + '95',
-          },
-          {
-            data: predictions[1],
-            label: 'Probabilities After Attack',
-            backgroundColor: theme.palette.secondary.main,
-            hoverBackgroundColor: theme.palette.secondary.main + '95',
-          },
-        ],
-        labels: predictions[0].map((value, index) => 'Class ' + index),
-      };
-    } else {
-      chart.data = {
-        datasets: [
-          {
-            data: [],
-            label: 'Probabilities Before Attack',
-            backgroundColor: theme.palette.primary.main,
-            hoverBackgroundColor: theme.palette.primary.main + '95',
-          },
-          {
-            data: [],
-            label: 'Probabilities After Attack',
-            backgroundColor: theme.palette.secondary.main,
-            hoverBackgroundColor: theme.palette.secondary.main + '95',
-          },
-        ],
-        labels: [],
-      };
-    }
+    chart.data = {
+      datasets: [
+        {
+          data: predictions ? predictions[0] : [],
+          label: 'Probabilities Before Attack',
+          backgroundColor: theme.palette.primary.main,
+          hoverBackgroundColor: theme.palette.primary.main + '95',
+        },
+        {
+          data: predictions ? predictions[1] : [],
+          label: 'Probabilities After Attack',
+          backgroundColor: theme.palette.secondary.main,
+          hoverBackgroundColor: theme.palette.secondary.main + '95',
+        },
+      ],
+      labels: predictions
+        ? predictions[0].map((value, index) => 'Class ' + index)
+        : [],
+    };
     chart.update();
   }, [predictions, theme.palette]);
   return <canvas className={className} ref={canvasRef} />;
