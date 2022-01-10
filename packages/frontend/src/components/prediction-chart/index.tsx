@@ -1,6 +1,7 @@
 import { Chart, type ChartOptions } from 'chart.js';
 import 'chart.js/auto';
 import { useEffect, useRef, type FC } from 'react';
+import { useTheme } from '@material-ui/core';
 
 interface PredictionChartProps {
   className?: string;
@@ -13,6 +14,7 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
   const { className, predictions } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart>();
+  const theme = useTheme();
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -32,12 +34,16 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
       chart.data = {
         datasets: [
           {
-            label: 'Probabilities Before Attack',
             data: predictions[0],
+            label: 'Probabilities Before Attack',
+            backgroundColor: theme.palette.primary.main,
+            hoverBackgroundColor: theme.palette.primary.main + '95',
           },
           {
-            label: 'Probabilities After Attack',
             data: predictions[1],
+            label: 'Probabilities After Attack',
+            backgroundColor: theme.palette.secondary.main,
+            hoverBackgroundColor: theme.palette.secondary.main + '95',
           },
         ],
         labels: predictions[0].map((value, index) => 'Class ' + index),
@@ -46,19 +52,23 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
       chart.data = {
         datasets: [
           {
-            label: 'Probabilities Before Attack',
             data: [],
+            label: 'Probabilities Before Attack',
+            backgroundColor: theme.palette.primary.main,
+            hoverBackgroundColor: theme.palette.primary.main + '95',
           },
           {
-            label: 'Probabilities Before Attack',
             data: [],
+            label: 'Probabilities After Attack',
+            backgroundColor: theme.palette.secondary.main,
+            hoverBackgroundColor: theme.palette.secondary.main + '95',
           },
         ],
         labels: [],
       };
     }
     chart.update();
-  }, [predictions]);
+  }, [predictions, theme.palette]);
   return <canvas className={className} ref={canvasRef} />;
 };
 
