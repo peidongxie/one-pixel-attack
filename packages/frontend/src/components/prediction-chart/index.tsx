@@ -8,7 +8,29 @@ interface PredictionChartProps {
   predictions: [number[], number[]] | null;
 }
 
-const options: ChartOptions<'bar'> = {};
+const options: ChartOptions<'bar'> = {
+  interaction: {
+    intersect: false,
+    mode: 'index',
+  },
+  scales: {
+    y: {
+      min: 0,
+      max: 1,
+      ticks: {
+        stepSize: 0.25,
+        callback: (value) => (Number(value) * 100).toFixed(0) + '%',
+      },
+    },
+  },
+  plugins: {
+    tooltip: {
+      callbacks: {
+        label: (item) => (Number(item.raw) * 100).toFixed(2) + '%',
+      },
+    },
+  },
+};
 
 const PredictionChart: FC<PredictionChartProps> = (props) => {
   const { className, predictions } = props;
