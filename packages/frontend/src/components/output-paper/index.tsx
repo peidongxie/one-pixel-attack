@@ -1,13 +1,12 @@
 import { Paper, makeStyles } from '@material-ui/core';
 import { type FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import ProbabilityChart from '../probability-chart';
+import PredictionChart from '../prediction-chart';
 import ImageCanvas from '../image-canvas';
 import {
   imageBeforeState,
   imageAfterState,
-  predictionBeforeState,
-  predictionAfterState,
+  resultState,
 } from '../../utils/form';
 
 interface OutputPaperProps {
@@ -30,16 +29,14 @@ const useStyles = makeStyles((theme) => ({
 
 const OutputPaper: FC<OutputPaperProps> = () => {
   const classes = useStyles();
+  const result = useRecoilValue(resultState);
   const imageBefore = useRecoilValue(imageBeforeState);
   const imageAfter = useRecoilValue(imageAfterState);
-  const predictionBefore = useRecoilValue(predictionBeforeState);
-  const predictionAfter = useRecoilValue(predictionAfterState);
   return (
     <Paper className={classes.root}>
       <ImageCanvas image={imageBefore} />
       <ImageCanvas image={imageAfter} />
-      <ProbabilityChart data={predictionBefore} />
-      <ProbabilityChart data={predictionAfter} />
+      <PredictionChart predictions={result?.predictions || null} />
     </Paper>
   );
 };
