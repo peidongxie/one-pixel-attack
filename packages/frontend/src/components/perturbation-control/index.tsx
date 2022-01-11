@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'end',
   },
   pixel: {
+    minWidth: 184,
     margin: theme.spacing(0, 1),
   },
   hidden: {

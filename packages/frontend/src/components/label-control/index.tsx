@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'end',
   },
   index: {
+    minWidth: 184,
     margin: theme.spacing(0, 1),
   },
   hidden: {

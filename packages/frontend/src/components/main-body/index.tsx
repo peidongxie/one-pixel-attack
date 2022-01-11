@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
-    [theme.breakpoints.down('xs')]: {
-      justifyContent: 'flex-start',
-    },
   },
 }));
 
