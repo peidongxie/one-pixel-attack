@@ -38,11 +38,12 @@ const OutputPaper: FC<OutputPaperProps> = () => {
   const result = useRecoilValue(resultState);
   const imageBefore = useRecoilValue(imageBeforeState);
   const imageAfter = useRecoilValue(imageAfterState);
+  if (!result) return null;
   return (
     <Paper className={classes.root}>
       <ImageCanvas image={imageBefore} />
       <ImageCanvas image={imageAfter} />
-      <PredictionChart predictions={result?.predictions || null} />
+      <PredictionChart predictions={result.predictions || null} />
     </Paper>
   );
 };
