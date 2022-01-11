@@ -8,7 +8,6 @@ interface FormItem {
 
 interface Result {
   image: [number, number, number][][];
-  label: number;
   pixels: [number, number, number, number, number][];
   predictions: [number[], number[]];
 }
