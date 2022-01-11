@@ -16,15 +16,15 @@ const useStyles = makeStyles((theme) => ({
     height: 'fit-content',
     width: 'fit-content',
     maxWidth: '100%',
-    margin: theme.spacing(2),
+    margin: theme.spacing(2, 2, 0, 2),
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(1),
-      margin: theme.spacing(1),
+      margin: theme.spacing(1, 1, 0, 1),
     },
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(1),
-      margin: theme.spacing(0.5),
+      margin: theme.spacing(0.5, 0.5, 0, 0.5),
       flexGrow: 1,
     },
   },
