@@ -22,10 +22,11 @@ const useStyles = makeStyles((theme) => ({
   label: {
     padding: theme.spacing(0.75, 2),
     height: 36,
-    width: 120,
+    minWidth: 122,
     textAlign: 'end',
   },
   pixel: {
+    minWidth: 184,
     margin: theme.spacing(0, 1),
   },
   hidden: {

@@ -10,6 +10,7 @@ interface StickyFooterProps {
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3, 2),
+    backgroundColor: theme.palette.grey[100],
     textAlign: 'center',
   },
 }));

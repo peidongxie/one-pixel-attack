@@ -29,14 +29,13 @@ const handler: Handler = async (req) => {
   const image = imageClassifier.getNormalized()
     ? np.around(np.multiply(imageClassifier.getImage(), 255))
     : imageClassifier.getImage();
-  const label = imageClassifier.getLabel();
   const pixels = adversarialAttacker.attack();
   const predictions = [
     imageClassifier.getPrediction(),
     adversarialAttacker.getPrediction() || [],
   ];
   return {
-    body: { image, label, pixels, predictions },
+    body: { image, pixels, predictions },
   };
 };
 

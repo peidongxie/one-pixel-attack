@@ -9,13 +9,13 @@ interface MainBodyProps {
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    paddingBottom: theme.spacing(0.5),
+    alignContent: 'flex-start',
+    backgroundColor: theme.palette.grey[100],
     display: 'flex',
     flexGrow: 1,
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
-    [theme.breakpoints.down('xs')]: {
-      justifyContent: 'flex-start',
-    },
   },
 }));
 

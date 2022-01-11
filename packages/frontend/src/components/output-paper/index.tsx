@@ -18,12 +18,25 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     height: 'fit-content',
     width: 'fit-content',
-    marginTop: theme.spacing(2),
+    maxWidth: '100%',
+    margin: theme.spacing(2, 2, 0, 2),
+    overflow: 'auto',
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+      margin: theme.spacing(1, 1, 0, 1),
+    },
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(1, 0),
-      marginTop: theme.spacing(0),
+      padding: theme.spacing(1),
+      margin: theme.spacing(0.5, 0.5, 0, 0.5),
       flexGrow: 1,
     },
+  },
+  image: {
+    margin: theme.spacing(0.5),
+  },
+  prediction: {
+    margin: theme.spacing(0.5),
   },
 }));
 
@@ -32,11 +45,15 @@ const OutputPaper: FC<OutputPaperProps> = () => {
   const result = useRecoilValue(resultState);
   const imageBefore = useRecoilValue(imageBeforeState);
   const imageAfter = useRecoilValue(imageAfterState);
+  if (!result) return null;
   return (
     <Paper className={classes.root}>
-      <ImageCanvas image={imageBefore} />
-      <ImageCanvas image={imageAfter} />
-      <PredictionChart predictions={result?.predictions || null} />
+      <ImageCanvas className={classes.image} image={imageBefore} />
+      <ImageCanvas className={classes.image} image={imageAfter} />
+      <PredictionChart
+        className={classes.prediction}
+        predictions={result.predictions || null}
+      />
     </Paper>
   );
 };
