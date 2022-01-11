@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     margin: theme.spacing(2, 2, 0, 2),
     overflow: 'auto',
+    textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(1),
       margin: theme.spacing(1, 1, 0, 1),
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5, 0.5, 0, 0.5),
       flexGrow: 1,
     },
+  },
+  image: {
+    margin: theme.spacing(0.5),
+  },
+  prediction: {
+    margin: theme.spacing(0.5),
   },
 }));
 
@@ -41,9 +48,12 @@ const OutputPaper: FC<OutputPaperProps> = () => {
   if (!result) return null;
   return (
     <Paper className={classes.root}>
-      <ImageCanvas image={imageBefore} />
-      <ImageCanvas image={imageAfter} />
-      <PredictionChart predictions={result.predictions || null} />
+      <ImageCanvas className={classes.image} image={imageBefore} />
+      <ImageCanvas className={classes.image} image={imageAfter} />
+      <PredictionChart
+        className={classes.prediction}
+        predictions={result.predictions || null}
+      />
     </Paper>
   );
 };

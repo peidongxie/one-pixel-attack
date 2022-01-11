@@ -26,6 +26,7 @@ const options: ChartOptions<'bar'> = {
   plugins: {
     tooltip: {
       callbacks: {
+        title: (item) => 'Class ' + item[0].dataIndex,
         label: (item) => (Number(item.raw) * 100).toFixed(2) + '%',
       },
     },
@@ -68,7 +69,7 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
         },
       ],
       labels: predictions
-        ? predictions[0].map((value, index) => 'Class ' + index)
+        ? predictions[0].map((value, index) => 'C' + index)
         : [],
     };
     chart.update();
