@@ -1,6 +1,6 @@
 import np from 'py:numpy';
 import ImageClassifier from '../image-classifier';
-import { type MultipartFile } from '../server';
+import { type MultipartFile } from '../wrap-http';
 
 class ImageClassifierFactory {
   static createImageClassifier(
