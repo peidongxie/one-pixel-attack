@@ -1,7 +1,7 @@
 import np from 'py:numpy';
 import AdversarialAttacker from './adversarial-attacker';
 import ImageClassifierFactory from './image-classifier-factory';
-import Server, { type Handler, type MultipartFile } from './server';
+import { Server, type Handler, type MultipartFile } from './wrap-http';
 
 interface Body {
   model: 'default' | MultipartFile;
@@ -39,5 +39,6 @@ const handler: Handler = async (req) => {
   };
 };
 
-const server = new Server(handler);
-server.start(3001);
+const server = new Server();
+server.use(handler);
+server.listen(3001);

@@ -6,7 +6,7 @@ import np, {
 } from 'py:numpy';
 import keras, { type Model } from 'py:tensorflow.keras';
 import { getDefaultImage, getDefaultLabel, getDefaultModel } from './default';
-import { type MultipartFile } from '../server';
+import { type MultipartFile } from '../wrap-http';
 
 class ImageClassifier {
   #image: NumpyArray3D;
