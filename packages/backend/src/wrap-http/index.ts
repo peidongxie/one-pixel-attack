@@ -15,6 +15,7 @@ interface CorsOptions {
   allowHeaders?: string;
   allowMethods?: string;
   allowOrigin?: (origin: string) => boolean;
+  enable?: boolean;
   maxAge?: number;
 }
 
@@ -46,6 +47,7 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
       allowHeaders: '*',
       allowMethods: '*',
       allowOrigin: () => true,
+      enable: false,
       maxAge: 600,
     };
     this.#router = new Router();
@@ -68,52 +70,26 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
   }
 
   callback(): RequestListener {
-    const { allowHeaders, allowMethods, allowOrigin, maxAge } = this.#cors;
-    const router = this.#router;
     return async (req, res) => {
       const request = new Request(req);
       const response = new Response(res);
-      const origin = request.getHeaders().origin;
-      const corsForbidden = origin !== undefined && !allowOrigin(origin);
-      const corsHeaders = corsForbidden
-        ? {}
-        : request.getMethod() === 'OPTIONS'
-        ? {
-            'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Headers': allowHeaders,
-            'Access-Control-Allow-Methods': allowMethods,
-            'Access-Control-Allow-Origin': origin,
-            'Access-Control-Max-Age': maxAge,
-          }
-        : {
-            'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Origin': origin,
-          };
+      const extraHeaders = this.#getExtraHeaders(request);
+      const handler = this.#getHandler(request);
       try {
-        if (corsForbidden) {
-          response.setResponse({
-            code: 400,
-          });
-        } else {
-          const handlerRequest = request.getRequest();
-          const handler = router.getHandler(
-            handlerRequest.getMethod(),
-            handlerRequest.getUrl().pathname,
-          );
-          const handlerResponse = (await handler(handlerRequest)) ?? {};
-          response.setResponse({
-            ...handlerResponse,
-            headers: {
-              ...corsHeaders,
-              ...handlerResponse.headers,
-            },
-          });
-        }
+        const handlerRequest = request.getRequest();
+        const handlerResponse = (await handler(handlerRequest)) ?? {};
+        response.setResponse({
+          ...handlerResponse,
+          headers: {
+            ...extraHeaders,
+            ...handlerResponse.headers,
+          },
+        });
       } catch (e) {
         if (e instanceof Error) {
-          response.setResponse({ headers: corsHeaders, body: e });
+          response.setResponse({ headers: extraHeaders, body: e });
         } else {
-          response.setResponse({ code: 500, headers: corsHeaders });
+          response.setResponse({ code: 500, headers: extraHeaders });
         }
       }
     };
@@ -123,6 +99,7 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
     return (this.#cors = {
       ...this.#cors,
       ...options,
+      enable: options?.enable ?? true,
     });
   }
 
@@ -139,6 +116,47 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
     handler?: Handler,
   ) {
     this.#router.route(method, pathname, handler);
+  }
+
+  #getAllowed(origin?: string) {
+    if (!this.#cors.enable) return true;
+    if (origin === undefined) return true;
+    return this.#cors.allowOrigin(origin);
+  }
+
+  #getExtraHeaders(request: Request) {
+    return this.#getHeaders(request.getMethod(), request.getHeaders().origin);
+  }
+
+  #getForbiddenHandler(): Handler {
+    return () => ({ code: 400 });
+  }
+
+  #getHandler(request: Request): Handler {
+    if (!this.#getAllowed(request.getHeaders().origin)) {
+      return this.#getForbiddenHandler();
+    }
+    return this.#router.getHandler(
+      request.getMethod(),
+      request.getUrl().pathname,
+    );
+  }
+
+  #getHeaders(method: string, origin?: string) {
+    const { allowHeaders, allowMethods, maxAge } = this.#cors;
+    if (this.#getAllowed(origin)) return {};
+    return method === 'OPTIONS'
+      ? {
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Headers': allowHeaders,
+          'Access-Control-Allow-Methods': allowMethods,
+          'Access-Control-Allow-Origin': origin,
+          'Access-Control-Max-Age': maxAge,
+        }
+      : {
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Origin': origin,
+        };
   }
 }
 
