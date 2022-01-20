@@ -11,10 +11,7 @@ interface Body {
 }
 
 const handler: Handler = async (req) => {
-  const { getBody, getMethod, getUrl } = req;
-  if (getMethod() === 'OPTIONS') return;
-  if (getUrl().pathname !== '/') return { code: 404 };
-  const body = await getBody<Body>();
+  const body = await req.getBody<Body>();
   if (!body) return { code: 400 };
   console.info(body);
   const imageClassifier = ImageClassifierFactory.createImageClassifier(
@@ -40,5 +37,6 @@ const handler: Handler = async (req) => {
 };
 
 const server = new Server();
-server.use(handler);
+server.route('OPTIONS', '/');
+server.route('POST', new RegExp('^/$'), handler);
 server.listen(3001);

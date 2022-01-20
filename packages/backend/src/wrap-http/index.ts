@@ -9,6 +9,7 @@ import {
 } from 'https';
 import Request, { type HandlerRequest, type MultipartFile } from './request';
 import Response, { type HandlerResponse, type JsonItem } from './response';
+import Router from './router';
 
 interface CorsOptions {
   allowHeaders?: string;
@@ -31,7 +32,7 @@ type ServerOriginalValue<Secure extends boolean> = Secure extends false
 
 class Server<Secure extends boolean = false, Version extends 1 = 1> {
   #cors: Required<CorsOptions>;
-  #handler: Handler;
+  #router: Router;
   #originalValue: ServerOriginalValue<Secure>;
 
   constructor(
@@ -47,9 +48,7 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
       allowOrigin: () => true,
       maxAge: 600,
     };
-    this.#handler = () => {
-      return;
-    };
+    this.#router = new Router();
     switch (version) {
       case 1:
         this.#originalValue = (
@@ -70,7 +69,7 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
 
   callback(): RequestListener {
     const { allowHeaders, allowMethods, allowOrigin, maxAge } = this.#cors;
-    const handler = this.#handler;
+    const router = this.#router;
     return async (req, res) => {
       const request = new Request(req);
       const response = new Response(res);
@@ -97,6 +96,10 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
           });
         } else {
           const handlerRequest = request.getRequest();
+          const handler = router.getHandler(
+            handlerRequest.getMethod(),
+            handlerRequest.getUrl().pathname,
+          );
           const handlerResponse = (await handler(handlerRequest)) ?? {};
           response.setResponse({
             ...handlerResponse,
@@ -130,8 +133,12 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
     return this.#originalValue;
   }
 
-  use(handler: Handler) {
-    return (this.#handler = handler);
+  route(
+    method: string | string[],
+    pathname: string | RegExp,
+    handler?: Handler,
+  ) {
+    this.#router.route(method, pathname, handler);
   }
 }
 
