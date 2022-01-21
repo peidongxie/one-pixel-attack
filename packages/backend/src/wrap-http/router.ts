@@ -1,9 +1,5 @@
-import { type HandlerRequest } from './request';
-import { type HandlerResponse } from './response';
-
-type Handler = (
-  req: HandlerRequest,
-) => void | HandlerResponse | Promise<void | HandlerResponse>;
+import { type OutgoingHttpHeaders } from 'http';
+import { type Handler } from './type';
 
 interface Route {
   method: string[];
@@ -23,10 +19,6 @@ const validMethod = [
   'TRACE',
 ];
 
-const defaultHandler = () => ({
-  code: 404,
-});
-
 class Router {
   #routingTable: Route[];
 
@@ -34,13 +26,17 @@ class Router {
     this.#routingTable = [];
   }
 
-  getHandler(method: string, pathname: string): Handler {
+  getExtraHeaders(): OutgoingHttpHeaders {
+    return {};
+  }
+
+  getHandler(method: string, pathname: string): Handler | null {
     const route = this.#routingTable.find((route) => {
       if (!route.method.includes(method)) return false;
       if (!route.pathname.test(pathname)) return false;
       return true;
     });
-    return route?.handler || defaultHandler;
+    return route?.handler || null;
   }
 
   route(
@@ -72,4 +68,4 @@ class Router {
   }
 }
 
-export { Router as default, type Handler, type Route };
+export { Router as default };

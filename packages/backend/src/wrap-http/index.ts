@@ -1,5 +1,6 @@
 import {
   Server as HttpServer,
+  type OutgoingHttpHeaders,
   type RequestListener,
   type ServerOptions as HttpServerOptions,
 } from 'http';
@@ -7,21 +8,11 @@ import {
   Server as HttpSecureServer,
   type ServerOptions as HttpSecureServerOptions,
 } from 'https';
+import Cors from './cors';
 import Request, { type HandlerRequest, type MultipartFile } from './request';
 import Response, { type HandlerResponse, type JsonItem } from './response';
 import Router from './router';
-
-interface CorsOptions {
-  allowHeaders?: string;
-  allowMethods?: string;
-  allowOrigin?: (origin: string) => boolean;
-  enable?: boolean;
-  maxAge?: number;
-}
-
-type Handler = (
-  req: HandlerRequest,
-) => void | HandlerResponse | Promise<void | HandlerResponse>;
+import { type Handler } from './type';
 
 type ServerOptions<Secure extends boolean> = Secure extends false
   ? HttpServerOptions
@@ -31,8 +22,19 @@ type ServerOriginalValue<Secure extends boolean> = Secure extends false
   ? HttpServer
   : HttpSecureServer;
 
+interface CorsOptions {
+  allowHeaders?: string;
+  allowMethods?: string;
+  allowOrigin?: (origin: string) => boolean;
+  maxAge?: number;
+}
+
+const defaultHandler = () => {
+  return { code: 404 };
+};
+
 class Server<Secure extends boolean = false, Version extends 1 = 1> {
-  #cors: Required<CorsOptions>;
+  #cors: Cors;
   #router: Router;
   #originalValue: ServerOriginalValue<Secure>;
 
@@ -43,13 +45,7 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
     },
   ) {
     const { secure, version, ...serverOptions } = options || {};
-    this.#cors = {
-      allowHeaders: '*',
-      allowMethods: '*',
-      allowOrigin: () => true,
-      enable: false,
-      maxAge: 600,
-    };
+    this.#cors = new Cors();
     this.#router = new Router();
     switch (version) {
       case 1:
@@ -95,12 +91,21 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
     };
   }
 
-  cors(options?: CorsOptions): Required<CorsOptions> {
-    return (this.#cors = {
-      ...this.#cors,
-      ...options,
-      enable: options?.enable ?? true,
-    });
+  cors(options?: CorsOptions | boolean): void {
+    if (options === undefined || options === true) {
+      this.#cors.setEnable(true);
+    } else if (options === false) {
+      this.#cors.setEnable(false);
+    } else {
+      const { allowHeaders, allowMethods, allowOrigin, maxAge } = options;
+      this.#cors.setEnable(true);
+      this.#cors.setAllowOptions({
+        ...(allowHeaders && { headers: allowHeaders }),
+        ...(allowMethods && { methods: allowMethods }),
+        ...(allowOrigin && { origin: allowOrigin }),
+      });
+      if (maxAge !== undefined) this.#cors.setMaxAge(maxAge);
+    }
   }
 
   listen(port?: number): ServerOriginalValue<Secure> {
@@ -114,49 +119,26 @@ class Server<Secure extends boolean = false, Version extends 1 = 1> {
     method: string | string[],
     pathname: string | RegExp,
     handler?: Handler,
-  ) {
+  ): void {
     this.#router.route(method, pathname, handler);
   }
 
-  #getAllowed(origin?: string) {
-    if (!this.#cors.enable) return true;
-    if (origin === undefined) return true;
-    return this.#cors.allowOrigin(origin);
-  }
-
-  #getExtraHeaders(request: Request) {
-    return this.#getHeaders(request.getMethod(), request.getHeaders().origin);
-  }
-
-  #getForbiddenHandler(): Handler {
-    return () => ({ code: 400 });
+  #getExtraHeaders(request: Request): OutgoingHttpHeaders {
+    return {
+      ...this.#cors.getExtraHeaders(
+        request.getMethod(),
+        request.getHeaders().origin,
+      ),
+      ...this.#router.getExtraHeaders(),
+    };
   }
 
   #getHandler(request: Request): Handler {
-    if (!this.#getAllowed(request.getHeaders().origin)) {
-      return this.#getForbiddenHandler();
-    }
-    return this.#router.getHandler(
-      request.getMethod(),
-      request.getUrl().pathname,
+    return (
+      this.#cors.getHandler(request.getMethod(), request.getHeaders().origin) ||
+      this.#router.getHandler(request.getMethod(), request.getUrl().pathname) ||
+      defaultHandler
     );
-  }
-
-  #getHeaders(method: string, origin?: string) {
-    const { allowHeaders, allowMethods, maxAge } = this.#cors;
-    if (this.#getAllowed(origin)) return {};
-    return method === 'OPTIONS'
-      ? {
-          'Access-Control-Allow-Credentials': 'true',
-          'Access-Control-Allow-Headers': allowHeaders,
-          'Access-Control-Allow-Methods': allowMethods,
-          'Access-Control-Allow-Origin': origin,
-          'Access-Control-Max-Age': maxAge,
-        }
-      : {
-          'Access-Control-Allow-Credentials': 'true',
-          'Access-Control-Allow-Origin': origin,
-        };
   }
 }
 
@@ -172,7 +154,6 @@ const createServer = <Secure extends boolean, Version extends 1>(
 export {
   Server,
   createServer,
-  type CorsOptions,
   type Handler,
   type HandlerRequest,
   type HandlerResponse,
