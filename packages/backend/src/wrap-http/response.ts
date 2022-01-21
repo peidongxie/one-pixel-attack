@@ -1,19 +1,13 @@
-import { type OutgoingHttpHeaders, type ServerResponse } from 'http';
 import { Stream } from 'stream';
+import { type HandlerResponse } from './handler';
+import { type ServerResponse, type ServerResponseHeaders } from './server';
 
 type JsonItem = object;
 
-interface HandlerResponse {
-  code?: Parameters<Response['setCode']>[0];
-  message?: Parameters<Response['setMessage']>[0];
-  headers?: Parameters<Response['setHeaders']>[0];
-  body?: Parameters<Response['setBody']>[0];
-}
+class Response<Version extends 1 | 2 = 1> {
+  #originalValue: ServerResponse<Version>;
 
-class Response {
-  #originalValue: ServerResponse;
-
-  constructor(res: ServerResponse) {
+  constructor(res: ServerResponse<Version>) {
     this.#originalValue = res;
   }
 
@@ -38,7 +32,7 @@ class Response {
     this.#originalValue.statusCode = code;
   }
 
-  setHeaders(headers: OutgoingHttpHeaders): void {
+  setHeaders(headers: ServerResponseHeaders): void {
     for (const key in headers) {
       const value = headers[key];
       if (value !== undefined) this.#setHeader(key, value);
@@ -123,4 +117,4 @@ class Response {
   };
 }
 
-export { Response as default, type HandlerResponse, type JsonItem };
+export { Response as default, type JsonItem };
