@@ -9,10 +9,14 @@ import {
   type ServerOptions as HttpSecureServerOptions,
 } from 'https';
 import Cors from './cors';
-import Request, { type HandlerRequest, type MultipartFile } from './request';
-import Response, { type HandlerResponse, type JsonItem } from './response';
+import defaultHandler, {
+  type Handler,
+  type HandlerRequest,
+  type HandlerResponse,
+} from './handler';
+import Request, { type MultipartFile } from './request';
+import Response, { type JsonItem } from './response';
 import Router from './router';
-import { type Handler } from './type';
 
 type ServerOptions<Secure extends boolean> = Secure extends false
   ? HttpServerOptions
@@ -28,10 +32,6 @@ interface CorsOptions {
   allowOrigin?: (origin: string) => boolean;
   maxAge?: number;
 }
-
-const defaultHandler = () => {
-  return { code: 404 };
-};
 
 class Server<Secure extends boolean = false, Version extends 1 = 1> {
   #cors: Cors;

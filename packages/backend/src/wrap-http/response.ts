@@ -1,14 +1,8 @@
 import { type OutgoingHttpHeaders, type ServerResponse } from 'http';
 import { Stream } from 'stream';
+import { type HandlerResponse } from './handler';
 
 type JsonItem = object;
-
-interface HandlerResponse {
-  code?: Parameters<Response['setCode']>[0];
-  message?: Parameters<Response['setMessage']>[0];
-  headers?: Parameters<Response['setHeaders']>[0];
-  body?: Parameters<Response['setBody']>[0];
-}
 
 class Response {
   #originalValue: ServerResponse;

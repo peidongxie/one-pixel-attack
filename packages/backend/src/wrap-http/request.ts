@@ -2,6 +2,7 @@ import { json, text } from 'co-body';
 import formidable from 'formidable';
 import { type IncomingMessage, type IncomingHttpHeaders } from 'http';
 import typeis from 'type-is';
+import { type HandlerRequest } from './handler';
 
 const form = formidable({ multiples: true });
 
@@ -24,14 +25,6 @@ interface MultipartFile {
   size: number;
   type: string | null;
 }
-
-interface HandlerRequest {
-  getMethod: Request['getMethod'];
-  getUrl: Request['getUrl'];
-  getHeaders: Request['getHeaders'];
-  getBody: Request['getBody'];
-}
-
 class Request {
   #originalValue: IncomingMessage;
 
@@ -148,4 +141,4 @@ class Request {
   }
 }
 
-export { Request as default, type HandlerRequest, type MultipartFile };
+export { Request as default, type MultipartFile };

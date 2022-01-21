@@ -1,5 +1,5 @@
 import { type OutgoingHttpHeaders } from 'http';
-import { type Handler } from './type';
+import { type Handler } from './handler';
 
 interface AllowOptions {
   headers?: string;
