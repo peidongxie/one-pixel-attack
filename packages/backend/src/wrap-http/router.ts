@@ -1,5 +1,5 @@
-import { type OutgoingHttpHeaders } from 'http';
 import { type Handler } from './handler';
+import { type ServerResponseHeaders } from './server';
 
 interface Route {
   method: string[];
@@ -26,7 +26,7 @@ class Router {
     this.#routingTable = [];
   }
 
-  getExtraHeaders(): OutgoingHttpHeaders {
+  getExtraHeaders(): ServerResponseHeaders {
     return {};
   }
 

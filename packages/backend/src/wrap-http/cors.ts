@@ -1,5 +1,5 @@
-import { type OutgoingHttpHeaders } from 'http';
 import { type Handler } from './handler';
+import { type ServerResponseHeaders } from './server';
 
 interface AllowOptions {
   headers?: string;
@@ -30,7 +30,7 @@ class Cors {
     this.#maxAge = 600;
   }
 
-  getExtraHeaders(method: string, origin?: string): OutgoingHttpHeaders {
+  getExtraHeaders(method: string, origin?: string): ServerResponseHeaders {
     if (!this.#enable) return {};
     if (origin === undefined) return {};
     if (!this.#allowOptions.origin(origin)) return {};

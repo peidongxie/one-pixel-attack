@@ -1,8 +1,9 @@
 import { json, text } from 'co-body';
 import formidable from 'formidable';
-import { type IncomingMessage, type IncomingHttpHeaders } from 'http';
+import { type IncomingMessage } from 'http';
 import typeis from 'type-is';
 import { type HandlerRequest } from './handler';
+import { type ServerRequest, type ServerRequestHeaders } from './server';
 
 const form = formidable({ multiples: true });
 
@@ -25,15 +26,15 @@ interface MultipartFile {
   size: number;
   type: string | null;
 }
-class Request {
-  #originalValue: IncomingMessage;
+class Request<Version extends 1 | 2 = 1> {
+  #originalValue: ServerRequest<Version>;
 
-  constructor(req: IncomingMessage) {
+  constructor(req: ServerRequest<Version>) {
     this.#originalValue = req;
   }
 
   async getBody<Body>(): Promise<Body | undefined> {
-    const req = this.#originalValue;
+    const req = this.#originalValue as IncomingMessage;
     if (typeis(req, formTypes)) {
       return this.#getBodyForm<Body>();
     } else if (typeis(req, jsonTypes)) {
@@ -45,8 +46,8 @@ class Request {
     }
   }
 
-  getHeaders(): IncomingHttpHeaders {
-    return this.#originalValue.headers;
+  getHeaders(): ServerRequestHeaders<Version> {
+    return this.#originalValue.headers as ServerRequestHeaders<Version>;
   }
 
   getMethod(): string {
@@ -71,47 +72,51 @@ class Request {
 
   async #getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
-      form.parse(this.#originalValue, (err, fields, files) => {
-        if (err) {
-          const reason = err;
-          reject(reason);
-        } else {
-          const newFiles: Record<string, MultipartFile | MultipartFile[]> = {};
-          for (const key in files) {
-            const value = files[key];
-            if (!Array.isArray(value)) {
-              newFiles[key] = {
-                name: value.originalFilename,
-                path: value.filepath,
-                size: value.size,
-                type: value.mimetype,
-              };
-            } else {
-              newFiles[key] = value.map((value) => ({
-                name: value.originalFilename,
-                path: value.filepath,
-                size: value.size,
-                type: value.mimetype,
-              }));
+      form.parse(
+        this.#originalValue as IncomingMessage,
+        (err, fields, files) => {
+          if (err) {
+            const reason = err;
+            reject(reason);
+          } else {
+            const newFiles: Record<string, MultipartFile | MultipartFile[]> =
+              {};
+            for (const key in files) {
+              const value = files[key];
+              if (!Array.isArray(value)) {
+                newFiles[key] = {
+                  name: value.originalFilename,
+                  path: value.filepath,
+                  size: value.size,
+                  type: value.mimetype,
+                };
+              } else {
+                newFiles[key] = value.map((value) => ({
+                  name: value.originalFilename,
+                  path: value.filepath,
+                  size: value.size,
+                  type: value.mimetype,
+                }));
+              }
             }
+            const value: unknown = { ...fields, ...newFiles };
+            resolve(value as Body);
           }
-          const value: unknown = { ...fields, ...newFiles };
-          resolve(value as Body);
-        }
-      });
+        },
+      );
     });
   }
 
   async #getBodyJson<Body>(): Promise<Body> {
-    return json(this.#originalValue);
+    return json(this.#originalValue as IncomingMessage);
   }
 
   async #getBodyText<Body>(): Promise<Body> {
-    return text(this.#originalValue);
+    return text(this.#originalValue as IncomingMessage);
   }
 
   async #getBodyXml<Body>(): Promise<Body> {
-    return text(this.#originalValue);
+    return text(this.#originalValue as IncomingMessage);
   }
 
   #getHeaderContent(key: string): string {

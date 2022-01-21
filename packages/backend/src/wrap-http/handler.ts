@@ -1,6 +1,5 @@
 import type Request from './request';
 import type Response from './response';
-
 interface HandlerRequest {
   getMethod: Request['getMethod'];
   getUrl: Request['getUrl'];
