@@ -19,11 +19,11 @@ import {
   createServer as createHttpSecureServer,
   type ServerOptions as HttpSecureServerOptions,
 } from 'https';
-import Cors from './cors';
+import Cors from './access-controller';
 import defaultHandler, { type Handler } from './handler';
 import Request from './request';
 import Response from './response';
-import Router from './router';
+import Router from './restful-router';
 
 type ServerOptions<
   Secure extends boolean,
@@ -76,46 +76,39 @@ type ServerListener<Version extends 1 | 2> = (
   res: ServerResponse<Version>,
 ) => void;
 
-interface CorsOptions {
-  allowHeaders?: string;
-  allowMethods?: string;
-  allowOrigin?: (origin: string) => boolean;
-  maxAge?: number;
-}
-
 class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
-  #cors: Cors;
-  #router: Router;
-  #secure: boolean;
-  #originalValue: ServerOriginalValue<Secure, Version>;
+  private accessController: Cors;
+  private restfulRouter: Router;
+  private originalValue: ServerOriginalValue<Secure, Version>;
+  private secure: boolean;
 
-  constructor(
+  public constructor(
     options?: ServerOptions<Secure, Version> & {
       secure?: Secure;
       version?: Version;
     },
   ) {
     const { secure, version, ...serverOptions } = options || {};
-    this.#cors = new Cors();
-    this.#router = new Router();
-    this.#secure = secure ?? false;
+    this.accessController = new Cors();
+    this.restfulRouter = new Router();
+    this.secure = secure ?? false;
     switch (version) {
       case 1:
-        this.#originalValue = (
+        this.originalValue = (
           !secure
             ? createHttpServer(serverOptions)
             : createHttpSecureServer(serverOptions)
         ) as ServerOriginalValue<Secure, Version>;
         break;
       case 2:
-        this.#originalValue = (
+        this.originalValue = (
           !secure
             ? createHttp2Server(serverOptions)
             : createHttp2SecureServer(serverOptions)
         ) as ServerOriginalValue<Secure, Version>;
         break;
       default:
-        this.#originalValue = (
+        this.originalValue = (
           !secure
             ? createHttpServer(serverOptions)
             : createHttpSecureServer(serverOptions)
@@ -124,12 +117,12 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
     }
   }
 
-  callback(): ServerListener<Version> {
+  public callback(): ServerListener<Version> {
     return async (req, res) => {
       const request = new Request<Version>(req);
       const response = new Response<Version>(res);
-      const extraHeaders = this.#getExtraHeaders(request);
-      const handler = this.#getHandler(request);
+      const extraHeaders = this.getExtraHeaders(request);
+      const handler = this.getHandler(request);
       try {
         const handlerRequest = request.getRequest();
         const handlerResponse = (await handler(handlerRequest)) ?? {};
@@ -150,53 +143,74 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
     };
   }
 
-  cors(options?: CorsOptions | boolean): void {
+  public cors(
+    options?:
+      | {
+          allowHeaders?: string;
+          allowMethods?: string;
+          allowOrigin?: (origin: string) => boolean;
+          maxAge?: number;
+        }
+      | boolean,
+  ): void {
     if (options === undefined || options === true) {
-      this.#cors.setEnable(true);
+      this.accessController.setEnable(true);
     } else if (options === false) {
-      this.#cors.setEnable(false);
+      this.accessController.setEnable(false);
     } else {
       const { allowHeaders, allowMethods, allowOrigin, maxAge } = options;
-      this.#cors.setEnable(true);
-      this.#cors.setAllowOptions({
+      this.accessController.setEnable(true);
+      this.accessController.setAllowOptions({
         ...(allowHeaders && { headers: allowHeaders }),
         ...(allowMethods && { methods: allowMethods }),
         ...(allowOrigin && { origin: allowOrigin }),
       });
-      if (maxAge !== undefined) this.#cors.setMaxAge(maxAge);
+      if (maxAge !== undefined) this.accessController.setMaxAge(maxAge);
     }
   }
 
-  listen(port?: number): ServerOriginalValue<Secure, Version> {
-    this.#originalValue.on('request', this.callback());
-    this.#originalValue.listen(port || (this.#secure ? 443 : 80));
-    return this.#originalValue;
+  private getExtraHeaders(request: Request<Version>): ServerResponseHeaders {
+    return {
+      ...this.accessController.getExtraHeaders(
+        request.getMethod(),
+        request.getHeaders().origin,
+      ),
+      ...this.restfulRouter.getExtraHeaders(),
+    };
   }
 
-  route(
+  private getHandler(request: Request<Version>): Handler {
+    return (
+      this.accessController.getHandler(
+        request.getMethod(),
+        request.getHeaders().origin,
+      ) ||
+      this.restfulRouter.getHandler(
+        request.getMethod(),
+        request.getUrl().pathname,
+      ) ||
+      defaultHandler
+    );
+  }
+
+  public listen(
+    port?: number,
+    hostname?: string,
+  ): ServerOriginalValue<Secure, Version> {
+    this.originalValue.on('request', this.callback());
+    this.originalValue.listen(
+      port || (this.secure ? 443 : 80),
+      hostname || 'localhost',
+    );
+    return this.originalValue;
+  }
+
+  public route(
     method: string | string[],
     pathname: string | RegExp,
     handler?: Handler,
   ): void {
-    this.#router.route(method, pathname, handler);
-  }
-
-  #getExtraHeaders(request: Request<Version>): ServerResponseHeaders {
-    return {
-      ...this.#cors.getExtraHeaders(
-        request.getMethod(),
-        request.getHeaders().origin,
-      ),
-      ...this.#router.getExtraHeaders(),
-    };
-  }
-
-  #getHandler(request: Request<Version>): Handler {
-    return (
-      this.#cors.getHandler(request.getMethod(), request.getHeaders().origin) ||
-      this.#router.getHandler(request.getMethod(), request.getUrl().pathname) ||
-      defaultHandler
-    );
+    this.restfulRouter.setRoute(method, pathname, handler);
   }
 }
 

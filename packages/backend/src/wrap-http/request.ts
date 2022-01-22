@@ -27,53 +27,29 @@ interface MultipartFile {
   type: string | null;
 }
 class Request<Version extends 1 | 2 = 1> {
-  #originalValue: ServerRequest<Version>;
+  private originalValue: ServerRequest<Version>;
 
-  constructor(req: ServerRequest<Version>) {
-    this.#originalValue = req;
+  public constructor(req: ServerRequest<Version>) {
+    this.originalValue = req;
   }
 
-  async getBody<Body>(): Promise<Body | undefined> {
-    const req = this.#originalValue as IncomingMessage;
+  public async getBody<Body>(): Promise<Body | undefined> {
+    const req = this.originalValue as IncomingMessage;
     if (typeis(req, formTypes)) {
-      return this.#getBodyForm<Body>();
+      return this.getBodyForm<Body>();
     } else if (typeis(req, jsonTypes)) {
-      return this.#getBodyJson<Body>();
+      return this.getBodyJson<Body>();
     } else if (typeis(req, textTypes)) {
-      return this.#getBodyText<Body>();
+      return this.getBodyText<Body>();
     } else if (typeis(req, xmlTypes)) {
-      return this.#getBodyXml<Body>();
+      return this.getBodyXml<Body>();
     }
   }
 
-  getHeaders(): ServerRequestHeaders<Version> {
-    return this.#originalValue.headers as ServerRequestHeaders<Version>;
-  }
-
-  getMethod(): string {
-    return this.#originalValue.method || '';
-  }
-
-  getUrl(): URL {
-    return new URL(
-      this.#originalValue.url || '',
-      `${this.#getProtocol()}://${this.#getHost()}`,
-    );
-  }
-
-  getRequest(): HandlerRequest {
-    return {
-      getMethod: this.getMethod.bind(this),
-      getUrl: this.getUrl.bind(this),
-      getHeaders: this.getHeaders.bind(this),
-      getBody: this.getBody.bind(this),
-    };
-  }
-
-  async #getBodyForm<Body>(): Promise<Body> {
+  private async getBodyForm<Body>(): Promise<Body> {
     return new Promise((resolve, reject) => {
       form.parse(
-        this.#originalValue as IncomingMessage,
+        this.originalValue as IncomingMessage,
         (err, fields, files) => {
           if (err) {
             const reason = err;
@@ -107,40 +83,64 @@ class Request<Version extends 1 | 2 = 1> {
     });
   }
 
-  async #getBodyJson<Body>(): Promise<Body> {
-    return json(this.#originalValue as IncomingMessage);
+  private async getBodyJson<Body>(): Promise<Body> {
+    return json(this.originalValue as IncomingMessage);
   }
 
-  async #getBodyText<Body>(): Promise<Body> {
-    return text(this.#originalValue as IncomingMessage);
+  private async getBodyText<Body>(): Promise<Body> {
+    return text(this.originalValue as IncomingMessage);
   }
 
-  async #getBodyXml<Body>(): Promise<Body> {
-    return text(this.#originalValue as IncomingMessage);
+  private async getBodyXml<Body>(): Promise<Body> {
+    return text(this.originalValue as IncomingMessage);
   }
 
-  #getHeaderContent(key: string): string {
+  private getHeader(key: string): string {
     const header = this.getHeaders()[key];
     if (Array.isArray(header)) return header[0].split(/\s*,\s*/, 1)[0];
     if (header) return header.split(/\s*,\s*/, 1)[0];
     return '';
   }
 
-  #getHost(): string {
-    const http2 = this.#originalValue.httpVersionMajor >= 2;
+  public getHeaders(): ServerRequestHeaders<Version> {
+    return this.originalValue.headers as ServerRequestHeaders<Version>;
+  }
+
+  public getMethod(): string {
+    return this.originalValue.method || '';
+  }
+
+  public getRequest(): HandlerRequest {
+    return {
+      getMethod: this.getMethod.bind(this),
+      getUrl: this.getUrl.bind(this),
+      getHeaders: this.getHeaders.bind(this),
+      getBody: this.getBody.bind(this),
+    };
+  }
+
+  public getUrl(): URL {
+    return new URL(
+      this.originalValue.url || '',
+      `${this.getUrlProtocol()}://${this.getUrlHost()}`,
+    );
+  }
+
+  private getUrlHost(): string {
+    const http2 = this.originalValue.httpVersionMajor >= 2;
     return (
-      this.#getHeaderContent('x-forwarded-host') ||
-      (http2 ? this.#getHeaderContent(':authority') : '') ||
-      this.#getHeaderContent('host') ||
+      this.getHeader('x-forwarded-host') ||
+      (http2 ? this.getHeader(':authority') : '') ||
+      this.getHeader('host') ||
       'unknown'
     );
   }
 
-  #getProtocol(): string {
-    const encrypted = Reflect.has(this.#originalValue.socket, 'encrypted');
+  private getUrlProtocol(): string {
+    const encrypted = Reflect.has(this.originalValue.socket, 'encrypted');
     return (
       (encrypted ? 'https' : '') ||
-      this.#getHeaderContent('x-forwarded-proto') ||
+      this.getHeader('x-forwarded-proto') ||
       'http'
     );
   }

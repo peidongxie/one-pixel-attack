@@ -19,19 +19,19 @@ const validMethod = [
   'TRACE',
 ];
 
-class Router {
-  #routingTable: Route[];
+class RestfulRouter {
+  private routingTable: Route[];
 
-  constructor() {
-    this.#routingTable = [];
+  public constructor() {
+    this.routingTable = [];
   }
 
-  getExtraHeaders(): ServerResponseHeaders {
+  public getExtraHeaders(): ServerResponseHeaders {
     return {};
   }
 
-  getHandler(method: string, pathname: string): Handler | null {
-    const route = this.#routingTable.find((route) => {
+  public getHandler(method: string, pathname: string): Handler | null {
+    const route = this.routingTable.find((route) => {
       if (!route.method.includes(method)) return false;
       if (!route.pathname.test(pathname)) return false;
       return true;
@@ -39,7 +39,7 @@ class Router {
     return route?.handler || null;
   }
 
-  route(
+  public setRoute(
     method: string | string[],
     pathname: string | RegExp,
     handler?: Handler,
@@ -51,7 +51,7 @@ class Router {
       if (methodArray.includes(method)) return true;
       return methodArray.includes('ALL');
     });
-    this.#routingTable.push({
+    this.routingTable.push({
       method: validMethodArray,
       pathname:
         pathname instanceof RegExp
@@ -68,4 +68,4 @@ class Router {
   }
 }
 
-export { Router as default };
+export { RestfulRouter as default };
