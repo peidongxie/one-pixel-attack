@@ -76,13 +76,6 @@ type ServerListener<Version extends 1 | 2> = (
   res: ServerResponse<Version>,
 ) => void;
 
-interface CorsOptions {
-  allowHeaders?: string;
-  allowMethods?: string;
-  allowOrigin?: (origin: string) => boolean;
-  maxAge?: number;
-}
-
 class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
   #cors: Cors;
   #router: Router;
@@ -150,7 +143,16 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
     };
   }
 
-  cors(options?: CorsOptions | boolean): void {
+  cors(
+    options?:
+      | {
+          allowHeaders?: string;
+          allowMethods?: string;
+          allowOrigin?: (origin: string) => boolean;
+          maxAge?: number;
+        }
+      | boolean,
+  ): void {
     if (options === undefined || options === true) {
       this.#cors.setEnable(true);
     } else if (options === false) {

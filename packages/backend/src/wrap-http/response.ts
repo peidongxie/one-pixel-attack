@@ -72,7 +72,7 @@ class Response<Version extends 1 | 2 = 1> {
     res.end(str);
   }
 
-  #setBodyJson = (value: JsonItem): void => {
+  #setBodyJson(value: JsonItem): void {
     const res = this.#originalValue;
     const str = JSON.stringify(value, (key, value) => {
       return typeof value === 'bigint' ? value.toString() + 'n' : value;
@@ -82,7 +82,7 @@ class Response<Version extends 1 | 2 = 1> {
     }
     this.#setHeader('Content-Length', Buffer.byteLength(str));
     res.end(str);
-  };
+  }
 
   #setBodyNothing(): void {
     const res = this.#originalValue;
@@ -109,12 +109,9 @@ class Response<Version extends 1 | 2 = 1> {
     res.end(value);
   }
 
-  #setHeader = (
-    name: string,
-    value: string | number | readonly string[],
-  ): void => {
+  #setHeader(name: string, value: string | number | readonly string[]): void {
     this.#originalValue.setHeader(name, value);
-  };
+  }
 }
 
 export { Response as default, type JsonItem };
