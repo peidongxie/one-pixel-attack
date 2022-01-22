@@ -193,9 +193,15 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
     );
   }
 
-  public listen(port?: number): ServerOriginalValue<Secure, Version> {
+  public listen(
+    port?: number,
+    hostname?: string,
+  ): ServerOriginalValue<Secure, Version> {
     this.originalValue.on('request', this.callback());
-    this.originalValue.listen(port || (this.secure ? 443 : 80));
+    this.originalValue.listen(
+      port || (this.secure ? 443 : 80),
+      hostname || 'localhost',
+    );
     return this.originalValue;
   }
 
