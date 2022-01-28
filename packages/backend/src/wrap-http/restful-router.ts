@@ -39,26 +39,31 @@ class RestfulRouter {
     return route?.handler || null;
   }
 
+  private getValidMethod(method: string | string[]): string[] {
+    const methodArray = (Array.isArray(method) ? method : [method]).map(
+      (method) => method.toUpperCase(),
+    );
+    return validMethod.filter((method) => {
+      if (methodArray.includes(method)) return true;
+      return methodArray.includes('ALL');
+    });
+  }
+
+  private getValidPathname(pathname: string | RegExp): RegExp {
+    if (pathname instanceof RegExp) return pathname;
+    const prefix = pathname.startsWith('/') ? '^' : '^/';
+    const suffix = pathname.endsWith('/') ? '' : '/?$';
+    return RegExp(prefix + pathname + suffix);
+  }
+
   public setRoute(
     method: string | string[],
     pathname: string | RegExp,
     handler?: Handler,
   ): void {
-    const methodArray = (Array.isArray(method) ? method : [method]).map(
-      (method) => method.toUpperCase(),
-    );
-    const validMethodArray = validMethod.filter((method) => {
-      if (methodArray.includes(method)) return true;
-      return methodArray.includes('ALL');
-    });
     this.routingTable.push({
-      method: validMethodArray,
-      pathname:
-        pathname instanceof RegExp
-          ? pathname
-          : pathname.startsWith('/')
-          ? new RegExp('^' + pathname)
-          : new RegExp('^/' + pathname),
+      method: this.getValidMethod(method),
+      pathname: this.getValidPathname(pathname),
       handler:
         handler ||
         (() => {
