@@ -8,7 +8,11 @@ interface LogoPicProps {
 const LogoPic: FC<LogoPicProps> = (props) => {
   const { className } = props;
   return (
-    <img alt={'logo'} className={clsx(className)} src={'/static/logo.svg'} />
+    <img
+      alt={'logo'}
+      className={clsx(className)}
+      src={'/static/logo/logo.svg'}
+    />
   );
 };
 

@@ -1,7 +1,7 @@
 # OnePixelAttack
 
 <p align="center">
-  <img src="./packages/frontend/public/static/logo.png">
+  <img src="./packages/frontend/public/static/log/logo-96.png">
 </p>
 <p align="center">
   <img src="https://img.shields.io/github/license/peidongxie/one-pixel-attack" />

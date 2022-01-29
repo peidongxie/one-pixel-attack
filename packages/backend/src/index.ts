@@ -38,5 +38,5 @@ const handler: Handler = async (req) => {
 
 const server = new Server();
 server.cors();
-server.route('POST', new RegExp('^/$'), handler);
+server.route('POST', '', handler);
 server.listen(3001, '::');
