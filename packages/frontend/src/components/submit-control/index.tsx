@@ -1,9 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  FormGroup,
-  makeStyles,
-} from '@material-ui/core';
+import { Button, CircularProgress, FormGroup, styled } from '@material-ui/core';
 import { useState, type FC } from 'react';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { formState, isValidState, resultState } from '../../utils/form';
@@ -12,21 +7,19 @@ interface SubmitControlProps {
   [key: string]: never;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(0, 1),
-    margin: theme.spacing(0.5, 0),
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-end',
-  },
-  submit: {
-    height: 38,
-    width: 88,
-  },
+const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
+  padding: theme.spacing(0, 1),
+  margin: theme.spacing(0.5, 0),
+  flexWrap: 'nowrap',
+  justifyContent: 'flex-end',
 }));
 
+const StyledButton = styled(Button)({
+  height: 38,
+  width: 88,
+});
+
 const SubmitControl: FC<SubmitControlProps> = () => {
-  const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const isVaild = useRecoilValue(isValidState);
   const handleClick = useRecoilCallback(
@@ -56,18 +49,17 @@ const SubmitControl: FC<SubmitControlProps> = () => {
     [],
   );
   return (
-    <FormGroup className={classes.root} row={true}>
-      <Button
+    <StyledFormGroup row={true}>
+      <StyledButton
         aria-label={'Attack'}
-        className={classes.submit}
         color={'secondary'}
         disabled={!isVaild || loading}
         onClick={handleClick}
         variant={'contained'}
       >
         {loading ? <CircularProgress size={20} thickness={1.8} /> : 'Attack'}
-      </Button>
-    </FormGroup>
+      </StyledButton>
+    </StyledFormGroup>
   );
 };
 

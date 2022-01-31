@@ -1,5 +1,4 @@
-import { FormGroup, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { FormGroup, styled, type Theme } from '@material-ui/core';
 import { useCallback, type FC } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
@@ -16,28 +15,31 @@ interface LabelControlProps {
   [key: string]: never;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(0.5, 0),
-    flexWrap: 'nowrap',
-  },
-  label: {
-    padding: theme.spacing(0.75, 2),
-    height: 36,
-    minWidth: 122,
-    textAlign: 'end',
-  },
-  index: {
-    minWidth: 184,
-    margin: theme.spacing(0, 1),
-  },
-  hidden: {
-    visibility: 'hidden',
-  },
+const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
+  margin: theme.spacing(0.5, 0),
+  flexWrap: 'nowrap',
+}));
+
+const StyledControlLabel = styled(ControlLabel)(({ theme }) => ({
+  padding: theme.spacing(0.75, 2),
+  height: 36,
+  minWidth: 122,
+  textAlign: 'end',
+}));
+
+interface StyledIntegerInputProps {
+  hidden: boolean;
+}
+
+const StyledIntegerInput = styled<
+  FC<Parameters<typeof IntegerInput>[0] & StyledIntegerInputProps>
+>(IntegerInput)<Theme, StyledIntegerInputProps>(({ hidden, theme }) => ({
+  minWidth: 184,
+  margin: theme.spacing(0, 1),
+  visibility: hidden ? 'hidden' : 'visible',
 }));
 
 const LabelControl: FC<LabelControlProps> = () => {
-  const classes = useStyles();
   const setImageIsDefault = useSetRecoilState(imageIsDefaultState);
   const setModelIsDefault = useSetRecoilState(modelIsDefaultState);
   const [isDefault, setIsDefault] = useRecoilState(labelIsDefaultState);
@@ -53,21 +55,17 @@ const LabelControl: FC<LabelControlProps> = () => {
     [setImageIsDefault, setIsDefault, setModelIsDefault],
   );
   return (
-    <FormGroup className={classes.root} row={true}>
-      <ControlLabel
-        className={classes.label}
-        value={'Label'}
-        variant={'subtitle1'}
-      />
+    <StyledFormGroup row={true}>
+      <StyledControlLabel value={'Label'} variant={'subtitle1'} />
       <CustomDefaultSwitch onChange={handleChange} value={isDefault} />
-      <IntegerInput
-        className={clsx(classes.index, isDefault && classes.hidden)}
+      <StyledIntegerInput
         description={'correspond to the classification'}
+        hidden={isDefault}
         min={0}
         onChange={setIndex}
         value={index}
       />
-    </FormGroup>
+    </StyledFormGroup>
   );
 };
 

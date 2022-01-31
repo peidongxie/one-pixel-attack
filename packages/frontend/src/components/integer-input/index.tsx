@@ -4,7 +4,7 @@ import {
   IconButton,
   InputAdornment,
   OutlinedInput,
-  makeStyles,
+  styled,
   type InputProps,
 } from '@material-ui/core';
 import { Add as AddIcon, Remove as RemoveIcon } from '@material-ui/icons';
@@ -19,29 +19,23 @@ interface IntegerInputProps {
   value: number;
 }
 
-const useStyles = makeStyles(() => ({
-  input: {
+const StyledOutlinedInput = styled(OutlinedInput)({
+  '& > input': {
     width: 64,
     padding: 8,
     height: 20,
     textAlign: 'center',
   },
-  text: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-}));
+});
+
+const StyledFormHelperText = styled(FormHelperText)({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
 
 const IntegerInput: FC<IntegerInputProps> = (props) => {
   const { className, description, min, onChange, value } = props;
-  const classes = useStyles();
-  const inputClasses = useMemo(
-    () => ({
-      input: classes.input,
-    }),
-    [classes],
-  );
   const minValue = useMemo(() => (min === undefined ? -Infinity : min), [min]);
   const [text, setText] = useState(value === null ? '' : String(value));
   const fixValue = useCallback(
@@ -96,15 +90,14 @@ const IntegerInput: FC<IntegerInputProps> = (props) => {
   );
   return (
     <FormControl className={clsx(className)} component={'label'}>
-      <OutlinedInput
-        classes={inputClasses}
+      <StyledOutlinedInput
         endAdornment={endAdornment}
         onBlur={handleBlur}
         onChange={handleChange}
         startAdornment={startAdornment}
         value={text}
       />
-      <FormHelperText className={classes.text}>{description}</FormHelperText>
+      <StyledFormHelperText>{description}</StyledFormHelperText>
     </FormControl>
   );
 };

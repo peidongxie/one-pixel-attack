@@ -1,5 +1,4 @@
-import { FormGroup, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { FormGroup, styled, type Theme } from '@material-ui/core';
 import { type FC } from 'react';
 import { useRecoilState } from 'recoil';
 import ControlLabel from '../control-label';
@@ -14,46 +13,45 @@ interface PerturbationControlProps {
   [key: string]: never;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(0.5, 0),
-    flexWrap: 'nowrap',
-  },
-  label: {
-    padding: theme.spacing(0.75, 2),
-    height: 36,
-    minWidth: 122,
-    textAlign: 'end',
-  },
-  pixel: {
-    minWidth: 184,
-    margin: theme.spacing(0, 1),
-  },
-  hidden: {
-    visibility: 'hidden',
-  },
+const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
+  margin: theme.spacing(0.5, 0),
+  flexWrap: 'nowrap',
+}));
+
+const StyledControlLabel = styled(ControlLabel)(({ theme }) => ({
+  padding: theme.spacing(0.75, 2),
+  height: 36,
+  minWidth: 122,
+  textAlign: 'end',
+}));
+
+interface StyledIntegerInputProps {
+  hidden: boolean;
+}
+
+const StyledIntegerInput = styled<
+  FC<Parameters<typeof IntegerInput>[0] & StyledIntegerInputProps>
+>(IntegerInput)<Theme, StyledIntegerInputProps>(({ hidden, theme }) => ({
+  minWidth: 184,
+  margin: theme.spacing(0, 1),
+  visibility: hidden ? 'hidden' : 'visible',
 }));
 
 const PerturbationControl: FC<PerturbationControlProps> = () => {
-  const classes = useStyles();
   const [isDefault, setIsDefault] = useRecoilState(perturbationIsDefaultState);
   const [pixel, setPixel] = useRecoilState(perturbationPixelState);
   return (
-    <FormGroup className={classes.root} row={true}>
-      <ControlLabel
-        className={classes.label}
-        value={'Perturbation'}
-        variant={'subtitle1'}
-      />
+    <StyledFormGroup row={true}>
+      <StyledControlLabel value={'Perturbation'} variant={'subtitle1'} />
       <CustomDefaultSwitch onChange={setIsDefault} value={isDefault} />
-      <IntegerInput
-        className={clsx(classes.pixel, isDefault && classes.hidden)}
+      <StyledIntegerInput
         description={'number of affected pixels'}
+        hidden={isDefault}
         min={1}
         onChange={setPixel}
         value={pixel}
       />
-    </FormGroup>
+    </StyledFormGroup>
   );
 };
 
