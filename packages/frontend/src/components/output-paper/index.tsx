@@ -1,4 +1,4 @@
-import { Paper, makeStyles } from '@material-ui/core';
+import { Paper, styled } from '@material-ui/core';
 import { type FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import PredictionChart from '../prediction-chart';
@@ -13,48 +13,44 @@ interface OutputPaperProps {
   className?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    height: 'fit-content',
-    width: 'fit-content',
-    maxWidth: '100%',
-    margin: theme.spacing(2, 2, 0, 2),
-    overflow: 'auto',
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(1),
-      margin: theme.spacing(1, 1, 0, 1),
-    },
-    [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(1),
-      margin: theme.spacing(0.5, 0.5, 0, 0.5),
-      flexGrow: 1,
-    },
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  height: 'fit-content',
+  width: 'fit-content',
+  maxWidth: '100%',
+  margin: theme.spacing(2, 2, 0, 2),
+  overflow: 'auto',
+  textAlign: 'center',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(1),
+    margin: theme.spacing(1, 1, 0, 1),
   },
-  image: {
-    margin: theme.spacing(0.5),
-  },
-  prediction: {
-    margin: theme.spacing(0.5),
+  [theme.breakpoints.down('xs')]: {
+    padding: theme.spacing(1),
+    margin: theme.spacing(0.5, 0.5, 0, 0.5),
+    flexGrow: 1,
   },
 }));
 
+const StyledImageCanvas = styled(ImageCanvas)(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
+const StyledPredictionChart = styled(PredictionChart)(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
 const OutputPaper: FC<OutputPaperProps> = () => {
-  const classes = useStyles();
   const result = useRecoilValue(resultState);
   const imageBefore = useRecoilValue(imageBeforeState);
   const imageAfter = useRecoilValue(imageAfterState);
   if (!result) return null;
   return (
-    <Paper className={classes.root}>
-      <ImageCanvas className={classes.image} image={imageBefore} />
-      <ImageCanvas className={classes.image} image={imageAfter} />
-      <PredictionChart
-        className={classes.prediction}
-        predictions={result.predictions || null}
-      />
-    </Paper>
+    <StyledPaper>
+      <StyledImageCanvas image={imageBefore} />
+      <StyledImageCanvas image={imageAfter} />
+      <StyledPredictionChart predictions={result.predictions || null} />
+    </StyledPaper>
   );
 };
 

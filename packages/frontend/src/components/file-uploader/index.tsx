@@ -1,9 +1,4 @@
-import {
-  Button,
-  FormControl,
-  FormHelperText,
-  makeStyles,
-} from '@material-ui/core';
+import { Button, FormControl, FormHelperText, styled } from '@material-ui/core';
 import { CloudUpload as CloudUploadIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import { useCallback, useMemo, type ChangeEventHandler, type FC } from 'react';
@@ -15,20 +10,18 @@ interface FileUploaderProps {
   value: File | null;
 }
 
-const useStyles = makeStyles(() => ({
-  input: {
-    display: 'none',
-  },
-  text: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-}));
+const StyledInput = styled('input')({
+  display: 'none',
+});
+
+const StyledFormHelperText = styled(FormHelperText)({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
 
 const FileUploader: FC<FileUploaderProps> = (props) => {
   const { className, extensions, onChange, value } = props;
-  const classes = useStyles();
   const accept = useMemo(() => {
     const text = extensions
       .map((extension) => '.' + extension.toLowerCase())
@@ -58,13 +51,8 @@ const FileUploader: FC<FileUploaderProps> = (props) => {
       >
         {'Upload'}
       </Button>
-      <input
-        accept={accept}
-        className={classes.input}
-        onChange={handleChange}
-        type={'file'}
-      />
-      <FormHelperText className={classes.text}>{helperText}</FormHelperText>
+      <StyledInput accept={accept} onChange={handleChange} type={'file'} />
+      <StyledFormHelperText>{helperText}</StyledFormHelperText>
     </FormControl>
   );
 };
