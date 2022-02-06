@@ -1,12 +1,13 @@
 import { Paper, styled } from '@material-ui/core';
 import { type FC } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import PredictionChart from '../prediction-chart';
 import ImageCanvas from '../image-canvas';
 import {
-  imageBeforeState,
-  imageAfterState,
-  resultState,
+  imagesState,
+  predictionsState,
+  queryIdState,
+  queryOutputState,
 } from '../../utils/form';
 
 interface OutputPaperProps {
@@ -41,15 +42,18 @@ const StyledPredictionChart = styled(PredictionChart)(({ theme }) => ({
 }));
 
 const OutputPaper: FC<OutputPaperProps> = () => {
-  const result = useRecoilValue(resultState);
-  const imageBefore = useRecoilValue(imageBeforeState);
-  const imageAfter = useRecoilValue(imageAfterState);
-  if (!result) return null;
+  const id = useRecoilValue(queryIdState);
+  const output = useRecoilValueLoadable(queryOutputState(id));
+  const images = useRecoilValueLoadable(imagesState(id));
+  const predictions = useRecoilValueLoadable(predictionsState(id));
+  if (output.state !== 'hasValue' || output.contents === null) {
+    return null;
+  }
   return (
     <StyledPaper>
-      <StyledImageCanvas image={imageBefore} />
-      <StyledImageCanvas image={imageAfter} />
-      <StyledPredictionChart predictions={result.predictions || null} />
+      <StyledImageCanvas image={images.contents[0]} />
+      <StyledImageCanvas image={images.contents[1]} />
+      <StyledPredictionChart predictions={predictions.contents} />
     </StyledPaper>
   );
 };

@@ -5,7 +5,7 @@ import { useTheme } from '@material-ui/core';
 
 interface PredictionChartProps {
   className?: string;
-  predictions: [number[], number[]] | null;
+  predictions: [number[], number[], string[]];
 }
 
 const options: ChartOptions<'bar'> = {
@@ -56,21 +56,19 @@ const PredictionChart: FC<PredictionChartProps> = (props) => {
     chart.data = {
       datasets: [
         {
-          data: predictions ? predictions[0] : [],
+          data: predictions[0],
           label: 'Probabilities Before Attack',
           backgroundColor: theme.palette.primary.main,
           hoverBackgroundColor: theme.palette.primary.main + '95',
         },
         {
-          data: predictions ? predictions[1] : [],
+          data: predictions[1],
           label: 'Probabilities After Attack',
           backgroundColor: theme.palette.secondary.main,
           hoverBackgroundColor: theme.palette.secondary.main + '95',
         },
       ],
-      labels: predictions
-        ? predictions[0].map((value, index) => 'C' + index)
-        : [],
+      labels: predictions[2],
     };
     chart.update();
   }, [predictions, theme.palette]);

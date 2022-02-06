@@ -8,6 +8,14 @@
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended"
   ],
+  "rules": {
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "useRecoilCallback"
+      }
+    ]
+  },
   "settings": {
     "react": {
       "version": "detect"
