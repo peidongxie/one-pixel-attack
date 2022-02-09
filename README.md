@@ -31,11 +31,59 @@ TODO
 
 ## Installation
 
-TODO
+This project uses Node.js and its package manager. Please make sure they are installed locally.
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ npm install
+```
+
+or
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ yarn
+```
 
 ## Usage
 
-TODO
+This project can be started in production mode or development mode.
+
+For production mode:
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ npm run build
+$ npm run start
+```
+
+or
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd south-wind
+$ yarn build
+$ yarn start
+```
+
+For development mode:
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ npm run dev
+```
+
+or
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd south-wind
+$ yarn dev
+```
 
 ## Related Efforts
 

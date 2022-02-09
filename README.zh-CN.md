@@ -31,11 +31,59 @@ TODO
 
 ## 安装
 
-TODO
+本项目使用 Node.js 和它的包管理器。请确保本地安装了它们。
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ npm install
+```
+
+或者
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ yarn
+```
 
 ## 使用
 
-TODO
+本项目可以以生产模式或开发模式启动。
+
+对于生产模式：
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ npm run build
+$ npm run start
+```
+
+或者
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd south-wind
+$ yarn build
+$ yarn start
+```
+
+对于开发模式：
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd one-pixel-attack
+$ npm run dev
+```
+
+或者
+
+```sh
+$ git clone https://github.com/peidongxie/one-pixel-attack
+$ cd south-wind
+$ yarn dev
+```
 
 ## 相关工作
 
