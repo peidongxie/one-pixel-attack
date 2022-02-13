@@ -28,12 +28,12 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "$npm_execpath workspace backend build && $npm_execpath workspace frontend build",
-    "dev": "$npm_execpath workspace backend dev & $npm_execpath workspace frontend dev",
-    "fix": "$npm_execpath workspace backend fix && $npm_execpath workspace frontend fix && sort-package-json",
-    "lint": "$npm_execpath workspace backend lint && $npm_execpath workspace frontend lint",
+    "build": "yarn workspace backend build && yarn workspace frontend build",
+    "dev": "yarn workspace backend dev & yarn workspace frontend dev",
+    "fix": "yarn workspace backend fix && yarn workspace frontend fix && sort-package-json",
+    "lint": "yarn workspace backend lint && yarn workspace frontend lint",
     "prepare": "husky install",
-    "start": "$npm_execpath workspace backend start & $npm_execpath workspace frontend start"
+    "start": "yarn workspace backend start & yarn workspace frontend start"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.11.0",
