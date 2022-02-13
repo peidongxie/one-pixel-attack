@@ -56,8 +56,8 @@ For production mode:
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ npm run build
-$ npm run start
+$ npm run build -ws
+$ npm run start -w backend & npm run start -w frontend
 ```
 
 or
@@ -74,7 +74,7 @@ For development mode:
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ npm run dev
+$ npm run dev -w backend & npm run dev -w frontend
 ```
 
 or
