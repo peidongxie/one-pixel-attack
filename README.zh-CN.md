@@ -1,7 +1,7 @@
 # OnePixelAttack
 
 <p align="center">
-  <img src="./packages/frontend/public/static/log/logo-96.png">
+  <img src="./packages/frontend/public/static/logo/logo-96.png">
 </p>
 <p align="center">
   <img src="https://img.shields.io/github/license/peidongxie/one-pixel-attack" />
@@ -13,7 +13,12 @@
 
 对抗性图像生成器
 
-TODO
+在许多情况下，通过改变图像中少量像素来欺骗神经网络是很容易的。一个优秀的对抗性图像生成器可以让这一切变得更加简单。
+
+本项目包含以下内容：
+
+- 一个可配置的像素求解器
+- 一个直观的用户界面
 
 ## 内容列表
 
@@ -27,7 +32,13 @@ TODO
 
 ## 背景
 
-TODO
+OnePixelAttack 受到 ['One pixel attack for fooling deep neural networks'](https://arxiv.org/abs/1710.08864) 一文的启发。 我发现我可以借鉴它的原理制作一个能够满足以下特性的工具:
+
+- 输入可配置
+- 输出直观
+- 易于使用
+
+于是，我制作了一个对抗性图像生成器。2020 年 1 月，我开始基于 Python 开发项目的 1.0 版本。2021 年 9 月，我开始基于 Python 绑定开发项目的 2.0 版本。
 
 ## 安装
 

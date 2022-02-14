@@ -1,7 +1,7 @@
 # OnePixelAttack
 
 <p align="center">
-  <img src="./packages/frontend/public/static/log/logo-96.png">
+  <img src="./packages/frontend/public/static/logo/logo-96.png">
 </p>
 <p align="center">
   <img src="https://img.shields.io/github/license/peidongxie/one-pixel-attack" />
@@ -13,7 +13,12 @@
 
 An adversarial image generator
 
-TODO
+In many cases, it is simple to fool the neural network by changing a small number of pixels in the image. A good adversarial image generator can make this much easier.
+
+This project contains:
+
+- A configurable pixel perturbation solver
+- An intuitive user interface
 
 ## Table of Contents
 
@@ -27,7 +32,13 @@ TODO
 
 ## Background
 
-TODO
+OnePixelAttack was inspired by ['One pixel attack for fooling deep neural networks'](https://arxiv.org/abs/1710.08864). I found that I could borrow its principles to make a tool that could meet the following characteristics:
+
+- Input configurable
+- Output intuitive
+- Easy to use
+
+As a result, I made an adversarial image generator. In January 2020, I started developing version 1.0 of the project based on Python. In September 2021, I started developing version 2.0 of the project based on Python bindings.
 
 ## Installation
 
