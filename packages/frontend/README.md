@@ -7,18 +7,8 @@
   <img src="https://img.shields.io/github/license/peidongxie/one-pixel-attack" />
   <img src="https://img.shields.io/github/package-json/v/peidongxie/one-pixel-attack" />
 </p>
-<p align="center">
-  <img src="demo.gif">
-</p>
 
-An adversarial image generator
-
-In many cases, it is simple to fool the neural network by changing a small number of pixels in the image. A good adversarial image generator can make this much easier.
-
-This project contains:
-
-- A configurable pixel perturbation solver
-- An intuitive user interface
+An intuitive user interface, the frontend of an adversarial image generator
 
 ## Table of Contents
 
@@ -46,7 +36,7 @@ This project uses Node.js and its package manager. Please make sure they are ins
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/frontend
 $ npm install
 ```
 
@@ -54,7 +44,7 @@ or
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/frontend
 $ yarn
 ```
 
@@ -66,16 +56,16 @@ For production mode:
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
-$ npm run build -ws
-$ npm run start -w backend & npm run start -w frontend
+$ cd one-pixel-attack/packages/frontend
+$ npm run build
+$ npm run start
 ```
 
 or
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/frontend
 $ yarn build
 $ yarn start
 ```
@@ -84,28 +74,23 @@ For development mode:
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
-$ npm run dev -w backend & npm run dev -w frontend
+$ cd one-pixel-attack/packages/frontend
+$ npm run dev
 ```
 
 or
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/frontend
 $ yarn dev
 ```
 
 ## Related Efforts
 
-- [Boa](https://github.com/imgcook/boa)
 - [Chart.js](https://github.com/chartjs/Chart.js)
 - [MUI](https://github.com/mui-org/material-ui)
-- [NumPy](https://github.com/numpy/numpy)
-- [One Pixel Attack](https://github.com/Hyperparticle/one-pixel-attack-keras)
 - [React](https://github.com/facebook/react)
-- [SciPy](https://github.com/scipy/scipy)
-- [TensorFlow](https://github.com/tensorflow/tensorflow)
 
 ## Maintainers
 

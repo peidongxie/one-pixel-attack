@@ -7,18 +7,8 @@
   <img src="https://img.shields.io/github/license/peidongxie/one-pixel-attack" />
   <img src="https://img.shields.io/github/package-json/v/peidongxie/one-pixel-attack" />
 </p>
-<p align="center">
-  <img src="demo.gif">
-</p>
 
-对抗性图像生成器
-
-在许多情况下，通过改变图像中少量像素来欺骗神经网络是很容易的。一个优秀的对抗性图像生成器可以让这一切变得更加简单。
-
-本项目包含以下内容：
-
-- 一个可配置的像素求解器
-- 一个直观的用户界面
+一个可配置的像素求解器，对抗性图像生成器后端
 
 ## 内容列表
 
@@ -46,7 +36,7 @@ OnePixelAttack 受到 ['One pixel attack for fooling deep neural networks'](http
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/backend
 $ npm install
 ```
 
@@ -54,7 +44,7 @@ $ npm install
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/backend
 $ yarn
 ```
 
@@ -66,16 +56,16 @@ $ yarn
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
-$ npm run build -ws
-$ npm run start -w backend & npm run start -w frontend
+$ cd one-pixel-attack/packages/backend
+$ npm run build
+$ npm run start
 ```
 
 或者
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/backend
 $ yarn build
 $ yarn start
 ```
@@ -84,26 +74,23 @@ $ yarn start
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
-$ npm run dev -w backend & npm run dev -w frontend
+$ cd one-pixel-attack/packages/backend
+$ npm run dev
 ```
 
 或者
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
+$ cd one-pixel-attack/packages/backend
 $ yarn dev
 ```
 
 ## 相关工作
 
 - [Boa](https://github.com/imgcook/boa)
-- [Chart.js](https://github.com/chartjs/Chart.js)
-- [MUI](https://github.com/mui-org/material-ui)
 - [NumPy](https://github.com/numpy/numpy)
 - [One Pixel Attack](https://github.com/Hyperparticle/one-pixel-attack-keras)
-- [React](https://github.com/facebook/react)
 - [SciPy](https://github.com/scipy/scipy)
 - [TensorFlow](https://github.com/tensorflow/tensorflow)
 
