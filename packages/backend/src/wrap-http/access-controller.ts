@@ -8,7 +8,7 @@ interface AllowOptions {
 }
 
 const forbiddenHandler = () => {
-  return { code: 400 };
+  return { code: 403 };
 };
 
 const preflightHandler = () => {
