@@ -39,6 +39,39 @@ class RestfulRouter {
     return route?.handler || null;
   }
 
+  public setRoute(
+    method: string | string[],
+    pathname: string | RegExp,
+    handler?: Handler,
+  ): void {
+    const validMethod = this.getValidMethod(method);
+    const validPathname = this.getValidPathname(pathname);
+    const validHandler = this.getValidHandler(handler);
+    const route = this.routingTable.find((route) => {
+      if (route.method.toString() !== validMethod.toString()) return false;
+      if (route.pathname.toString() !== validPathname.toString()) return false;
+      return true;
+    });
+    if (route) {
+      route.handler = validHandler;
+    } else {
+      this.routingTable.push({
+        method: validMethod,
+        pathname: validPathname,
+        handler: validHandler,
+      });
+    }
+  }
+
+  private getValidHandler(handler?: Handler): Handler {
+    return (
+      handler ||
+      (() => {
+        return;
+      })
+    );
+  }
+
   private getValidMethod(method: string | string[]): string[] {
     const methodArray = (Array.isArray(method) ? method : [method]).map(
       (method) => method.toUpperCase(),
@@ -54,22 +87,6 @@ class RestfulRouter {
     const prefix = pathname.startsWith('/') ? '^' : '^/';
     const suffix = pathname.endsWith('/') ? '' : '/?$';
     return RegExp(prefix + pathname + suffix);
-  }
-
-  public setRoute(
-    method: string | string[],
-    pathname: string | RegExp,
-    handler?: Handler,
-  ): void {
-    this.routingTable.push({
-      method: this.getValidMethod(method),
-      pathname: this.getValidPathname(pathname),
-      handler:
-        handler ||
-        (() => {
-          return;
-        }),
-    });
   }
 }
 
