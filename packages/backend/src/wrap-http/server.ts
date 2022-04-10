@@ -143,6 +143,18 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
     };
   }
 
+  public async close(): Promise<ServerOriginalValue<Secure, Version>> {
+    return new Promise((resolve, reject) =>
+      this.originalValue.close((e) => {
+        if (e) {
+          reject(e);
+        } else {
+          resolve(this.originalValue);
+        }
+      }),
+    );
+  }
+
   public cors(
     options?:
       | {
@@ -169,6 +181,26 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
     }
   }
 
+  public listen(
+    port?: number,
+    hostname?: string,
+  ): ServerOriginalValue<Secure, Version> {
+    this.originalValue.on('request', this.callback());
+    this.originalValue.listen(
+      port || (this.secure ? 443 : 80),
+      hostname || 'localhost',
+    );
+    return this.originalValue;
+  }
+
+  public route(
+    method: string | string[],
+    pathname: string | RegExp,
+    handler?: Handler,
+  ): void {
+    this.restfulRouter.setRoute(method, pathname, handler);
+  }
+
   private getExtraHeaders(request: Request<Version>): ServerResponseHeaders {
     return {
       ...this.accessController.getExtraHeaders(
@@ -191,26 +223,6 @@ class Server<Secure extends boolean = false, Version extends 1 | 2 = 1> {
       ) ||
       defaultHandler
     );
-  }
-
-  public listen(
-    port?: number,
-    hostname?: string,
-  ): ServerOriginalValue<Secure, Version> {
-    this.originalValue.on('request', this.callback());
-    this.originalValue.listen(
-      port || (this.secure ? 443 : 80),
-      hostname || 'localhost',
-    );
-    return this.originalValue;
-  }
-
-  public route(
-    method: string | string[],
-    pathname: string | RegExp,
-    handler?: Handler,
-  ): void {
-    this.restfulRouter.setRoute(method, pathname, handler);
   }
 }
 
