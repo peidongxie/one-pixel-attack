@@ -1,3 +1,8 @@
+import fragmentShaderSourceV1 from './webgl-fragment.glsl';
+import vertexShaderSourceV1 from './webgl-vertex.glsl';
+import fragmentShaderSourceV2 from './webgl2-fragment.glsl';
+import vertexShaderSourceV2 from './webgl2-vertex.glsl';
+
 type AttributeValue =
   | [number]
   | [number, number]
@@ -28,28 +33,25 @@ interface UniformOption {
 
 type UniformSetter = (uniform: UniformValue | UniformOption) => void;
 
-const vertexShaderSource = `
-  attribute vec2 a_position;
-  attribute vec2 a_coordinate;
-  uniform vec2 u_resolution;
-  varying vec2 v_coordinate;
-  void main() {
-    gl_Position = vec4(((a_position / u_resolution) * 2.0 - 1.0) * vec2(1, -1), 0, 1);
-    v_coordinate = a_coordinate;
-  }
-`;
+type CacheOfWebGL2 = [
+  Record<string, AttributeSetter>,
+  Record<string, UniformSetter>,
+];
 
-const fragmentShaderSource = `
-  precision mediump float;
-  uniform sampler2D u_image;
-  varying vec2 v_coordinate;
-  void main() {
-    gl_FragColor = texture2D(u_image, v_coordinate);
+const getShaderSource = (
+  context: WebGLRenderingContext | WebGL2RenderingContext,
+): [string, string] => {
+  if (context instanceof WebGLRenderingContext) {
+    return [vertexShaderSourceV1, fragmentShaderSourceV1];
   }
-`;
+  if (context instanceof WebGL2RenderingContext) {
+    return [vertexShaderSourceV2, fragmentShaderSourceV2];
+  }
+  return ['', ''];
+};
 
 const createAndCompileShader = (
-  context: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   type: GLenum,
   source: string,
 ): WebGLShader => {
@@ -58,35 +60,44 @@ const createAndCompileShader = (
   context.shaderSource(shader, source);
   context.compileShader(shader);
   const success = context.getShaderParameter(shader, context.COMPILE_STATUS);
-  if (!success) throw context.getShaderInfoLog(shader);
+  if (!success) {
+    const log = context.getShaderInfoLog(shader);
+    context.deleteShader(shader);
+    throw log;
+  }
   return shader;
 };
 
 const createAndLinkProgram = (
-  context: WebGLRenderingContext,
-  vertex: string | WebGLShader,
-  fragment: string | WebGLShader,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
 ): WebGLProgram => {
   const program = context.createProgram();
   if (!program) throw 'cannot create program';
-  const vertexShader =
-    typeof vertex === 'string'
-      ? createAndCompileShader(context, context.VERTEX_SHADER, vertex)
-      : vertex;
-  const fragmentShader =
-    typeof fragment === 'string'
-      ? createAndCompileShader(context, context.FRAGMENT_SHADER, fragment)
-      : fragment;
+  const [vertexShaderSource, fragmentShaderSource] = getShaderSource(context);
+  const vertexShader = createAndCompileShader(
+    context,
+    context.VERTEX_SHADER,
+    vertexShaderSource,
+  );
+  const fragmentShader = createAndCompileShader(
+    context,
+    context.FRAGMENT_SHADER,
+    fragmentShaderSource,
+  );
   context.attachShader(program, vertexShader);
   context.attachShader(program, fragmentShader);
   context.linkProgram(program);
   const success = context.getProgramParameter(program, context.LINK_STATUS);
-  if (!success) throw context.getProgramInfoLog(program);
+  if (!success) {
+    const log = context.getProgramInfoLog(program);
+    context.deleteProgram(program);
+    throw log;
+  }
   return program;
 };
 
 const createAttributeSetters = (
-  context: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   program: WebGLProgram,
 ): Record<string, AttributeSetter> => {
   const setters: Record<string, AttributeSetter> = {};
@@ -121,7 +132,7 @@ const createAttributeSetters = (
 };
 
 const createUniformSetters = (
-  context: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   program: WebGLProgram,
 ): Record<string, UniformSetter> => {
   const setters: Record<string, UniformSetter> = {};
@@ -151,7 +162,7 @@ const createUniformSetters = (
 };
 
 const createAndBindBuffer = (
-  context: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   data: number[],
 ): WebGLBuffer => {
   const buffer = context.createBuffer();
@@ -166,17 +177,40 @@ const createAndBindBuffer = (
 };
 
 const createAndSetupTexture = (
-  gl: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   image: ImageData,
 ): WebGLTexture => {
-  const texture = gl.createTexture();
+  const texture = context.createTexture();
   if (!texture) throw 'cannot create texture';
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+  context.bindTexture(context.TEXTURE_2D, texture);
+  context.texParameteri(
+    context.TEXTURE_2D,
+    context.TEXTURE_WRAP_S,
+    context.CLAMP_TO_EDGE,
+  );
+  context.texParameteri(
+    context.TEXTURE_2D,
+    context.TEXTURE_WRAP_T,
+    context.CLAMP_TO_EDGE,
+  );
+  context.texParameteri(
+    context.TEXTURE_2D,
+    context.TEXTURE_MIN_FILTER,
+    context.NEAREST,
+  );
+  context.texParameteri(
+    context.TEXTURE_2D,
+    context.TEXTURE_MAG_FILTER,
+    context.NEAREST,
+  );
+  context.texImage2D(
+    context.TEXTURE_2D,
+    0,
+    context.RGBA,
+    context.RGBA,
+    context.UNSIGNED_BYTE,
+    image,
+  );
   return texture;
 };
 
@@ -198,16 +232,26 @@ const setUniforms = (
   }
 };
 
-const webglDraw = (context: WebGLRenderingContext, image: ImageData): void => {
+const drawWithWebGL = (
+  context: WebGLRenderingContext | WebGL2RenderingContext,
+  image: ImageData,
+  cache?:
+    | [Record<string, AttributeSetter>, Record<string, UniformSetter>]
+    | undefined,
+): [Record<string, AttributeSetter>, Record<string, UniformSetter>] => {
   const { width, height } = image;
-  const program = createAndLinkProgram(
-    context,
-    vertexShaderSource,
-    fragmentShaderSource,
-  );
-  const attributeSetters = createAttributeSetters(context, program);
-  const uniformSetters = createUniformSetters(context, program);
-  context.useProgram(program);
+  const currentProgram = context.getParameter(context.CURRENT_PROGRAM);
+  const currentAttributeSetters = cache?.[0];
+  const currentUniformSetters = cache?.[1];
+  const program: WebGLProgram = currentProgram || createAndLinkProgram(context);
+  const attributeSetters =
+    (currentProgram && currentAttributeSetters) ||
+    createAttributeSetters(context, program);
+  const uniformSetters =
+    (currentProgram && currentUniformSetters) ||
+    createUniformSetters(context, program);
+  if (!currentProgram) context.useProgram(program);
+  context.viewport(0, 0, width, height);
   setAttributes(attributeSetters, {
     a_position: {
       buffer: createAndBindBuffer(context, [
@@ -241,6 +285,7 @@ const webglDraw = (context: WebGLRenderingContext, image: ImageData): void => {
     },
   });
   context.drawArrays(context.TRIANGLES, 0, 6);
+  return [attributeSetters, uniformSetters];
 };
 
-export { webglDraw as default };
+export { drawWithWebGL as default, type CacheOfWebGL2 };
