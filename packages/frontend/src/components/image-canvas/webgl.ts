@@ -33,7 +33,7 @@ interface UniformOption {
 
 type UniformSetter = (uniform: UniformValue | UniformOption) => void;
 
-type CacheOfWebGL2 = [
+type CacheOfWebGL = [
   Record<string, AttributeSetter>,
   Record<string, UniformSetter>,
 ];
@@ -288,4 +288,4 @@ const drawWithWebGL = (
   return [attributeSetters, uniformSetters];
 };
 
-export { drawWithWebGL as default, type CacheOfWebGL2 };
+export { drawWithWebGL as default, type CacheOfWebGL };
