@@ -65,3 +65,8 @@ declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
   export { classes as default };
 }
+
+declare module '*.glsl' {
+  const src: string;
+  export { src as default };
+}
