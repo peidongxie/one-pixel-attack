@@ -28,6 +28,7 @@ const buildOptions: BuildOptions = {
     '.png': 'file',
     '.webp': 'file',
     '.svg': 'file',
+    '.glsl': 'text',
   },
   minify: false,
   minifyWhitespace: false,
