@@ -1,11 +1,10 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { render } from 'react-dom';
 import App from './app';
 
-const container = globalThis.document.querySelector('#root');
-const root = container && createRoot(container);
-root?.render(
+render(
   <StrictMode>
     <App />
   </StrictMode>,
+  document.getElementById('root'),
 );
