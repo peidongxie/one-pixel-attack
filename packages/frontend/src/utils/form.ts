@@ -202,10 +202,13 @@ const queryOutputState = selectorFamily<Result | null, number>({
     async ({ get }) => {
       const input = get(queryInputState(id));
       if (input === null) return null;
-      const response = await fetch('http://localhost:3001', {
-        body: input,
-        method: 'POST',
-      });
+      const response = await fetch(
+        'https://run.mocky.io/v3/7aa60be8-792f-437e-a9ac-d823d36d9669',
+        {
+          body: input,
+          method: 'POST',
+        },
+      );
       return response.json();
     },
 });
@@ -248,7 +251,7 @@ const bufferState = selectorFamily<
             for (let i2 = 0; i2 < s2; i2++) {
               for (let i3 = 0; i3 < s3; i3++) {
                 const offset = (((i0 * s1 + i1) * s2 + i2) * s3 + i3) * s4;
-                const [red, green, blue, alpha = 100] = output.image[i0][i2];
+                const [red, green, blue, alpha = 255] = output.image[i0][i2];
                 bufferBefore[offset] = red;
                 bufferBefore[offset + 1] = green;
                 bufferBefore[offset + 2] = blue;
@@ -260,7 +263,7 @@ const bufferState = selectorFamily<
       }
       const bufferAfter = new Uint8ClampedArray(bufferBefore);
       if (output?.pixels) {
-        for (const [i0, i2, red, green, blue, alpha = 100] of output.pixels) {
+        for (const [i0, i2, red, green, blue, alpha = 255] of output.pixels) {
           for (let i1 = 0; i1 < s1; i1++) {
             for (let i3 = 0; i3 < s3; i3++) {
               const offset = (((i0 * s1 + i1) * s2 + i2) * s3 + i3) * s4;
