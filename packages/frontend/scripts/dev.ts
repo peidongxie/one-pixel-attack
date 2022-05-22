@@ -7,13 +7,15 @@ const serveOptions: ServeOptions = {
   host: 'localhost',
   servedir: 'public',
   onRequest: ({ method, path, status }) => {
-    console.log(`${status} ${method} ${path}`);
+    globalThis.console.log(`${status} ${method} ${path}`);
   },
 };
 
 const buildOptions: BuildOptions = {
   bundle: true,
-  define: {},
+  define: {
+    'process.env.PUBLIC_URL': '',
+  },
   entryPoints: ['./src/index.tsx'],
   external: [],
   format: 'esm',
@@ -70,13 +72,15 @@ const buildOptions: BuildOptions = {
       port: `\x1b[1m${output.port}\x1b[22m`,
     }));
   const only = outputs.length === 1;
-  console.log('\x1b[32mCompiled successfully!\x1b[39m');
-  console.log();
-  console.log(`You can now view ${appName} in the browser.`);
-  console.log();
+  globalThis.console.log('\x1b[32mCompiled successfully!\x1b[39m');
+  globalThis.console.log();
+  globalThis.console.log(`You can now view ${appName} in the browser.`);
+  globalThis.console.log();
   for (const { label, protocol, hostname, port } of outputs) {
-    console.log(`  ${only ? '' : label}${protocol}://${hostname}:${port}`);
+    globalThis.console.log(
+      `  ${only ? '' : label}${protocol}://${hostname}:${port}`,
+    );
   }
-  console.log();
-  console.log('Note that the development build is not optimized.');
+  globalThis.console.log();
+  globalThis.console.log('Note that the development build is not optimized.');
 })();
