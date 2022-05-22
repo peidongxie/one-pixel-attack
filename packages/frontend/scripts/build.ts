@@ -6,7 +6,9 @@ import { gzipSync } from 'zlib';
 
 const buildOptions: BuildOptions = {
   bundle: true,
-  define: {},
+  define: {
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || ''),
+  },
   entryPoints: ['./src/index.tsx'],
   external: [],
   format: 'esm',
@@ -43,8 +45,8 @@ const buildOptions: BuildOptions = {
   await emptyDir('dist');
   await copy('public', 'dist');
   const { errors, metafile, warnings } = await build(buildOptions);
-  for (const error of errors) console.error(error);
-  for (const warning of warnings) console.warn(warning);
+  for (const error of errors) globalThis.console.error(error);
+  for (const warning of warnings) globalThis.console.warn(warning);
   if (errors.length === 0 && warnings.length === 0) {
     const outputs = Reflect.ownKeys(metafile.outputs)
       .filter<string>((output): output is string => {
@@ -64,14 +66,18 @@ const buildOptions: BuildOptions = {
         baseName: `\x1b[36m${output.baseName}\x1b[39m`,
       }));
     const length = Math.max(...outputs.map((output) => output.gzipSize.length));
-    console.log('\x1b[32mCompiled successfully.\x1b[39m');
-    console.log();
-    console.log('File sizes after gzip:');
-    console.log();
+    globalThis.console.log('\x1b[32mCompiled successfully.\x1b[39m');
+    globalThis.console.log();
+    globalThis.console.log('File sizes after gzip:');
+    globalThis.console.log();
     for (const { gzipSize, dirName, baseName } of outputs) {
-      console.log(`  ${gzipSize.padEnd(length, ' ')}  ${dirName}${baseName}`);
+      globalThis.console.log(
+        `  ${gzipSize.padEnd(length, ' ')}  ${dirName}${baseName}`,
+      );
     }
-    console.log();
-    console.log('The \x1b[36mdist\x1b[39m folder is ready to be deployed.');
+    globalThis.console.log();
+    globalThis.console.log(
+      'The \x1b[36mdist\x1b[39m folder is ready to be deployed.',
+    );
   }
 })();
