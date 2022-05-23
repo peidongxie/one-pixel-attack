@@ -7,9 +7,11 @@ import { gzipSync } from 'zlib';
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {
-    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || ''),
+    'process.env.PUBLIC_URL': JSON.stringify(
+      process.env.PUBLIC_URL || '/static/',
+    ),
   },
-  entryPoints: ['./src/index.tsx'],
+  entryPoints: ['./src/index.tsx', './src/service-worker.ts'],
   external: [],
   format: 'esm',
   inject: ['./scripts/react-shim.ts'],
