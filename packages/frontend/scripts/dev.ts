@@ -14,11 +14,12 @@ const serveOptions: ServeOptions = {
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {
-    'process.env.PUBLIC_URL': JSON.stringify(
-      process.env.PUBLIC_URL || '/static/',
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || ''),
+    'process.env.SOURCE_URL': JSON.stringify(
+      process.env.SOURCE_URL || '/static',
     ),
   },
-  entryPoints: ['./src/index.tsx', './src/utils/service-worker.ts'],
+  entryPoints: ['./src/index.tsx', './src/service-worker.ts'],
   external: [],
   format: 'esm',
   inject: ['./scripts/react-shim.ts'],
@@ -38,7 +39,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: false,
   minifyIdentifiers: false,
   minifySyntax: false,
-  outdir: './public/static/',
+  outdir: './public/static',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
@@ -46,8 +47,7 @@ const buildOptions: BuildOptions = {
   watch: false,
   write: false,
   metafile: false,
-  publicPath: '/static/',
-  sourceRoot: '/static/',
+  sourceRoot: '/static',
 };
 
 (async () => {
