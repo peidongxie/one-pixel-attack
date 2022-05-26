@@ -1,17 +1,19 @@
+import { createHash } from 'crypto';
 import { build, type BuildOptions } from 'esbuild';
 import filesize from 'filesize';
-import { copy, emptyDir, readFileSync } from 'fs-extra';
-import { basename, dirname, sep } from 'path';
+import { copy, emptyDir, readdirSync, readFileSync, statSync } from 'fs-extra';
+import { basename, dirname, join, sep } from 'path';
 import { gzipSync } from 'zlib';
 
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {
-    'process.env.PUBLIC_URL': JSON.stringify(
-      process.env.PUBLIC_URL || '/static/',
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || ''),
+    'process.env.SOURCE_URL': JSON.stringify(
+      process.env.SOURCE_URL || '/static',
     ),
   },
-  entryPoints: ['./src/index.tsx', './src/service-worker.ts'],
+  entryPoints: [],
   external: [],
   format: 'esm',
   inject: ['./scripts/react-shim.ts'],
@@ -31,7 +33,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  outdir: './dist/static/',
+  outdir: './dist/static',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
@@ -39,47 +41,98 @@ const buildOptions: BuildOptions = {
   watch: false,
   write: true,
   metafile: true,
-  publicPath: '/static/',
-  sourceRoot: '/static/',
+  sourceRoot: '/static',
+};
+
+const getPrecacheEntryList = (
+  dir: string,
+): { revision: string; url: string }[] => {
+  const contents = readdirSync(dir);
+  return contents
+    .map((content) => {
+      const path = join(dir, content);
+      const stats = statSync(path);
+      if (stats.isDirectory()) {
+        return getPrecacheEntryList(path);
+      } else if (/.(css|html?|js)$/.test(content)) {
+        return {
+          revision: createHash('md5').update(readFileSync(path)).digest('hex'),
+          url: path.substring(path.indexOf('/')),
+        };
+      } else {
+        return null;
+      }
+    })
+    .filter((v) => v !== null)
+    .flat();
 };
 
 (async () => {
+  // prepare
   await emptyDir('dist');
   await copy('public', 'dist');
-  const { errors, metafile, warnings } = await build(buildOptions);
-  for (const error of errors) globalThis.console.error(error);
-  for (const warning of warnings) globalThis.console.warn(warning);
-  if (errors.length === 0 && warnings.length === 0) {
-    const outputs = Reflect.ownKeys(metafile.outputs)
-      .filter<string>((output): output is string => {
-        return typeof output === 'string' && !output.endsWith('.map');
-      })
-      .map((output) => ({
-        gzipSize: gzipSync(readFileSync(output)).length,
-        dirName: dirname(output) + sep,
-        baseName: basename(output),
-      }))
-      .sort((a, b) => {
-        return b.gzipSize - a.gzipSize;
-      })
-      .map((output) => ({
-        gzipSize: filesize(output.gzipSize),
-        dirName: `\x1b[2m${output.dirName}\x1b[22m`,
-        baseName: `\x1b[36m${output.baseName}\x1b[39m`,
-      }));
-    const length = Math.max(...outputs.map((output) => output.gzipSize.length));
-    globalThis.console.log('\x1b[32mCompiled successfully.\x1b[39m');
-    globalThis.console.log();
-    globalThis.console.log('File sizes after gzip:');
-    globalThis.console.log();
-    for (const { gzipSize, dirName, baseName } of outputs) {
-      globalThis.console.log(
-        `  ${gzipSize.padEnd(length, ' ')}  ${dirName}${baseName}`,
-      );
-    }
-    globalThis.console.log();
+  // build from index entry
+  const {
+    errors: indexErrors,
+    metafile: { outputs: indexOutputs },
+    warnings: indexWarnings,
+  } = await build({
+    ...buildOptions,
+    entryPoints: ['./src/index.tsx'],
+  });
+  if (indexErrors.length && indexWarnings.length) {
+    for (const error of indexErrors) globalThis.console.error(error);
+    for (const warning of indexWarnings) globalThis.console.warn(warning);
+    return;
+  }
+  // build from sw entry
+  const {
+    errors: swErrors,
+    metafile: { outputs: swOutputs },
+    warnings: swWarnings,
+  } = await build({
+    ...buildOptions,
+    define: {
+      ...buildOptions.define,
+      'self.__WB_MANIFEST': JSON.stringify(getPrecacheEntryList('dist')),
+    },
+    entryPoints: ['./src/service-worker.ts'],
+  });
+  if (swErrors.length && swWarnings.length) {
+    for (const error of swErrors) globalThis.console.error(error);
+    for (const warning of swWarnings) globalThis.console.warn(warning);
+    return;
+  }
+  // log
+  const outputs = Reflect.ownKeys({ ...indexOutputs, ...swOutputs })
+    .filter<string>((output): output is string => {
+      return typeof output === 'string' && !output.endsWith('.map');
+    })
+    .map((output) => ({
+      gzipSize: gzipSync(readFileSync(output)).length,
+      dirName: dirname(output) + sep,
+      baseName: basename(output),
+    }))
+    .sort((a, b) => {
+      return b.gzipSize - a.gzipSize;
+    })
+    .map((output) => ({
+      gzipSize: filesize(output.gzipSize),
+      dirName: `\x1b[2m${output.dirName}\x1b[22m`,
+      baseName: `\x1b[36m${output.baseName}\x1b[39m`,
+    }));
+  const length = Math.max(...outputs.map((output) => output.gzipSize.length));
+  globalThis.console.log('\x1b[32mCompiled successfully.\x1b[39m');
+  globalThis.console.log();
+  globalThis.console.log('File sizes after gzip:');
+  globalThis.console.log();
+  for (const { gzipSize, dirName, baseName } of outputs) {
     globalThis.console.log(
-      'The \x1b[36mdist\x1b[39m folder is ready to be deployed.',
+      `  ${gzipSize.padEnd(length, ' ')}  ${dirName}${baseName}`,
     );
   }
+  globalThis.console.log();
+  globalThis.console.log(
+    'The \x1b[36mdist\x1b[39m folder is ready to be deployed.',
+  );
 })();
