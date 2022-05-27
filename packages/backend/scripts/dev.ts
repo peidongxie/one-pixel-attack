@@ -7,7 +7,7 @@ let childProcess: ChildProcess | null = null;
 
 const startChildProcess = () => {
   if (!childProcess) {
-    childProcess = fork('./build/index.js', {
+    childProcess = fork('build/index.js', {
       execArgv: ['--experimental-loader=@pipcook/boa/esm/loader.mjs'],
     });
   }
@@ -23,7 +23,7 @@ const stopChildProcess = () => {
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {},
-  entryPoints: ['./src/index.ts'],
+  entryPoints: ['src/index.ts'],
   external: [
     '@pipcook/boa',
     'co-body',
@@ -41,7 +41,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: false,
   minifyIdentifiers: false,
   minifySyntax: false,
-  outdir: './build/',
+  outdir: 'build',
   platform: 'node',
   sourcemap: false,
   splitting: true,

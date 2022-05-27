@@ -80,7 +80,10 @@ const register = (config?: Config) => {
     const publicUrl = new URL(process.env.PUBLIC_URL, globalThis.location.href);
     if (publicUrl.origin !== globalThis.location.origin) return;
     globalThis.addEventListener('load', () => {
-      const swUrl = `${process.env.SOURCE_URL}/service-worker.js`;
+      const swUrl = new URL(
+        process.env.ASSET_PATH + '/service-worker.js',
+        publicUrl,
+      ).pathname;
       if (isLocalhost) {
         checkValidServiceWorker(swUrl, config);
         globalThis.navigator.serviceWorker.ready.then(() => {

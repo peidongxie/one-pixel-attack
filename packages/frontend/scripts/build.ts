@@ -8,15 +8,15 @@ import { gzipSync } from 'zlib';
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {
-    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || ''),
-    'process.env.SOURCE_URL': JSON.stringify(
-      process.env.SOURCE_URL || '/static',
+    'process.env.ASSET_PATH': JSON.stringify(
+      process.env.ASSET_PATH || '/static',
     ),
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
   },
   entryPoints: [],
   external: [],
   format: 'esm',
-  inject: ['./scripts/react-shim.ts'],
+  inject: [],
   loader: {
     '.ts': 'tsx',
     '.avif': 'file',
@@ -33,7 +33,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  outdir: './dist/static',
+  outdir: 'dist/static',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
@@ -41,6 +41,7 @@ const buildOptions: BuildOptions = {
   watch: false,
   write: true,
   metafile: true,
+  publicPath: '/static',
   sourceRoot: '/static',
 };
 
@@ -72,32 +73,40 @@ const getPrecacheEntryList = (
   await emptyDir('dist');
   await copy('public', 'dist');
   // build from index entry
+  const indexOptions: BuildOptions = {
+    ...buildOptions,
+    define: {
+      ...buildOptions.define,
+      'self.__WB_MANIFEST': JSON.stringify([]),
+    },
+    entryPoints: ['src/index.tsx'],
+    inject: ['scripts/react-shim.ts'],
+  };
   const {
     errors: indexErrors,
     metafile: { outputs: indexOutputs },
     warnings: indexWarnings,
-  } = await build({
-    ...buildOptions,
-    entryPoints: ['./src/index.tsx'],
-  });
+  } = await build(indexOptions);
   if (indexErrors.length && indexWarnings.length) {
     for (const error of indexErrors) globalThis.console.error(error);
     for (const warning of indexWarnings) globalThis.console.warn(warning);
     return;
   }
   // build from sw entry
-  const {
-    errors: swErrors,
-    metafile: { outputs: swOutputs },
-    warnings: swWarnings,
-  } = await build({
+  const swOptions: BuildOptions = {
     ...buildOptions,
     define: {
       ...buildOptions.define,
       'self.__WB_MANIFEST': JSON.stringify(getPrecacheEntryList('dist')),
     },
-    entryPoints: ['./src/service-worker.ts'],
-  });
+    entryPoints: ['src/service-worker.ts'],
+    inject: [],
+  };
+  const {
+    errors: swErrors,
+    metafile: { outputs: swOutputs },
+    warnings: swWarnings,
+  } = await build(swOptions);
   if (swErrors.length && swWarnings.length) {
     for (const error of swErrors) globalThis.console.error(error);
     for (const warning of swWarnings) globalThis.console.warn(warning);
