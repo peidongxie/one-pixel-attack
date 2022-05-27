@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 const buildOptions: BuildOptions = {
   bundle: true,
   define: {},
-  entryPoints: ['./src/index.ts'],
+  entryPoints: ['src/index.ts'],
   external: [
     '@pipcook/boa',
     'co-body',
@@ -22,7 +22,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  outdir: './build/',
+  outdir: 'build',
   platform: 'node',
   sourcemap: false,
   splitting: true,

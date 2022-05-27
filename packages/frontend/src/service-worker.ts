@@ -6,6 +6,8 @@ import { StaleWhileRevalidate } from 'workbox-strategies';
 
 declare const self: ServiceWorkerGlobalScope;
 
+const publicUrl = new URL(process.env.PUBLIC_URL, globalThis.location.href);
+
 clientsClaim();
 
 precacheAndRoute(self.__WB_MANIFEST);
@@ -16,7 +18,7 @@ registerRoute(({ request, url }: { request: Request; url: URL }) => {
     !url.pathname.startsWith('/_') &&
     !/\/[^/?]+\.[^/]+$/.test(url.pathname)
   );
-}, createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'));
+}, createHandlerBoundToURL(new URL('index.html', publicUrl).pathname));
 
 registerRoute(
   ({ url }) =>
