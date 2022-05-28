@@ -33,7 +33,7 @@ const buildOptions: BuildOptions = {
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  outdir: 'dist/static',
+  outdir: '',
   platform: 'browser',
   sourcemap: true,
   splitting: true,
@@ -42,7 +42,7 @@ const buildOptions: BuildOptions = {
   write: true,
   metafile: true,
   publicPath: '/static',
-  sourceRoot: '/static',
+  sourceRoot: '',
 };
 
 const getPrecacheEntryList = (
@@ -81,6 +81,8 @@ const getPrecacheEntryList = (
     },
     entryPoints: ['src/index.tsx'],
     inject: ['scripts/react-shim.ts'],
+    outdir: 'dist/static',
+    sourceRoot: '/static',
   };
   const {
     errors: indexErrors,
@@ -101,6 +103,8 @@ const getPrecacheEntryList = (
     },
     entryPoints: ['src/service-worker.ts'],
     inject: [],
+    outdir: 'dist',
+    sourceRoot: '/',
   };
   const {
     errors: swErrors,
