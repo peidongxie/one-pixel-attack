@@ -41,8 +41,7 @@ const buildOptions: BuildOptions = {
   watch: false,
   write: true,
   metafile: true,
-  publicPath: '/static',
-  sourceRoot: '',
+  publicPath: '',
 };
 
 const getPrecacheEntryList = (
@@ -82,7 +81,7 @@ const getPrecacheEntryList = (
     entryPoints: ['src/index.tsx'],
     inject: ['scripts/react-shim.ts'],
     outdir: 'dist/static',
-    sourceRoot: '/static',
+    publicPath: '/static',
   };
   const {
     errors: indexErrors,
@@ -104,7 +103,7 @@ const getPrecacheEntryList = (
     entryPoints: ['src/service-worker.ts'],
     inject: [],
     outdir: 'dist',
-    sourceRoot: '/',
+    publicPath: '/',
   };
   const {
     errors: swErrors,
