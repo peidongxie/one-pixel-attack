@@ -77,7 +77,7 @@ const trainModel = (): Model => {
   const [testLoss, testAcc] = model.evaluate(
     boa.kwargs({ x: testImages, y: testLabels, verbose: 2 }),
   );
-  console.info(`loss: ${testLoss}, accuracy: ${testAcc}`);
+  globalThis.console.info(`loss: ${testLoss}, accuracy: ${testAcc}`);
   return model;
 };
 

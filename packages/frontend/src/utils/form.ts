@@ -202,13 +202,12 @@ const queryOutputState = selectorFamily<Result | null, number>({
     async ({ get }) => {
       const input = get(queryInputState(id));
       if (input === null) return null;
-      const response = await fetch(
-        'https://run.mocky.io/v3/7aa60be8-792f-437e-a9ac-d823d36d9669',
-        {
-          body: input,
-          method: 'POST',
-        },
-      );
+      const url = new URL(globalThis.location.origin);
+      url.port = '3001';
+      const response = await fetch(url.origin, {
+        body: input,
+        method: 'POST',
+      });
       return response.json();
     },
 });
