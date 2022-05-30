@@ -13,7 +13,7 @@ interface Body {
 const handler: Handler = async (req) => {
   const body = await req.getBody<Body>();
   if (!body) return { code: 400 };
-  console.info(body);
+  globalThis.console.info(body);
   const imageClassifier = ImageClassifierFactory.createImageClassifier(
     body.model,
     body.image,
