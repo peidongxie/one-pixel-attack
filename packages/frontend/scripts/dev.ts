@@ -48,7 +48,6 @@ const buildOptions: BuildOptions = {
   write: false,
   metafile: false,
   publicPath: '/static',
-  sourceRoot: '/static',
 };
 
 (async () => {
