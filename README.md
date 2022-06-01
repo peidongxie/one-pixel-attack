@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/github/package-json/v/peidongxie/one-pixel-attack" />
 </p>
 <p align="center">
-  <img src="demo.gif">
+  <img src="demo.png">
 </p>
 
 An adversarial image generator
@@ -65,8 +65,6 @@ This project can be started in production mode or development mode.
 For production mode:
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
 $ npm run build -ws
 $ npm run start -w backend & npm run start -w frontend
 ```
@@ -74,8 +72,6 @@ $ npm run start -w backend & npm run start -w frontend
 or
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
 $ yarn build
 $ yarn start
 ```
@@ -83,16 +79,12 @@ $ yarn start
 For development mode:
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
 $ npm run dev -w backend & npm run dev -w frontend
 ```
 
 or
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack
 $ yarn dev
 ```
 
