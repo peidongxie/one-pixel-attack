@@ -32,58 +32,48 @@ As a result, I made an adversarial image generator. In January 2020, I started d
 
 ## Installation
 
-This project uses Node.js and its package manager. Please make sure they are installed locally.
+This app uses Node.js and its package manager. Please make sure they are installed locally.
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/frontend
 $ npm install
+$ cd one-pixel-attack/packages/frontend
 ```
 
 or
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/frontend
 $ yarn
+$ cd one-pixel-attack/packages/frontend
 ```
 
 ## Usage
 
-This project can be started in production mode or development mode.
-
-For production mode:
+This app can be started in development mode.
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/frontend
-$ npm run build
-$ npm run start
+$ yarn dev
 ```
 
 or
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/frontend
+$ npm run dev
+```
+
+This app can be built for production and be started in production mode once built. You can view the production build in the `dist` directory.
+
+```sh
 $ yarn build
 $ yarn start
 ```
 
-For development mode:
-
-```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/frontend
-$ npm run dev
-```
-
 or
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/frontend
-$ yarn dev
+$ npm run build
+$ npm run start
 ```
 
 ## Related Efforts
