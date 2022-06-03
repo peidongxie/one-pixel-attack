@@ -47,7 +47,7 @@ This project uses Node.js and its package manager. Please make sure they are ins
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ npm install
+$ yarn
 ```
 
 or
@@ -55,37 +55,35 @@ or
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ yarn
+$ npm install
 ```
 
 ## Usage
 
-This project can be started in production mode or development mode.
-
-For production mode:
+This project can be started in development mode.
 
 ```sh
-$ npm run build -ws
-$ npm run start -w backend & npm run start -w frontend
+$ yarn dev
 ```
 
 or
+
+```sh
+$ npm run dev -w backend & npm run dev -w frontend
+```
+
+This project can be built for production and be started in production mode once built. You can view the production build in the `packages/backend/build` directory and the `packages/frontend/dist` directory.
 
 ```sh
 $ yarn build
 $ yarn start
 ```
 
-For development mode:
-
-```sh
-$ npm run dev -w backend & npm run dev -w frontend
-```
-
 or
 
 ```sh
-$ yarn dev
+$ npm run build -ws
+$ npm run start -w backend & npm run start -w frontend
 ```
 
 ## Related Efforts

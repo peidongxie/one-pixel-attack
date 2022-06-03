@@ -32,58 +32,48 @@ OnePixelAttack 受到 ['One pixel attack for fooling deep neural networks'](http
 
 ## 安装
 
-本项目使用 Node.js 和它的包管理器。请确保本地安装了它们。
+本应用使用 Node.js 和它的包管理器。请确保本地安装了它们。
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/backend
 $ npm install
+$ cd one-pixel-attack/packages/backend
 ```
 
 或者
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/backend
 $ yarn
+$ cd one-pixel-attack/packages/backend
 ```
 
 ## 使用
 
-本项目可以以生产模式或开发模式启动。
-
-对于生产模式：
+本应用可以以开发模式启动。
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/backend
-$ npm run build
-$ npm run start
+$ yarn dev
 ```
 
 或者
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/backend
+$ npm run dev
+```
+
+本项目可以为生产环境构建，构建后以生产模式启动。你可以在 `build` 目录中看到生产环境构建产物。
+
+```sh
 $ yarn build
 $ yarn start
 ```
 
-对于开发模式：
-
-```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/backend
-$ npm run dev
-```
-
 或者
 
 ```sh
-$ git clone https://github.com/peidongxie/one-pixel-attack
-$ cd one-pixel-attack/packages/backend
-$ yarn dev
+$ npm run build
+$ npm run start
 ```
 
 ## 相关工作

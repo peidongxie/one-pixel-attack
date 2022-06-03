@@ -60,32 +60,30 @@ $ yarn
 
 ## 使用
 
-本项目可以以生产模式或开发模式启动。
-
-对于生产模式：
+本项目可以以开发模式启动。
 
 ```sh
-$ npm run build -ws
-$ npm run start -w backend & npm run start -w frontend
+$ yarn dev
 ```
 
 或者
+
+```sh
+$ npm run dev -w backend & npm run dev -w frontend
+```
+
+本项目可以为生产环境构建，构建后以生产模式启动。你可以在 `packages/backend/build` 目录和 `packages/frontend/dist` 目录中看到生产环境构建产物。
 
 ```sh
 $ yarn build
 $ yarn start
 ```
 
-对于开发模式：
-
-```sh
-$ npm run dev -w backend & npm run dev -w frontend
-```
-
 或者
 
 ```sh
-$ yarn dev
+$ npm run build -ws
+$ npm run start -w backend & npm run start -w frontend
 ```
 
 ## 相关工作
