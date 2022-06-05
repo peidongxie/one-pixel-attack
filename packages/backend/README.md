@@ -36,16 +36,18 @@ This app uses Node.js and its package manager. Please make sure they are install
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ npm install
-$ cd one-pixel-attack/packages/backend
+$ cd one-pixel-attack
+$ yarn
+$ cd packages/backend
 ```
 
 or
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ yarn
-$ cd one-pixel-attack/packages/backend
+$ cd one-pixel-attack
+$ npm install
+$ cd packages/backend
 ```
 
 ## Usage

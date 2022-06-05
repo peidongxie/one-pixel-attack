@@ -36,16 +36,18 @@ OnePixelAttack 受到 ['One pixel attack for fooling deep neural networks'](http
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ npm install
-$ cd one-pixel-attack/packages/backend
+$ cd one-pixel-attack
+$ yarn
+$ cd packages/backend
 ```
 
 或者
 
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
-$ yarn
-$ cd one-pixel-attack/packages/backend
+$ cd one-pixel-attack
+$ npm install
+$ cd packages/backend
 ```
 
 ## 使用
