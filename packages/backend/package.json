@@ -26,8 +26,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "cat scripts/build.ts | esbuild --format=cjs --loader=ts | node",
-    "dev": "cat scripts/dev.ts | esbuild --format=cjs --loader=ts | node",
+    "build": "cat scripts/build.ts | esbuild --format=iife --loader=ts | node",
+    "dev": "cat scripts/dev.ts | esbuild --format=iife --loader=ts | node",
     "fix": "eslint scripts src --ext .ts --fix && sort-package-json",
     "lint": "eslint scripts src --ext .ts",
     "prepare": "bip install numpy pillow scipy tensorflow --upgrade",

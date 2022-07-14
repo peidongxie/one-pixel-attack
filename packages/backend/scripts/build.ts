@@ -1,5 +1,5 @@
 import { build, type BuildOptions } from 'esbuild';
-import fs from 'fs-extra';
+import { emptyDirSync } from 'fs-extra';
 
 const buildOptions: BuildOptions = {
   bundle: true,
@@ -31,6 +31,6 @@ const buildOptions: BuildOptions = {
 };
 
 (async () => {
-  await fs.emptyDir('build');
+  emptyDirSync('build');
   await build(buildOptions);
 })();
