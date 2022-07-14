@@ -1,7 +1,7 @@
 import { ip } from 'address';
+import { fork, type ChildProcess } from 'child_process';
 import { build, type BuildOptions } from 'esbuild';
 import { readJson } from 'fs-extra';
-import { fork, type ChildProcess } from 'child_process';
 
 let childProcess: ChildProcess | null = null;
 

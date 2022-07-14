@@ -1,7 +1,13 @@
 import { createHash } from 'crypto';
 import { build, type BuildOptions } from 'esbuild';
 import filesize from 'filesize';
-import { copy, emptyDir, readdirSync, readFileSync, statSync } from 'fs-extra';
+import {
+  copy,
+  emptyDirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+} from 'fs-extra';
 import { basename, dirname, join, sep } from 'path';
 import { gzipSync } from 'zlib';
 
@@ -63,13 +69,13 @@ const getPrecacheEntryList = (
         return null;
       }
     })
-    .filter((v) => v !== null)
+    .filter((v): v is { revision: string; url: string } => v !== null)
     .flat();
 };
 
 (async () => {
   // prepare
-  await emptyDir('dist');
+  emptyDirSync('dist');
   await copy('public', 'dist');
   // build from index entry
   const indexOptions: BuildOptions = {
