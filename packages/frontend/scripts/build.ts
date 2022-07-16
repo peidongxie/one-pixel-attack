@@ -2,7 +2,7 @@ import { createHash } from 'crypto';
 import { build, type BuildOptions } from 'esbuild';
 import filesize from 'filesize';
 import {
-  copy,
+  copySync,
   emptyDirSync,
   readdirSync,
   readFileSync,
@@ -11,7 +11,7 @@ import {
 import { basename, dirname, join, sep } from 'path';
 import { gzipSync } from 'zlib';
 
-const buildOptions: BuildOptions = {
+const buildOptions: BuildOptions & { metafile: true } = {
   bundle: true,
   define: {
     'process.env.ASSET_PATH': JSON.stringify(
@@ -53,21 +53,24 @@ const buildOptions: BuildOptions = {
 const getPrecacheEntryList = (
   dir: string,
 ): { revision: string; url: string }[] => {
-  const contents = readdirSync(dir);
-  return contents
-    .map((content) => {
-      const path = join(dir, content);
+  const files = readdirSync(dir);
+  return files
+    .map((file) => {
+      const path = join(dir, file);
       const stats = statSync(path);
       if (stats.isDirectory()) {
         return getPrecacheEntryList(path);
-      } else if (/.(css|html?|js)$/.test(content)) {
-        return {
-          revision: createHash('md5').update(readFileSync(path)).digest('hex'),
-          url: path.substring(path.indexOf('/')),
-        };
-      } else {
-        return null;
+      } else if (stats.isFile()) {
+        if (/.(css|html?|js)$/.test(file)) {
+          return {
+            revision: createHash('md5')
+              .update(readFileSync(path))
+              .digest('hex'),
+            url: path.substring(path.indexOf('/')),
+          };
+        }
       }
+      return null;
     })
     .filter((v): v is { revision: string; url: string } => v !== null)
     .flat();
@@ -76,9 +79,9 @@ const getPrecacheEntryList = (
 (async () => {
   // prepare
   emptyDirSync('dist');
-  await copy('public', 'dist');
+  copySync('public', 'dist');
   // build from index entry
-  const indexOptions: BuildOptions = {
+  const indexOptions: BuildOptions & { metafile: true } = {
     ...buildOptions,
     define: {
       ...buildOptions.define,
@@ -100,7 +103,7 @@ const getPrecacheEntryList = (
     return;
   }
   // build from sw entry
-  const swOptions: BuildOptions = {
+  const swOptions: BuildOptions & { metafile: true } = {
     ...buildOptions,
     define: {
       ...buildOptions.define,
@@ -116,37 +119,39 @@ const getPrecacheEntryList = (
     metafile: { outputs: swOutputs },
     warnings: swWarnings,
   } = await build(swOptions);
+  // log
   if (swErrors.length && swWarnings.length) {
     for (const error of swErrors) globalThis.console.error(error);
     for (const warning of swWarnings) globalThis.console.warn(warning);
     return;
   }
-  // log
-  const outputs = Reflect.ownKeys({ ...indexOutputs, ...swOutputs })
+  const descriptions = Reflect.ownKeys({ ...indexOutputs, ...swOutputs })
     .filter<string>((output): output is string => {
       return typeof output === 'string' && !output.endsWith('.map');
     })
     .map((output) => ({
-      gzipSize: gzipSync(readFileSync(output)).length,
+      size: gzipSync(readFileSync(output)).length,
       dirName: dirname(output) + sep,
       baseName: basename(output),
     }))
     .sort((a, b) => {
-      return b.gzipSize - a.gzipSize;
+      return b.size - a.size;
     })
-    .map((output) => ({
-      gzipSize: filesize(output.gzipSize),
-      dirName: `\x1b[2m${output.dirName}\x1b[22m`,
-      baseName: `\x1b[36m${output.baseName}\x1b[39m`,
+    .map((description) => ({
+      size: filesize(description.size),
+      dirName: `\x1b[2m${description.dirName}\x1b[22m`,
+      baseName: `\x1b[36m${description.baseName}\x1b[39m`,
     }));
-  const length = Math.max(...outputs.map((output) => output.gzipSize.length));
+  const length = Math.max(
+    ...descriptions.map((description) => description.size.length),
+  );
   globalThis.console.log('\x1b[32mCompiled successfully.\x1b[39m');
   globalThis.console.log();
   globalThis.console.log('File sizes after gzip:');
   globalThis.console.log();
-  for (const { gzipSize, dirName, baseName } of outputs) {
+  for (const { size, dirName, baseName } of descriptions) {
     globalThis.console.log(
-      `  ${gzipSize.padEnd(length, ' ')}  ${dirName}${baseName}`,
+      `  ${size.padEnd(length, ' ')}  ${dirName}${baseName}`,
     );
   }
   globalThis.console.log();
