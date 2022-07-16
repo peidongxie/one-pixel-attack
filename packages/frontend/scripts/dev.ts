@@ -1,6 +1,6 @@
 import { ip } from 'address';
 import { serve, type BuildOptions, type ServeOptions } from 'esbuild';
-import { readJson } from 'fs-extra';
+import { readJsonSync } from 'fs-extra';
 
 const serveOptions: ServeOptions = {
   port: 3000,
@@ -46,13 +46,14 @@ const buildOptions: BuildOptions = {
   target: 'es6',
   watch: false,
   write: false,
-  metafile: false,
   publicPath: '/static',
 };
 
 (async () => {
-  const { name } = await readJson('package.json');
+  // build & serve
   const { host, port } = await serve(serveOptions, buildOptions);
+  // log
+  const name = readJsonSync('package.json').name;
   const appName = `\x1b[1m${name}\x1b[22m`;
   const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
   const outputs = [

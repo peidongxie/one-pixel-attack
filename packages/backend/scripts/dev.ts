@@ -1,24 +1,7 @@
 import { ip } from 'address';
 import { fork, type ChildProcess } from 'child_process';
 import { build, type BuildOptions } from 'esbuild';
-import { readJson } from 'fs-extra';
-
-let childProcess: ChildProcess | null = null;
-
-const startChildProcess = () => {
-  if (!childProcess) {
-    childProcess = fork('build/index.js', {
-      execArgv: ['--experimental-loader=@pipcook/boa/esm/loader.mjs'],
-    });
-  }
-};
-
-const stopChildProcess = () => {
-  if (childProcess) {
-    childProcess.kill();
-    childProcess = null;
-  }
-};
+import { readJsonSync } from 'fs-extra';
 
 const buildOptions: BuildOptions = {
   bundle: true,
@@ -55,10 +38,30 @@ const buildOptions: BuildOptions = {
   write: true,
 };
 
+let childProcess: ChildProcess | null = null;
+
+const startChildProcess = () => {
+  if (!childProcess) {
+    childProcess = fork('build/index.js', {
+      execArgv: ['--experimental-loader=@pipcook/boa/esm/loader.mjs'],
+    });
+  }
+};
+
+const stopChildProcess = () => {
+  if (childProcess) {
+    childProcess.kill();
+    childProcess = null;
+  }
+};
+
 (async () => {
-  const { name } = await readJson('package.json');
+  // build & watch
   await build(buildOptions);
+  // serve
   startChildProcess();
+  // log
+  const name = readJsonSync('package.json').name;
   const appName = `\x1b[1m${name}\x1b[22m`;
   const protocol = 'http';
   const port = 3001;
