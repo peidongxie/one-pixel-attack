@@ -47,7 +47,7 @@ OnePixelAttack 受到 ['One pixel attack for fooling deep neural networks'](http
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ npm install
+$ yarn && yarn workspace backend prepare
 ```
 
 或者
@@ -55,7 +55,7 @@ $ npm install
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ yarn
+$ npm install && npm run prepare -w backend
 ```
 
 ## 使用
