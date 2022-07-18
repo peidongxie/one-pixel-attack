@@ -47,7 +47,7 @@ This project uses Node.js and its package manager. Please make sure they are ins
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ yarn
+$ yarn && yarn workspace backend prepare
 ```
 
 or
@@ -55,7 +55,7 @@ or
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ npm install
+$ npm install && npm run prepare -w backend
 ```
 
 ## Usage

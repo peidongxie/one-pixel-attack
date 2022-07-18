@@ -37,7 +37,7 @@ This app uses Node.js and its package manager. Please make sure they are install
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ yarn
+$ yarn && yarn workspace backend prepare
 $ cd packages/backend
 ```
 
@@ -46,7 +46,7 @@ or
 ```sh
 $ git clone https://github.com/peidongxie/one-pixel-attack
 $ cd one-pixel-attack
-$ npm install
+$ npm install && npm run prepare -w backend
 $ cd packages/backend
 ```
 
