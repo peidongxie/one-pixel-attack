@@ -1,42 +1,53 @@
 import np from 'py:numpy';
 import AdversarialAttacker from './adversarial-attacker';
 import ImageClassifierFactory from './image-classifier-factory';
-import { Server, type Handler, type MultipartFile } from './wrap-http';
+import { Cors, Router, Server } from '@dest-toolkit/http-server';
 
-interface Body {
-  model: 'default' | MultipartFile;
-  image: 'default' | MultipartFile;
-  label: string;
-  perturbation: string;
-}
+const cors = new Cors<'HTTP'>();
 
-const handler: Handler = async (req) => {
-  const body = await req.getBody<Body>();
-  if (!body) return { code: 400 };
-  globalThis.console.info(body);
+const router = new Router<'HTTP'>();
+router.setRoute('POST', '/', async (req) => {
+  const { body } = req;
+  const form = await body.formData();
+  const model = form.get('model');
+  const image = form.get('image');
+  const label = form.get('label');
+  const perturbation = form.get('perturbation');
+  if (
+    !model ||
+    !image ||
+    typeof label !== 'string' ||
+    typeof perturbation !== 'string'
+  ) {
+    return {
+      code: 400,
+      body: null,
+    };
+  }
   const imageClassifier = ImageClassifierFactory.createImageClassifier(
-    body.model,
-    body.image,
-    body.label,
+    model,
+    image,
+    label,
   );
   const adversarialAttacker = new AdversarialAttacker(
     imageClassifier,
-    isNaN(Number(body.perturbation)) ? undefined : Number(body.perturbation),
+    isNaN(Number(perturbation)) ? undefined : Number(perturbation),
   );
-  const image = imageClassifier.getNormalized()
-    ? np.around(np.multiply(imageClassifier.getImage(), 255))
-    : imageClassifier.getImage();
-  const pixels = adversarialAttacker.attack();
-  const predictions = [
-    imageClassifier.getPrediction(),
-    adversarialAttacker.getPrediction() || [],
-  ];
   return {
-    body: { image, pixels, predictions },
+    body: {
+      image: imageClassifier.getNormalized()
+        ? np.around(np.multiply(imageClassifier.getImage(), 255))
+        : imageClassifier.getImage(),
+      pixels: adversarialAttacker.attack(),
+      predictions: [
+        imageClassifier.getPrediction(),
+        adversarialAttacker.getPrediction() || [],
+      ],
+    },
   };
-};
+});
 
-const server = new Server();
-server.cors();
-server.route('POST', '', handler);
+const server = new Server('http');
+server.use(cors.getHandler());
+server.use(router.getHandler());
 server.listen(3001, '::');

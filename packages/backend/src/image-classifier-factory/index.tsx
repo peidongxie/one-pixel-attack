@@ -1,14 +1,13 @@
 import np from 'py:numpy';
 import ImageClassifier from '../image-classifier';
-import { type MultipartFile } from '../wrap-http';
 
 class ImageClassifierFactory {
   static createImageClassifier(
-    model: 'default' | MultipartFile,
-    image: 'default' | MultipartFile,
+    model: string | URL,
+    image: string | URL,
     label: string,
   ): ImageClassifier {
-    while (image === 'default') {
+    while (typeof image === 'string') {
       const imageClassifier = this.#createImageClassifier(model, image, label);
       const prediction = imageClassifier.getPrediction();
       if (
@@ -22,13 +21,13 @@ class ImageClassifierFactory {
   }
 
   static #createImageClassifier(
-    model: 'default' | MultipartFile,
-    image: 'default' | MultipartFile,
+    model: string | URL,
+    image: string | URL,
     label: string,
   ): ImageClassifier {
     return new ImageClassifier(
-      model === 'default' ? undefined : model,
-      image === 'default' ? undefined : image,
+      typeof model === 'string' ? undefined : model,
+      typeof image === 'string' ? undefined : image,
       isNaN(Number(label)) ? undefined : Number(label),
     );
   }

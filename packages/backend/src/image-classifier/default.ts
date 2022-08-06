@@ -1,5 +1,5 @@
 import boa from '@pipcook/boa';
-import fs from 'fs-extra';
+import { existsSync } from 'fs';
 import np, {
   type NumpyArray2D,
   type NumpyArray3D,
@@ -82,7 +82,7 @@ const trainModel = (): Model => {
 };
 
 const { trainImages, trainLabels, testImages, testLabels } = loadData();
-const model = fs.existsSync('./public/model.h5') ? loadModel() : trainModel();
+const model = existsSync('./public/model.h5') ? loadModel() : trainModel();
 model.summary();
 
 const getDefaultImage = (key: number): NumpyArray3D => {
