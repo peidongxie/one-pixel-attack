@@ -1,2 +1,1 @@
-import React from 'react';
-export { React };
+export { default as React } from 'react';
