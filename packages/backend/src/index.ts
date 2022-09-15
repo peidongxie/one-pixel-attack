@@ -47,7 +47,7 @@ router.setRoute('POST', '/', async (req) => {
   };
 });
 
-const server = new Server('http');
-server.use(cors.getHandler());
-server.use(router.getHandler());
+const server = new Server<'HTTP'>('http');
+server.use(cors);
+server.use(router);
 server.listen(3001, '::');
