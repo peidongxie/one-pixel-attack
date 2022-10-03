@@ -1,5 +1,5 @@
-declare module 'py:scipy.optimize' {
-  import { type NumpyArray } from 'py:numpy';
+declare module 'py://scipy.optimize' {
+  import { type NumpyArray } from 'py://numpy';
   class Bounds {
     constructor(
       lb: number[] | Tuple<number, number>,

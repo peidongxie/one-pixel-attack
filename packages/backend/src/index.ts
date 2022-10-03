@@ -1,9 +1,9 @@
-import np from 'py:numpy';
+import np from 'py://numpy';
 import AdversarialAttacker from './adversarial-attacker';
 import ImageClassifierFactory from './image-classifier-factory';
 import { Cors, Router, Server } from '@dest-toolkit/http-server';
 
-const cors = new Cors<'HTTP'>();
+const cors = new Cors();
 
 const router = new Router<'HTTP'>();
 router.setRoute('POST', '/', async (req) => {

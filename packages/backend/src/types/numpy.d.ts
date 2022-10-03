@@ -1,4 +1,4 @@
-declare module 'py:numpy' {
+declare module 'py://numpy' {
   interface NumpyArray {
     __getitem__: <T extends NumpyArray>(
       key:

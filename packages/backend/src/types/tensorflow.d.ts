@@ -1,11 +1,11 @@
-declare module 'py:tensorflow.keras' {
-  import { type Image } from 'py:PIL';
+declare module 'py://tensorflow.keras' {
+  import { type Image } from 'py://PIL';
   import {
     type NumpyArray,
     type NumpyArray2D,
     type NumpyArray3D,
     type NumpyArray4D,
-  } from 'py:numpy';
+  } from 'py://numpy';
   class Loss {
     constructor(kwargs?: BoaKwargs);
   }
