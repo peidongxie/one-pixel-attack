@@ -1,4 +1,4 @@
-import np from 'py:numpy';
+import np from 'py://numpy';
 import ImageClassifier from '../image-classifier';
 
 class ImageClassifierFactory {

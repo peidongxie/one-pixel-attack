@@ -3,8 +3,8 @@ import np, {
   type NumpyArray0D,
   type NumpyArray1D,
   type NumpyArray2D,
-} from 'py:numpy';
-import optimize from 'py:scipy.optimize';
+} from 'py://numpy';
+import optimize from 'py://scipy.optimize';
 import type ImageClassifier from '../image-classifier';
 
 const { len, tuple } = boa.builtins();

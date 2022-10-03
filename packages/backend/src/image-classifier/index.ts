@@ -3,8 +3,8 @@ import np, {
   type NumpyArray1D,
   type NumpyArray2D,
   type NumpyArray3D,
-} from 'py:numpy';
-import keras, { type Model } from 'py:tensorflow.keras';
+} from 'py://numpy';
+import keras, { type Model } from 'py://tensorflow.keras';
 import { fileURLToPath } from 'url';
 import { getDefaultImage, getDefaultLabel, getDefaultModel } from './default';
 

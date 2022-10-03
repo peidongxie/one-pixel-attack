@@ -4,8 +4,8 @@ import np, {
   type NumpyArray2D,
   type NumpyArray3D,
   type NumpyArray4D,
-} from 'py:numpy';
-import keras, { type Model } from 'py:tensorflow.keras';
+} from 'py://numpy';
+import keras, { type Model } from 'py://tensorflow.keras';
 
 const { tuple } = boa.builtins();
 
