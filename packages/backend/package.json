@@ -31,7 +31,7 @@
     "fix": "eslint scripts src --ext .ts --fix && sort-package-json",
     "lint": "eslint scripts src --ext .ts",
     "prepare": "bip install numpy pillow scipy tensorflow --upgrade",
-    "start": "node --experimental-loader @pipcook/boa/esm/loader.mjs ./build/index.js"
+    "start": "node --experimental-loader scripts/loader.js ./build/index.js"
   },
   "dependencies": {
     "@dest-toolkit/http-server": "^0.1.8",
