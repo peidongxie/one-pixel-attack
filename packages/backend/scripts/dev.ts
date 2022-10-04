@@ -10,9 +10,9 @@ const buildOptions: BuildOptions = {
   external: [
     '@dest-toolkit/http-server',
     '@pipcook/boa',
-    'py:numpy',
-    'py:scipy.optimize',
-    'py:tensorflow.keras',
+    'py://numpy',
+    'py://scipy.optimize',
+    'py://tensorflow.keras',
   ],
   format: 'esm',
   inject: [],
@@ -25,7 +25,7 @@ const buildOptions: BuildOptions = {
   platform: 'node',
   sourcemap: false,
   splitting: true,
-  target: 'node14',
+  target: 'es2018',
   watch: {
     onRebuild: () => {
       stopChildProcess();
@@ -40,7 +40,7 @@ let childProcess: ChildProcess | null = null;
 const startChildProcess = () => {
   if (!childProcess) {
     childProcess = fork('build/index.js', {
-      execArgv: ['--experimental-loader=@pipcook/boa/esm/loader.mjs'],
+      execArgv: ['--experimental-loader=./scripts/loader.js'],
     });
   }
 };
