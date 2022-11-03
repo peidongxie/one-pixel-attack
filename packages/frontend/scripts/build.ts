@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import { build, type BuildOptions } from 'esbuild';
-import filesize from 'filesize';
+import { filesize } from 'filesize';
 import {
   copySync,
   emptyDirSync,
@@ -138,7 +138,7 @@ const getPrecacheEntryList = (
       return b.size - a.size;
     })
     .map((description) => ({
-      size: filesize(description.size),
+      size: filesize(description.size) as string,
       dirName: `\x1b[2m${description.dirName}\x1b[22m`,
       baseName: `\x1b[36m${description.baseName}\x1b[39m`,
     }));

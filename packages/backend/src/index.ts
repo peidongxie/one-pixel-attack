@@ -5,7 +5,7 @@ import { Cors, Router, Server } from '@dest-toolkit/http-server';
 
 const cors = new Cors();
 
-const router = new Router<'HTTP'>();
+const router = new Router();
 router.setRoute('POST', '/', async (req) => {
   const { body } = req;
   const form = await body.formData();
@@ -24,7 +24,7 @@ router.setRoute('POST', '/', async (req) => {
       body: null,
     };
   }
-  const imageClassifier = ImageClassifierFactory.createImageClassifier(
+  const imageClassifier = await ImageClassifierFactory.createImageClassifier(
     model,
     image,
     label,
@@ -47,7 +47,7 @@ router.setRoute('POST', '/', async (req) => {
   };
 });
 
-const server = new Server<'HTTP'>('http');
+const server = new Server('http');
 server.use(cors);
 server.use(router);
 server.listen(3001, '::');
