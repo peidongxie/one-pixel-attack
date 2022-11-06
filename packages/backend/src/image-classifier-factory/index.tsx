@@ -41,10 +41,7 @@ class ImageClassifierFactory {
   }
 
   static async #saveFile(file: File): Promise<string> {
-    const path = join(
-      tmpdir(),
-      `${Date.now()}_${randomUUID()}_${file.type}_${file.name}`,
-    );
+    const path = join(tmpdir(), `${Date.now()}_${randomUUID()}_${file.name}`);
     const buffer = await file.arrayBuffer();
     writeFileSync(path, Buffer.from(buffer));
     return path;
