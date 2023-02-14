@@ -8,47 +8,8 @@ import {
   readFileSync,
   statSync,
 } from 'fs-extra';
-import { basename, dirname, join, sep } from 'path';
+import { basename, dirname, extname, join, sep } from 'path';
 import { gzipSync } from 'zlib';
-
-const buildOptions: BuildOptions & { metafile: true } = {
-  bundle: true,
-  define: {
-    'process.env.ASSET_PATH': JSON.stringify(
-      process.env.ASSET_PATH || '/static',
-    ),
-    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
-  },
-  entryPoints: [],
-  external: [],
-  format: 'esm',
-  inject: [],
-  loader: {
-    '.ts': 'tsx',
-    '.avif': 'file',
-    '.bmp': 'file',
-    '.gif': 'file',
-    '.jpg': 'file',
-    '.jpeg': 'file',
-    '.png': 'file',
-    '.webp': 'file',
-    '.svg': 'file',
-    '.glsl': 'text',
-  },
-  minify: true,
-  minifyWhitespace: true,
-  minifyIdentifiers: true,
-  minifySyntax: true,
-  outdir: '',
-  platform: 'browser',
-  sourcemap: true,
-  splitting: true,
-  target: 'es6',
-  watch: false,
-  write: true,
-  metafile: true,
-  publicPath: '',
-};
 
 const getPrecacheEntryList = (
   dir: string,
@@ -60,8 +21,9 @@ const getPrecacheEntryList = (
       const stats = statSync(path);
       if (stats.isDirectory()) {
         return getPrecacheEntryList(path);
-      } else if (stats.isFile()) {
-        if (/.(css|html?|js)$/.test(file)) {
+      }
+      if (stats.isFile()) {
+        if (['.css', '.htm', '.html', '.js'].includes(extname(file))) {
           return {
             revision: createHash('md5')
               .update(readFileSync(path))
@@ -76,22 +38,97 @@ const getPrecacheEntryList = (
     .flat();
 };
 
+const indexOptions: BuildOptions & { metafile: true } = {
+  // General options
+  bundle: true,
+  platform: 'browser',
+  tsconfig: 'tsconfig.json',
+  // Input
+  entryPoints: ['src/index.tsx'],
+  loader: {
+    '.avif': 'file',
+    '.bmp': 'file',
+    '.gif': 'file',
+    '.jpg': 'file',
+    '.jpeg': 'file',
+    '.png': 'file',
+    '.webp': 'file',
+    '.svg': 'file',
+    '.glsl': 'text',
+  },
+  // Output contents
+  format: 'esm',
+  splitting: true,
+  // Output location
+  chunkNames: 'chunks/[hash]',
+  outdir: 'dist/static',
+  publicPath: '/static',
+  write: true,
+  // Path resolution
+  external: [],
+  // Transformation
+  target: 'es2018',
+  // Optimization
+  define: {
+    'process.env.ASSET_PATH': JSON.stringify(
+      process.env.ASSET_PATH || '/static',
+    ),
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
+  },
+  inject: ['scripts/react-shim.ts'],
+  minify: true,
+  // Source maps
+  sourcemap: true,
+  // Build metadata
+  metafile: true,
+  // Logging
+  color: true,
+  // Plugins
+  plugins: [],
+};
+
+const swOptions: BuildOptions & { metafile: true } = {
+  // General options
+  bundle: true,
+  platform: 'browser',
+  tsconfig: 'tsconfig.json',
+  // Input
+  entryPoints: ['src/service-worker.ts'],
+  loader: {},
+  // Output contents
+  format: 'esm',
+  splitting: true,
+  // Output location
+  chunkNames: 'chunks/[hash]',
+  outdir: 'dist',
+  publicPath: '/',
+  write: true,
+  // Path resolution
+  external: [],
+  // Transformation
+  target: 'es2018',
+  // Optimization
+  define: {
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
+    'self.__WB_MANIFEST': JSON.stringify(getPrecacheEntryList('dist')),
+  },
+  inject: [],
+  minify: true,
+  // Source maps
+  sourcemap: true,
+  // Build metadata
+  metafile: true,
+  // Logging
+  color: true,
+  // Plugins
+  plugins: [],
+};
+
 (async () => {
   // prepare
   emptyDirSync('dist');
   copySync('public', 'dist');
   // build from index entry
-  const indexOptions: BuildOptions & { metafile: true } = {
-    ...buildOptions,
-    define: {
-      ...buildOptions.define,
-      'self.__WB_MANIFEST': JSON.stringify([]),
-    },
-    entryPoints: ['src/index.tsx'],
-    inject: ['scripts/react-shim.ts'],
-    outdir: 'dist/static',
-    publicPath: '/static',
-  };
   const {
     errors: indexErrors,
     metafile: { outputs: indexOutputs },
@@ -103,17 +140,6 @@ const getPrecacheEntryList = (
     return;
   }
   // build from sw entry
-  const swOptions: BuildOptions & { metafile: true } = {
-    ...buildOptions,
-    define: {
-      ...buildOptions.define,
-      'self.__WB_MANIFEST': JSON.stringify(getPrecacheEntryList('dist')),
-    },
-    entryPoints: ['src/service-worker.ts'],
-    inject: [],
-    outdir: 'dist',
-    publicPath: '/',
-  };
   const {
     errors: swErrors,
     metafile: { outputs: swOutputs },

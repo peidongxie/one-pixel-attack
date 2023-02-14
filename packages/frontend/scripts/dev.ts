@@ -1,5 +1,5 @@
 import { ip } from 'address';
-import { serve, type BuildOptions, type ServeOptions } from 'esbuild';
+import { context, type BuildOptions, type ServeOptions } from 'esbuild';
 import { readJsonSync } from 'fs-extra';
 
 const serveOptions: ServeOptions = {
@@ -12,19 +12,13 @@ const serveOptions: ServeOptions = {
 };
 
 const buildOptions: BuildOptions = {
+  // General options
   bundle: true,
-  define: {
-    'process.env.ASSET_PATH': JSON.stringify(
-      process.env.ASSET_PATH || '/static',
-    ),
-    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
-  },
+  platform: 'browser',
+  tsconfig: 'tsconfig.json',
+  // Input
   entryPoints: ['src/index.tsx'],
-  external: [],
-  format: 'esm',
-  inject: ['scripts/react-shim.ts'],
   loader: {
-    '.ts': 'tsx',
     '.avif': 'file',
     '.bmp': 'file',
     '.gif': 'file',
@@ -35,23 +29,42 @@ const buildOptions: BuildOptions = {
     '.svg': 'file',
     '.glsl': 'text',
   },
-  minify: false,
-  minifyWhitespace: false,
-  minifyIdentifiers: false,
-  minifySyntax: false,
-  outdir: 'public/static',
-  platform: 'browser',
-  sourcemap: true,
+  // Output contents
+  format: 'esm',
   splitting: true,
-  target: 'es6',
-  watch: false,
-  write: false,
+  // Output location
+  chunkNames: 'chunks/[hash]',
+  outdir: 'public/static',
   publicPath: '/static',
+  write: false,
+  // Path resolution
+  external: [],
+  // Transformation
+  target: 'es2018',
+  // Optimization
+  define: {
+    'process.env.ASSET_PATH': JSON.stringify(
+      process.env.ASSET_PATH || '/static',
+    ),
+    'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
+  },
+  inject: ['scripts/react-shim.ts'],
+  minify: false,
+  // Source maps
+  sourcemap: true,
+  // Build metadata
+  metafile: true,
+  // Logging
+  color: true,
+  // Plugins
+  plugins: [],
 };
 
 (async () => {
   // build & serve
-  const { host, port } = await serve(serveOptions, buildOptions);
+  const ctx = await context(buildOptions);
+  // await ctx.watch();
+  const { host, port } = await ctx.serve(serveOptions);
   // log
   const name = readJsonSync('package.json').name;
   const appName = `\x1b[1m${name}\x1b[22m`;

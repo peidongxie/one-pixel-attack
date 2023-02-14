@@ -4,9 +4,20 @@ import { emptyDirSync, readFileSync } from 'fs-extra';
 import { basename, dirname, sep } from 'path';
 
 const buildOptions: BuildOptions & { metafile: true } = {
+  // General options
   bundle: true,
-  define: {},
+  platform: 'node',
+  tsconfig: 'tsconfig.json',
+  // Input
   entryPoints: ['src/index.ts'],
+  // Output contents
+  format: 'esm',
+  splitting: true,
+  // Output location
+  chunkNames: 'chunks/[hash]',
+  outdir: 'build',
+  write: true,
+  // Path resolution
   external: [
     '@dest-toolkit/http-server',
     '@pipcook/boa',
@@ -14,21 +25,18 @@ const buildOptions: BuildOptions & { metafile: true } = {
     'py://scipy.optimize',
     'py://tensorflow.keras',
   ],
-  format: 'esm',
-  inject: [],
-  loader: {},
-  minify: true,
-  minifyWhitespace: true,
-  minifyIdentifiers: true,
-  minifySyntax: true,
-  outdir: 'build',
-  platform: 'node',
-  sourcemap: false,
-  splitting: true,
+  // Transformation
   target: 'es2018',
-  write: true,
-  watch: false,
+  // Optimization
+  minify: true,
+  // Source maps
+  sourcemap: false,
+  // Build metadata
   metafile: true,
+  // Logging
+  color: true,
+  // Plugins
+  plugins: [],
 };
 
 (async () => {
