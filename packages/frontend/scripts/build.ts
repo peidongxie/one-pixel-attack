@@ -3,6 +3,7 @@ import { build, type BuildOptions } from 'esbuild';
 import { filesize } from 'filesize';
 import {
   copySync,
+  ensureDirSync,
   emptyDirSync,
   readdirSync,
   readFileSync,
@@ -109,8 +110,10 @@ const swOptions: BuildOptions & { metafile: true } = {
   target: 'es2018',
   // Optimization
   define: {
+    'process.env.ASSET_PATH': JSON.stringify(
+      process.env.ASSET_PATH || '/static',
+    ),
     'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '/'),
-    'self.__WB_MANIFEST': JSON.stringify(getPrecacheEntryList('dist')),
   },
   inject: [],
   minify: true,
@@ -126,6 +129,7 @@ const swOptions: BuildOptions & { metafile: true } = {
 
 (async () => {
   // prepare
+  ensureDirSync('./dist');
   emptyDirSync('dist');
   copySync('public', 'dist');
   // build from index entry
@@ -144,7 +148,13 @@ const swOptions: BuildOptions & { metafile: true } = {
     errors: swErrors,
     metafile: { outputs: swOutputs },
     warnings: swWarnings,
-  } = await build(swOptions);
+  } = await build({
+    ...swOptions,
+    define: {
+      ...swOptions.define,
+      'self.__WB_MANIFEST': JSON.stringify(getPrecacheEntryList('dist')),
+    },
+  });
   // log
   if (swErrors.length && swWarnings.length) {
     for (const error of swErrors) globalThis.console.error(error);
