@@ -1,12 +1,23 @@
 import { ip } from 'address';
 import { fork, type ChildProcess } from 'child_process';
-import { build, type BuildOptions } from 'esbuild';
+import { context, type BuildOptions } from 'esbuild';
 import { readJsonSync } from 'fs-extra';
 
-const buildOptions: BuildOptions = {
+const buildOptions: BuildOptions & { metafile: true } = {
+  // General options
   bundle: true,
-  define: {},
+  platform: 'node',
+  tsconfig: 'tsconfig.json',
+  // Input
   entryPoints: ['src/index.ts'],
+  // Output contents
+  format: 'esm',
+  splitting: true,
+  // Output location
+  chunkNames: 'chunks/[hash]',
+  outdir: 'build',
+  write: true,
+  // Path resolution
   external: [
     '@dest-toolkit/http-server',
     '@pipcook/boa',
@@ -14,49 +25,37 @@ const buildOptions: BuildOptions = {
     'py://scipy.optimize',
     'py://tensorflow.keras',
   ],
-  format: 'esm',
-  inject: [],
-  loader: {},
-  minify: false,
-  minifyWhitespace: false,
-  minifyIdentifiers: false,
-  minifySyntax: false,
-  outdir: 'build',
-  platform: 'node',
-  sourcemap: false,
-  splitting: true,
+  // Transformation
   target: 'es2018',
-  watch: {
-    onRebuild: () => {
-      stopChildProcess();
-      startChildProcess();
+  // Optimization
+  minify: false,
+  // Source maps
+  sourcemap: false,
+  // Build metadata
+  metafile: true,
+  // Logging
+  color: true,
+  // Plugins
+  plugins: [
+    {
+      name: 'dev',
+      setup(build) {
+        let childProcess: ChildProcess | null = null;
+        build.onEnd(() => {
+          childProcess?.kill();
+          childProcess = fork('build/index.js', {
+            execArgv: ['--experimental-loader=./scripts/loader.js'],
+          });
+        });
+      },
     },
-  },
-  write: true,
-};
-
-let childProcess: ChildProcess | null = null;
-
-const startChildProcess = () => {
-  if (!childProcess) {
-    childProcess = fork('build/index.js', {
-      execArgv: ['--experimental-loader=./scripts/loader.js'],
-    });
-  }
-};
-
-const stopChildProcess = () => {
-  if (childProcess) {
-    childProcess.kill();
-    childProcess = null;
-  }
+  ],
 };
 
 (async () => {
   // build & watch
-  await build(buildOptions);
-  // serve
-  startChildProcess();
+  const ctx = await context(buildOptions);
+  await ctx.watch();
   // log
   const name = readJsonSync('package.json').name;
   const appName = `\x1b[1m${name}\x1b[22m`;
