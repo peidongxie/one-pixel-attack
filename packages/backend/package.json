@@ -30,6 +30,7 @@
     "dev": "cat scripts/dev.ts | esbuild --format=iife --loader=ts | node",
     "fix": "eslint scripts src --ext .ts --fix && sort-package-json",
     "lint": "eslint scripts src --ext .ts",
+    "prepare": "conda create -p ./conda -y && conda activate ./conda && conda install numpy pillow scipy tensorflow grpcio -y",
     "start": "node --experimental-loader scripts/loader.js ./build/index.js"
   },
   "dependencies": {
