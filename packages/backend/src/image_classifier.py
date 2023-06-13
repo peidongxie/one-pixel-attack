@@ -72,9 +72,6 @@ def train_model() -> tf.keras.models.Sequential:
             units=10,
         ),
     )
-    model.add(
-        layer=tf.keras.layers.Softmax(),
-    )
     model.compile(
         optimizer='adam',
         loss=tf.keras.losses.SparseCategoricalCrossentropy(
@@ -107,7 +104,7 @@ class ImageClassifier:
     def __init__(self, model: str | None = None, image: str | None = None) -> None:
         if model is None:
             self.model_normalized = True
-            self.model = model
+            self.model = default_model
         else:
             self.model_normalized = not model.endswith(
                 suffix='raw.h5',
@@ -126,15 +123,12 @@ class ImageClassifier:
             self.image_normalized = not image.endswith(
                 suffix='raw.npy',
             )
-            self.image = np.load(image).astype(
-                dtype='float32' if self.image_normalized else 'uint8'
-            )
+            self.image = np.load(image)
             self.label = None
         else:
             self.image_normalized = False
             self.image = tf.keras.preprocessing.image.img_to_array(
                 img=tf.keras.preprocessing.image.load_img(image),
-                dtype='unit8',
             )
             self.label = None
 
@@ -164,4 +158,5 @@ test_images = data[1][0] / 255.0
 test_labels = data[1][1]
 data_size = len(test_labels)
 model_path = './public/model.h5'
-model = load_model() if os.access(path=model_path, mode=os.F_OK) else train_model()
+model_accessible = os.access(path=model_path, mode=os.F_OK)
+default_model = load_model() if model_accessible else train_model()
