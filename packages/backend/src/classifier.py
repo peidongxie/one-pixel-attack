@@ -4,24 +4,13 @@ import random
 import tensorflow as tf
 
 
-def add_softmax_layer(model: tf.keras.models.Sequential) -> tf.keras.models.Sequential:
-    return tf.keras.models.Sequential(
-        layers=[
-            model,
-            tf.keras.layers.Softmax(),
-        ],
-    )
-
-
 def load_model() -> tf.keras.models.Sequential:
     model = tf.keras.models.load_model(
         filepath=model_path,
     )
     model.summary()
     print()
-    return add_softmax_layer(
-        model=model,
-    )
+    return model
 
 
 def train_model() -> tf.keras.models.Sequential:
@@ -95,12 +84,10 @@ def train_model() -> tf.keras.models.Sequential:
     print()
     model.summary()
     print()
-    return add_softmax_layer(
-        model=model,
-    )
+    return model
 
 
-class ImageClassifier:
+class Classifier:
     def __init__(self, model: str | None = None, image: str | None = None) -> None:
         if model is None:
             self.model_normalized = True
@@ -109,10 +96,8 @@ class ImageClassifier:
             self.model_normalized = not model.endswith(
                 suffix='raw.h5',
             )
-            self.model = add_softmax_layer(
-                model=tf.keras.models.load_model(
-                    filepath=model,
-                ),
+            self.model = tf.keras.models.load_model(
+                filepath=model,
             )
         if image is None:
             key = random.randint(0, data_size - 1)
