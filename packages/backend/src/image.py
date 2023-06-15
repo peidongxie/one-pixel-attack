@@ -55,3 +55,21 @@ class Image:
     @property
     def channel(self) -> int:
         return self._channel
+
+    def generate(self, pixels: np.ndarray, normalized: bool) -> 'Image':
+        if normalized and not self.normalized:
+            data = self.data * 255
+        elif self.normalized and not normalized:
+            data = self.data / 255.0
+        else:
+            data = np.copy(self.data)
+        for pixel in pixels:
+            row, column, *colors = pixel
+            for channel in range(len(colors)):
+                if normalized:
+                    data[row][column][channel] = colors[channel]
+                else:
+                    data[row][column][channel] = colors[channel] / 255.0
+        return Image(
+            data=data,
+        )
