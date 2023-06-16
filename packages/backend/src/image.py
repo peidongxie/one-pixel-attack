@@ -18,20 +18,18 @@ class Image:
                     path=data,
                 ),
             )
-        self._normalized = True
+        normalized = True
         for element in np.nditer(
             op=self._data,
         ):
             if element > 1:
                 self._normalized = False
-        if self._normalized:
-            self._data = self._data.astype(
-                dtype='uint8',
-            )
-        else:
-            self._data = self._data.astype(
-                dtype='float32',
-            )
+                break
+        if normalized:
+            self._data = self._data * 255
+        self._data = self._data.astype(
+            dtype='uint8',
+        )
         self._row = self._data.shape[0]
         self._column = self._data.shape[1]
         self._channel = self._data.shape[2]
@@ -39,10 +37,6 @@ class Image:
     @property
     def data(self) -> np.ndarray:
         return self._data
-
-    @property
-    def normalized(self) -> bool:
-        return self._normalized
 
     @property
     def row(self) -> int:
@@ -56,20 +50,12 @@ class Image:
     def channel(self) -> int:
         return self._channel
 
-    def generate(self, pixels: np.ndarray, normalized: bool) -> 'Image':
-        if normalized and not self.normalized:
-            data = self.data * 255
-        elif self.normalized and not normalized:
-            data = self.data / 255.0
-        else:
-            data = np.copy(self.data)
+    def generate(self, pixels: np.ndarray) -> 'Image':
+        data = np.copy(self.data)
         for pixel in pixels:
             row, column, *colors = pixel
             for channel in range(len(colors)):
-                if normalized:
-                    data[row][column][channel] = colors[channel]
-                else:
-                    data[row][column][channel] = colors[channel] / 255.0
+                data[row][column][channel] = colors[channel]
         return Image(
             data=data,
         )
