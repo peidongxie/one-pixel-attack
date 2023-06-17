@@ -18,21 +18,31 @@ class Image:
                     path=data,
                 ),
             )
-        normalized = True
-        for element in np.nditer(
+        if self._data.ndim is 2:
+            self._row = self._data.shape[0]
+            self._column = self._data.shape[1]
+            self._channel = 1
+        elif self._data.ndim is 3:
+            self._row = self._data.shape[0]
+            self._column = self._data.shape[1]
+            self._channel = self._data.shape[2]
+        else:
+            raise ValueError("Bad image")
+        self._data = self._data.reshape(
+            self._row,
+            self._column,
+            self._channel,
+        )
+        max_value = 1
+        for value in np.nditer(
             op=self._data,
         ):
-            if element > 1:
-                self._normalized = False
+            if value > 1:
+                max_value = 255
                 break
-        if normalized:
-            self._data = self._data * 255
-        self._data = self._data.astype(
+        self._data = (self._data * (255 / max_value)).astype(
             dtype='uint8',
         )
-        self._row = self._data.shape[0]
-        self._column = self._data.shape[1]
-        self._channel = self._data.shape[2]
 
     @property
     def data(self) -> np.ndarray:
