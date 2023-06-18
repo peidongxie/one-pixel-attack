@@ -18,21 +18,22 @@ class Image:
                     path=data,
                 ),
             )
-        if self._data.ndim is 2:
-            self._row = self._data.shape[0]
-            self._column = self._data.shape[1]
+        shape = self._data.shape
+        if len(shape) is 2:
+            self._row = shape[0]
+            self._column = shape[1]
             self._channel = 1
-        elif self._data.ndim is 3:
-            self._row = self._data.shape[0]
-            self._column = self._data.shape[1]
-            self._channel = self._data.shape[2]
+            self._data = self._data.reshape(
+                self._row,
+                self._column,
+                1,
+            )
+        elif len(shape) is 3:
+            self._row = shape[0]
+            self._column = shape[1]
+            self._channel = shape[2]
         else:
             raise ValueError("Bad image")
-        self._data = self._data.reshape(
-            self._row,
-            self._column,
-            self._channel,
-        )
         max_value = 1
         for value in np.nditer(
             op=self._data,
