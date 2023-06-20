@@ -4,6 +4,7 @@ import tensorflow as tf
 
 class Image:
     def __init__(self, data: np.ndarray | str) -> None:
+        # data source
         if type(data) is not str:
             self._data = data
         elif data.endswith(
@@ -18,6 +19,21 @@ class Image:
                     path=data,
                 ),
             )
+        # data value
+        max_value = 1
+        for value in np.nditer(
+            op=self._data,
+        ):
+            if value > 1:
+                max_value = 255
+                break
+        if max_value is 1:
+            self._data = self._data * 255
+        if self._data.dtype is not 'uint8':
+            self._data = self._data.astype(
+                dtype='uint8',
+            )
+        # data shape
         shape = self._data.shape
         if len(shape) is 2:
             self._row = shape[0]
@@ -34,16 +50,6 @@ class Image:
             self._channel = shape[2]
         else:
             raise ValueError("Bad image")
-        max_value = 1
-        for value in np.nditer(
-            op=self._data,
-        ):
-            if value > 1:
-                max_value = 255
-                break
-        self._data = (self._data * (255 / max_value)).astype(
-            dtype='uint8',
-        )
 
     @property
     def data(self) -> np.ndarray:
