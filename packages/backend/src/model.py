@@ -5,13 +5,17 @@ import tensorflow as tf
 class Model:
     def __init__(self, data: tf.keras.models.Sequential | str) -> None:
         # data source
-        if type(data) is not str:
-            self._data = data
-        else:
+        if isinstance(data, str):
             self._data = tf.keras.models.load_model(
                 filepath=data,
             )
+        elif isinstance(data, tf.keras.models.Model):
+            self._data = data
+        else:
+            raise ValueError("Bad model")
         # data value
+        if len(self._data.layers) is 0:
+            raise ValueError("Bad model")
         if not isinstance(self._data.layers[0], tf.keras.layers.Rescaling):
             self._data = tf.keras.models.Sequential(
                 layers=[

@@ -5,20 +5,23 @@ import tensorflow as tf
 class Image:
     def __init__(self, data: np.ndarray | str) -> None:
         # data source
-        if type(data) is not str:
+        if isinstance(data, str):
+            if data.endswith(
+                suffix='.npy',
+            ):
+                self._data = np.load(
+                    file=data,
+                )
+            else:
+                self._data = tf.keras.preprocessing.image.img_to_array(
+                    img=tf.keras.preprocessing.image.load_img(
+                        path=data,
+                    ),
+                )
+        elif isinstance(data, np.ndarray):
             self._data = data
-        elif data.endswith(
-            suffix='.npy',
-        ):
-            self._data = np.load(
-                file=data,
-            )
         else:
-            self._data = tf.keras.preprocessing.image.img_to_array(
-                img=tf.keras.preprocessing.image.load_img(
-                    path=data,
-                ),
-            )
+            raise ValueError("Bad image")
         # data value
         max_value = 1
         for value in np.nditer(
