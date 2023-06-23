@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 class Model:
-    def __init__(self, data: tf.keras.models.Sequential | str) -> None:
+    def __init__(self, data: tf.keras.models.Model | str) -> None:
         # data source
         if isinstance(data, str):
             self._data = tf.keras.models.load_model(
@@ -47,3 +47,19 @@ class Model:
             self._channel = shape[2]
         else:
             raise ValueError("Bad model")
+
+    @property
+    def data(self) -> tf.keras.models.Model:
+        return self._data
+
+    @property
+    def row(self) -> int:
+        return self._row
+
+    @property
+    def column(self) -> int:
+        return self._column
+
+    @property
+    def channel(self) -> int:
+        return self._channel
