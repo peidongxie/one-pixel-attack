@@ -23,14 +23,7 @@ class Image:
         else:
             raise ValueError("Bad image")
         # data value
-        max_value = 1
-        for value in np.nditer(
-            op=self._data,
-        ):
-            if value > 1:
-                max_value = 255
-                break
-        if max_value is 1:
+        if self._data.max() <= 1:
             self._data = self._data * 255
         if self._data.dtype is not 'uint8':
             self._data = self._data.astype(
