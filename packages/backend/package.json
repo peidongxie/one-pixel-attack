@@ -30,27 +30,27 @@
     "dev": "cat scripts/dev.ts | esbuild --format=iife --loader=ts | node",
     "fix": "eslint scripts src --ext .ts --fix && sort-package-json",
     "lint": "eslint scripts src --ext .ts",
-    "prepare": "bip install numpy pillow scipy tensorflow --upgrade",
+    "prepare": "conda create -p ./conda -y && conda activate ./conda && conda install numpy pillow scipy tensorflow grpcio -y",
     "start": "node --experimental-loader scripts/loader.js ./build/index.js"
   },
   "dependencies": {
-    "@dest-toolkit/http-server": "^0.1.18",
-    "@pipcook/boa": "^1.3.1"
+    "@dest-toolkit/grpc-client": "^0.1.18",
+    "@dest-toolkit/http-server": "^0.1.18"
   },
   "devDependencies": {
     "@types/fs-extra": "11.0.1",
-    "@types/node": "^18.15.11",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@types/node": "^20.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
     "address": "^1.2.2",
-    "esbuild": "^0.17.16",
-    "eslint": "^8.38.0",
+    "esbuild": "^0.18.6",
+    "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "filesize": "^10.0.7",
     "fs-extra": "^11.1.1",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "sort-package-json": "^2.4.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.1.3"
   }
 }
