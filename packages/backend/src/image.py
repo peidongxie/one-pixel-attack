@@ -25,13 +25,13 @@ class Image:
         # data value
         if self._data.max() <= 1:
             self._data = self._data * 255
-        if self._data.dtype is not 'uint8':
+        if self._data.dtype != 'uint8':
             self._data = self._data.astype(
                 dtype='uint8',
             )
         # data shape
         shape = self._data.shape
-        if len(shape) is 2:
+        if len(shape) == 2:
             self._row = shape[0]
             self._column = shape[1]
             self._channel = 1
@@ -40,7 +40,7 @@ class Image:
                 self._column,
                 1,
             )
-        elif len(shape) is 3:
+        elif len(shape) == 3:
             self._row = shape[0]
             self._column = shape[1]
             self._channel = shape[2]
@@ -64,7 +64,7 @@ class Image:
         return self._channel
 
     def create_batch(self, pixels: np.ndarray | None = None) -> np.ndarray:
-        if pixels is None:
+        if pixels == None:
             return np.expand_dims(self.data, 0)
         data = np.copy(self.data)
         for pixel in pixels:

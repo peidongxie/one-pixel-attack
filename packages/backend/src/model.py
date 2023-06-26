@@ -15,7 +15,7 @@ class Model:
         else:
             raise ValueError("Bad model")
         # data value
-        if len(self._data.layers) is 0:
+        if len(self._data.layers) == 0:
             raise ValueError("Bad model")
         if not isinstance(self._data.layers[0], tf.keras.layers.Rescaling):
             self._data = tf.keras.models.Sequential(
@@ -29,7 +29,7 @@ class Model:
             )
         # data shape
         shape = self._data.layers[0].input_shape
-        if len(shape) is 2:
+        if len(shape) == 2:
             self._row = shape[0]
             self._column = shape[1]
             self._channel = 1
@@ -42,7 +42,7 @@ class Model:
                     self._data,
                 ],
             )
-        elif len(shape) is 3:
+        elif len(shape) == 3:
             self._row = shape[0]
             self._column = shape[1]
             self._channel = shape[2]
