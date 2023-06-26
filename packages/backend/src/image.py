@@ -63,12 +63,12 @@ class Image:
     def channel(self) -> int:
         return self._channel
 
-    def generate(self, pixels: np.ndarray) -> 'Image':
+    def create_batch(self, pixels: np.ndarray | None = None) -> np.ndarray:
+        if pixels is None:
+            return np.expand_dims(self.data, 0)
         data = np.copy(self.data)
         for pixel in pixels:
             row, column, *colors = pixel
             for channel in range(len(colors)):
                 data[row][column][channel] = colors[channel]
-        return Image(
-            data=data,
-        )
+        return np.expand_dims(data, 0)

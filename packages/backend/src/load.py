@@ -1,4 +1,3 @@
-import numpy as np
 import random
 import tensorflow as tf
 from image import Image
@@ -85,6 +84,10 @@ print()
 default_model = Model(default_model_data)
 
 
+def load_default_model() -> Model:
+    return default_model
+
+
 def load_default_image(key: int) -> Image:
     return Image(default_test_images_data[key])
 
@@ -96,7 +99,3 @@ def load_default_label(key: int) -> int:
 def load_default_pair() -> tuple[Image, int]:
     key = random.randint(0, default_test_size - 1)
     return load_default_image(key), load_default_label(key)
-
-
-def load_default_model() -> Model:
-    return default_model

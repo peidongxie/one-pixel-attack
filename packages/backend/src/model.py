@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from image import Image
 
 
 class Model:
@@ -63,3 +64,6 @@ class Model:
     @property
     def channel(self) -> int:
         return self._channel
+
+    def predict(self, batch: np.ndarray) -> np.ndarray:
+        return self.data.predict(batch)
