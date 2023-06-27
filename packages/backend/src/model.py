@@ -22,13 +22,13 @@ class Model:
                 layers=[
                     tf.keras.layers.Rescaling(
                         scale=1./255,
-                        input_shape=self._data.layers[0].input_shape,
+                        input_shape=self._data.layers[0].input_shape[1:],
                     ),
                     self._data,
                 ],
             )
         # data shape
-        shape = self._data.layers[0].input_shape
+        shape = self._data.layers[0].input_shape[1:]
         if len(shape) == 2:
             self._row = shape[0]
             self._column = shape[1]
