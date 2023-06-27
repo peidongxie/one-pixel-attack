@@ -93,7 +93,7 @@ def load_default_image(key: int) -> Image:
 
 
 def load_default_label(key: int) -> int:
-    return default_test_labels_data[key]
+    return default_test_labels_data[key][0]
 
 
 def load_default_pair() -> tuple[Image, int]:
